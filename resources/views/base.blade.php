@@ -20,5 +20,6 @@
 
         {{-- Les pages --}}
         <script src="{{ asset('assets/app/js/script.js') }}"></script>
+        <script src="{{ asset('assets/app/js/register.js') }}"></script>
     </body>
 </html>

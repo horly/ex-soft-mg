@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
+use Illuminate\Support\Facades\DB;
+use App\Repository\GradeRepo;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -48,7 +50,13 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         Fortify::registerView(function () {
-            return view('auth.register');
+            $grades = DB::table('grades')->get();
+            $roles = DB::table('roles')->get();
+
+            return view('auth.register', [
+                'grades' => $grades,
+                'roles' => $roles,
+            ]);
         });
     }
 }

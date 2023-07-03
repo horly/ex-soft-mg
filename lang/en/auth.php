@@ -30,13 +30,13 @@ return [
     'not_registered_yet' => 'Not registered yet ?',
     'create_an_account' => 'Create an account',
 
-    'enter_your_email' => "Enter your email address",
-    'enter_your_password' => "Enter your password",
+    'enter_your_email' => "Enter the email address",
+    'enter_your_password' => "Enter the password",
 
-    'enter_your_firstname' => "Enter your firstname",
-    'enter_your_lastname' => "Enter your lastname",
-    'create_your_password' => "Create your password",
-    'confirm_your_password' => "Confirm your password",
+    'enter_your_firstname' => "Enter the firstname",
+    'enter_your_lastname' => "Enter the lastname",
+    'create_your_password' => "Create the password",
+    'confirm_your_password' => "Confirm the password",
 
     /*
     |--------------------------------------------------------------------------
@@ -61,6 +61,10 @@ return [
     'password_confirmation_register_message' => 'Your passwords must be identical!',
     'error_country_register_message' => 'Please select your country!',
     'error_agreeTerms_register_message' => 'You should agree to our terms.',
+
+    'error_role_register_message' => "Select a role please!",
+    'error_function_register_message' => "Select a function please!",
+    'error_phone_number_register_message' => "The phone number you entered is invalid",
 
     /*
     |--------------------------------------------------------------------------
@@ -166,6 +170,8 @@ return [
     'error_new_password_message_profile' => 'Your password must be at least 8 characters!',
     'error_confirm_new_password_message_profile' => 'Your passwords must be identical!',
     'error_old_password_message_profile' => 'The entered password does not match the old password!',
+
+    'loading' => "Loading",
 
 
 ];

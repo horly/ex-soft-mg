@@ -12,20 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role', 255)
-                ->after('remember_token')
-                ->default('user');
-
-            $table->string('function', 255)
-                ->after('role');
-
-            $table->text('address')
-                ->after('function')
-                ->nullable();
-
-            $table->string('phone_number', 255)
-                ->after('address')
-                ->nullable();
+            //
+            $table->dropColumn('function');
         });
     }
 
@@ -34,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

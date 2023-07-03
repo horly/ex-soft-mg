@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'address',
+        'phone_number',
     ];
 
     /**
@@ -42,4 +45,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /** Un Utilisateurs appartient à un role */
+    function role()
+    {
+        return $this->belongsTo('App\Models\Role', 'role_id');
+    }
+
+    /** Un Utilisateurs appartient à un grade */
+    function grade()
+    {
+        return $this->belongsTo('App\Models\Grade', 'grade_id');
+    }
 }

@@ -30,13 +30,13 @@ return [
     'not_registered_yet' => 'Pas encore inscrit ?',
     'create_an_account' => 'Créer un compte',
 
-    'enter_your_email' => "Entrez votre adresse email",
-    'enter_your_password' => "Tapez votre mot de passe",
+    'enter_your_email' => "Entrez l'adresse email",
+    'enter_your_password' => "Tapez le mot de passe",
 
-    'enter_your_firstname' => "Entrez votre prénom",
-    'enter_your_lastname' => "Entrez votre nom",
-    'create_your_password' => "Créer votre mot de passe",
-    'confirm_your_password' => "Confirmez votre mot de passe",
+    'enter_your_firstname' => "Entrez le prénom",
+    'enter_your_lastname' => "Entrez le nom",
+    'create_your_password' => "Créer le mot de passe",
+    'confirm_your_password' => "Confirmez le mot de passe",
 
     /*
     |--------------------------------------------------------------------------
@@ -61,6 +61,11 @@ return [
     'password_confirmation_register_message' => 'Vos mots de passe doivent être identiques !',
     'error_country_register_message' => 'S\'il vous plaît sélectionnez votre pays!',
     'error_agreeTerms_register_message' => 'Vous devez accepter nos conditions.',
+
+
+    'error_role_register_message' => "Veuillez séléctionner un rôle !",
+    'error_function_register_message' => "Veuillez séléctionner une fonction !",
+    'error_phone_number_register_message' => "Le number de téléphone que vous avez entré n'est pas valide !",
 
     /*
     |--------------------------------------------------------------------------
@@ -167,5 +172,5 @@ return [
     'error_confirm_new_password_message_profile' => 'Vos mots de passe doivent être identiques !',
     'error_old_password_message_profile' => 'Le mot de passe saisi ne correspond pas à l\'ancien mot de passe !',
 
-
+    'loading' => "Chargement",
 ];

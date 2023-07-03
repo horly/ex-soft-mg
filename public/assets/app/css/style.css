@@ -4,3 +4,9 @@
 @import "../../lib/bootstrap/css/bootstrap.css";
 @import "../../lib/flags-icon/css/flag-icon.css";
 @import "../../lib/fontawesome-free-6.4.0-web/css/all.css";
+
+
+/**
+*   Les pages
+*/
+@import "./register.css";
