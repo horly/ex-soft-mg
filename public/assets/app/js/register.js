@@ -71,7 +71,7 @@ $('#register-user').click(function() {
                                         },
                                         success: function(data){
                                             setTimeout(function(){
-                                                console.log(data.user);
+                                                //console.log(data.user);
                                                 let title = $('#success-message').val(); //Success
                                                 let content = $('#user_added-message').val(); //User added successfully
 
@@ -166,3 +166,30 @@ function warningMessage(title, content){
         closeOnConfirm: true
     });
 }
+
+$("#show-password").click(function(){
+    $('#show-password').addClass('d-none');
+    $('#hide-password').removeClass('d-none');
+    $('#password').attr('type', 'text');
+});
+
+
+$("#hide-password").click(function(){
+    $('#hide-password').addClass('d-none');
+    $('#show-password').removeClass('d-none');
+    $('#password').attr('type', 'password');
+});
+
+
+$("#show-password-confirm").click(function(){
+    $('#show-password-confirm').addClass('d-none');
+    $('#hide-password-confirm').removeClass('d-none');
+    $('#password-confirm').attr('type', 'text');
+});
+
+
+$("#hide-password-confirm").click(function(){
+    $('#hide-password-confirm').addClass('d-none');
+    $('#show-password-confirm').removeClass('d-none');
+    $('#password-confirm').attr('type', 'password');
+});

@@ -139,6 +139,7 @@ return [
     'reset_your_password' => 'Reset your password',
     'please_enter_your_email_address' => 'Please enter your email address. We\'ll send you a link to reset your password.',
     'enter_your_email' => 'Enter your email address',
+    'enter_the_email' => 'Enter the email address',
     'back_to' => 'Back to',
     'we_have_sent_the_reset_password_link' => 'We have sent the reset password link to the entered email address.',
     'the_email_address_you_entered_does_not' => 'The email address you entered does not match any user.',

@@ -41,12 +41,12 @@ class LoginController extends Controller
             'address' => $address
         );
 
-        //$user = User::create($array);
+        $user = User::create($array);
 
         return response()->json([
             'code' => 200,
             'status' => 'success',
-            'user' => $array,
+            'user' => $user,
         ]);
     }
 }

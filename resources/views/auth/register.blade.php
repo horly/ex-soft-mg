@@ -42,7 +42,7 @@
                             <label for="email" class="form-label">{{ __('auth.email')}} *</label>
                             <div class="input-group">
                                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-envelope"></i></span>
-                                <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('auth.enter_your_email') }}" value="{{ old('email') }}" required autocomplete="email">
+                                <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('auth.enter_the_email') }}" value="{{ old('email') }}" required autocomplete="email">
                             </div>
                             <small class="error-register-field text-danger" id="error-email"></small>
                         </div>
@@ -52,6 +52,8 @@
                             <div class="input-group">
                                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-lock"></i></span>
                                 <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('auth.create_your_password') }}">
+                                <span class="input-group-text cursor-pointer" id="show-password"><i class="fa-solid fa-eye"></i></span>
+                                <span class="input-group-text cursor-pointer d-none" id="hide-password"><i class="fa-solid fa-eye-slash"></i></span>
                             </div>
                             <small class="error-register-field text-danger" id="error-password"></small>
                         </div>
@@ -61,6 +63,8 @@
                             <div class="input-group">
                                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-lock"></i></span>
                                 <input type="password" name="password-confirm" id="password-confirm" class="form-control" placeholder="{{ __('auth.confirm_your_password') }}">
+                                <span class="input-group-text cursor-pointer" id="show-password-confirm"><i class="fa-solid fa-eye"></i></span>
+                                <span class="input-group-text cursor-pointer d-none" id="hide-password-confirm"><i class="fa-solid fa-eye-slash"></i></span>
                             </div>
                             <small class="error-register-field text-danger" id="error-password-confirmation"></small>
                         </div>

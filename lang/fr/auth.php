@@ -140,6 +140,7 @@ return [
     'reset_your_password' => 'Réinitialisez votre mot de passe',
     'please_enter_your_email_address' => 'Veuillez saisir votre adresse e-mail. Nous vous enverrons un lien pour réinitialiser votre mot de passe.',
     'enter_your_email' => 'Entrez votre adresse email',
+    'enter_the_email' => "Entrez l'adresse email",
     'back_to' => 'Retour à',
     'we_have_sent_the_reset_password_link' => 'Nous avons envoyé le lien de réinitialisation du mot de passe à l\'adresse e-mail saisie.',
     'the_email_address_you_entered_does_not' => 'L\'adresse e-mail que vous avez saisie ne correspond à aucun utilisateur.',
