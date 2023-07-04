@@ -72,6 +72,15 @@ $('#register-user').click(function() {
                                         success: function(data){
                                             setTimeout(function(){
                                                 console.log(data.user);
+                                                let title = $('#success-message').val(); //Success
+                                                let content = $('#user_added-message').val(); //User added successfully
+
+                                                successMessage(title, content);
+                                                $('#form-register')[0].reset();
+
+                                                $('#register-user').removeClass('d-none');
+                                                $('#loading-btn').addClass('d-none');
+                                                $(".form-control, .form-select").removeClass('is-valid');
                                             }, 3000);
                                         }
                                     });
@@ -121,3 +130,39 @@ $('#register-user').click(function() {
         $('#error-firstname').text($('#error-firstname-register-message').val()); //First Name is not valid!
     }
 });
+
+function successMessage(title, content){
+    swal({
+        title: title,
+        text: content,
+        type: "success",
+        showCancelButton: false,
+        confirmButtonColor: "#198754",
+        confirmButtonText: "OK",
+        closeOnConfirm: true
+    });
+}
+
+function errorMessage(title, content){
+    swal({
+        title: title,
+        text: content,
+        type: "error",
+        showCancelButton: false,
+        confirmButtonColor: "#dc3545",
+        confirmButtonText: "OK",
+        closeOnConfirm: true
+    });
+}
+
+function warningMessage(title, content){
+    swal({
+        title: title,
+        text: content,
+        type: "warning",
+        showCancelButton: false,
+        confirmButtonColor: "#ffc107",
+        confirmButtonText: "OK",
+        closeOnConfirm: true
+    });
+}

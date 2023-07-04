@@ -11,4 +11,7 @@
         'add_user' => "Add user",
 
         'close' => "Close",
+
+        'user_added' => "User added successfully",
+        'success' => "Success",
 ];

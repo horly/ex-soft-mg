@@ -17,6 +17,7 @@
         <script src="{{ asset('assets/lib/proper/proper.js') }}"></script>
         <script src="{{ asset('assets/lib/bootstrap/js/bootstrap.js') }}"></script>
         <script src="{{ asset('assets/lib/jquery/jquery.js') }}"></script>
+        <script src="{{ asset('assets/lib/sweet-alert/sweetalert.min.js') }}"></script>
 
         {{-- Les pages --}}
         <script src="{{ asset('assets/app/js/script.js') }}"></script>

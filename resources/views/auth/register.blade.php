@@ -123,34 +123,6 @@
     </div>
 </div>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-    Launch static backdrop modal
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="d-flex flex-column mb-3">
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="d-flex flex-row h-100 align-items-center">
-                        <div>
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-                        <div>Flex item 2</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ __('main.close') }}</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 {{-- Hidden form --}}
 <form>
@@ -164,6 +136,9 @@
     <input type="hidden" id="error-role-register-message" value="{{ __('auth.error_role_register_message')}}">
     <input type="hidden" id="error-function-register-message" value="{{ __('auth.error_function_register_message')}}">
     <input type="hidden" id="error-phone-number-register-message" value="{{ __('auth.error_phone_number_register_message')}}">
+
+    <input type="hidden" id="success-message" value="{{ __('main.success')}}">
+    <input type="hidden" id="user_added-message" value="{{ __('main.user_added')}}">
 </form>
 
 @endsection
