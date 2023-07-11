@@ -31,10 +31,12 @@ Route::controller(HomeController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::match(['get', 'post'], '/main', 'main')->name('app_main');
     });
+    Route::get('/infos-online-user/{matricule}', 'infosOnlineUser')->name('app_infos_online_user');
 });
 
 Route::controller(LoginController::class)->group(function(){
     Route::get('/user_checker', 'userChecker')->name('user_checker');
     Route::get('/logout-user', 'logout')->name('app_logout');
+    Route::get('/add_user_page', 'addUserPage')->name('app_add_user_page');
     Route::post('/add_user', 'addUser')->name('app_add_user');
 });

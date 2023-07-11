@@ -24,6 +24,7 @@ class User extends Authenticatable
         'role',
         'address',
         'phone_number',
+        'matricule',
         'role_id',
         'grade_id',
     ];

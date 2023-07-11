@@ -10,6 +10,7 @@ $('#register-user').click(function() {
     var grade = $('#function').val();
     var phone_number = $('#phone-number').val();
     var phone_number_ind = $('#phone-number-ind').text();
+    var matricule = $('#matricule').val();
     var address = $('#address').val();
 
     if (firstname != "" && /^[a-zA-Z ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ]+$/.test(firstname)) {
@@ -53,38 +54,48 @@ $('#register-user').click(function() {
                                     $('#phone-number').removeClass('is-invalid');
                                     $('#error-phone-number').text("");
 
-                                    $('#register-user').addClass('d-none');
-                                    $('#loading-btn').removeClass('d-none');
+                                    if(matricule != ""){
+                                        $('#matricule').addClass('is-valid');
+                                        $('#matricule').removeClass('is-invalid');
+                                        $('#error-matricule').text("");
 
-                                    $.ajax({
-                                        type : 'POST',
-                                        url : $('#form-register').attr('action'),
-                                        data : {
-                                            '_token' : $('#form-register').attr('token'),
-                                            name : firstname + " " + lastname,
-                                            email : email,
-                                            password : password,
-                                            role : role,
-                                            grade : grade,
-                                            phone_number : phone_number_ind + phone_number,
-                                            address: address
-                                        },
-                                        success: function(data){
-                                            setTimeout(function(){
-                                                //console.log(data.user);
-                                                let title = $('#success-message').val(); //Success
-                                                let content = $('#user_added-message').val(); //User added successfully
+                                        $('#register-user').addClass('d-none');
+                                        $('#loading-btn').removeClass('d-none');
 
-                                                successMessage(title, content);
-                                                $('#form-register')[0].reset();
+                                        $.ajax({
+                                            type : 'POST',
+                                            url : $('#form-register').attr('action'),
+                                            data : {
+                                                '_token' : $('#form-register').attr('token'),
+                                                name : firstname + " " + lastname,
+                                                email : email,
+                                                password : password,
+                                                role : role,
+                                                grade : grade,
+                                                phone_number : phone_number_ind + phone_number,
+                                                matricule : matricule,
+                                                address: address
+                                            },
+                                            success: function(data){
+                                                setTimeout(function(){
+                                                    //console.log(data.user);
+                                                    let title = $('#success-message').val(); //Success
+                                                    let content = $('#user_added-message').val(); //User added successfully
 
-                                                $('#register-user').removeClass('d-none');
-                                                $('#loading-btn').addClass('d-none');
-                                                $(".form-control, .form-select").removeClass('is-valid');
-                                            }, 3000);
-                                        }
-                                    });
+                                                    successMessage(title, content);
+                                                    $('#form-register')[0].reset();
 
+                                                    $('#register-user').removeClass('d-none');
+                                                    $('#loading-btn').addClass('d-none');
+                                                    $(".form-control, .form-select").removeClass('is-valid');
+                                                }, 3000);
+                                            }
+                                        });
+                                    }else {
+                                        $('#matricule').addClass('is-invalid');
+                                        $('#matricule').removeClass('is-valid');
+                                        $('#error-matricule').text($('#error-matricule-register-message').val()); //Enter the registration number please!
+                                    }
 
                                 } else {
                                     $('#phone-number').addClass('is-invalid');

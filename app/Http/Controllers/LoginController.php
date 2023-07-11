@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
@@ -21,6 +22,17 @@ class LoginController extends Controller
         return redirect()->route('app_main');
     }
 
+    public function addUserPage()
+    {
+        $grades = DB::table('grades')->get();
+        $roles = DB::table('roles')->get();
+
+        return view('auth.add_user_page', [
+            'grades' => $grades,
+            'roles' => $roles,
+        ]);
+    }
+
     public function addUser()
     {
         $name = $this->request->input('name');
@@ -30,6 +42,7 @@ class LoginController extends Controller
         $grade = $this->request->input('grade');
         $phone_number = $this->request->input('phone_number');
         $address = $this->request->input('address');
+        $matricule = $this->request->input('matricule');
 
         $array = array(
             'name' => $name,
@@ -38,6 +51,7 @@ class LoginController extends Controller
             'role_id' => $role,
             'grade_id' => $grade,
             'phone_number' => $phone_number,
+            'matricule' => $matricule,
             'address' => $address
         );
 

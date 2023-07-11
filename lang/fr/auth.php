@@ -174,4 +174,7 @@ return [
     'error_old_password_message_profile' => 'Le mot de passe saisi ne correspond pas à l\'ancien mot de passe !',
 
     'loading' => "Chargement",
+
+    'error_matriculer_register_message' => "Veuillez renseigner le matricule S.V.P!",
+    
 ];

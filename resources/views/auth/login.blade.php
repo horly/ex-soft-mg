@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-md-5 mx-auto">
                 <img class="rounded mx-auto d-block" src="{{ asset('assets/img/logo/exad.jpeg') }}" alt="" srcset="" width="200">
-                <p class="text-center text-muted mb-5">Soft Manager</p>
+                <p class="text-center text-muted mb-5">ERP</p>
 
                 <div class="d-flex justify-content-end mb-3">
                     <div class="dropdown">
@@ -56,6 +56,7 @@
                         <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-lock"></i></span>
                         <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('auth.enter_your_password') }}" required autocomplete="current-password">
                     </div>
+                    
 
                     <div class="row mb-4">
 

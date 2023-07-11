@@ -14,4 +14,10 @@
 
         'user_added' => "User added successfully",
         'success' => "Success",
+
+        'registration_number' => "registration number",
+        'enter_the_registration_number' => "Enter the registration number",
+
+        'online_service_card' => "Online service card",
+
 ];

@@ -174,5 +174,6 @@ return [
 
     'loading' => "Loading",
 
+    'error_matriculer_register_message' => "Enter the registration number please!",
 
 ];

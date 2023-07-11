@@ -14,4 +14,9 @@
 
         'user_added' => "Utilisateur ajouté avec succès",
         'success' => "Succès",
+
+        'registration_number' => "Matricule",
+        'enter_the_registration_number' => "Entrer le matricule",
+
+        'online_service_card' => "Carte de service en ligne",
 ];

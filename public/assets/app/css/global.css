@@ -1,3 +1,12 @@
 .cursor-pointer {
     cursor: pointer;
 }
+
+.bg-blue-theme {
+    background-color: #1f2863;
+}
+
+
+.text-blue-theme {
+    color: #1f2863;
+}
