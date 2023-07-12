@@ -23,17 +23,17 @@
 
                         <div class="row align-items-start mt-5">
                             <h6 class="col">Matricule</h6>
-                            <h6 class="col text-blue-theme">{{ $user->matricule }}</h6>
+                            <h6 class="col text-blue-theme text-end">{{ $user->matricule }}</h6>
                         </div>
 
                         <div class="row align-items-start">
                             <h6 class="col">Téléphone</h6>
-                            <h6 class="col text-blue-theme">{{ $user->phone_number }}</h6>
+                            <h6 class="col text-blue-theme text-end">{{ $user->phone_number }}</h6>
                         </div>
 
                         <div class="row align-items-start">
                             <h6 class="col">Email</h6>
-                            <h6 class="col text-blue-theme">{{ $user->email }}</h6>
+                            <h6 class="col text-blue-theme text-end">{{ $user->email }}</h6>
                         </div>
                     </div> 
                     <div class="card-footer bg-blue-theme" style="height: 30px"></div>   

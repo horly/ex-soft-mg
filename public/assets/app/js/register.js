@@ -63,18 +63,18 @@ $('#register-user').click(function() {
                                         $('#loading-btn').removeClass('d-none');
 
                                         $.ajax({
-                                            type : 'POST',
+                                            type : 'post',
                                             url : $('#form-register').attr('action'),
                                             data : {
                                                 '_token' : $('#form-register').attr('token'),
-                                                name : firstname + " " + lastname,
-                                                email : email,
-                                                password : password,
-                                                role : role,
-                                                grade : grade,
-                                                phone_number : phone_number_ind + phone_number,
-                                                matricule : matricule,
-                                                address: address
+                                                'name' : firstname + " " + lastname,
+                                                'email' : email,
+                                                'password' : password,
+                                                'role' : role,
+                                                'grade' : grade,
+                                                'phone_number' : phone_number_ind + phone_number,
+                                                'matricule' : matricule,
+                                                'address' : address,
                                             },
                                             success: function(data){
                                                 setTimeout(function(){
@@ -91,6 +91,7 @@ $('#register-user').click(function() {
                                                 }, 3000);
                                             }
                                         });
+                                        
                                     }else {
                                         $('#matricule').addClass('is-invalid');
                                         $('#matricule').removeClass('is-valid');
