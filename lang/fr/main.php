@@ -19,4 +19,18 @@
         'enter_the_registration_number' => "Entrer le matricule",
 
         'online_service_card' => "Carte de service en ligne",
+
+        'dashboard' => "Tableau de bord",
+        'profile' => "Profil",
+        'logout' => "Se déconnecter",
+
+        'main_menu' => "Menu principal",
+        'entreprises' => "Entreprises", 
+
+        'home' => "Accueil",
+        'terms' => "Termes",
+        'privacy' => "Confidentialité",
+
+        'search' => "Rechercher",
+        'create_entreprise' => "Créer Entreprise",
 ];

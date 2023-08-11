@@ -209,8 +209,8 @@ $("#hide-password-confirm").click(function(){
 /**
  * save contact
  */
-var saveBtn = document.getElementById("save-btn");
-saveBtn.addEventListener("click", function () {
+
+$('#save-btn').click(function () {
   // Get the contact information from the website
   var contact = {
     name: $('#name-contact').text(),

@@ -39,4 +39,10 @@ Route::controller(LoginController::class)->group(function(){
     Route::get('/logout-user', 'logout')->name('app_logout');
     Route::get('/add_user_page', 'addUserPage')->name('app_add_user_page');
     Route::post('/add_user', 'addUser')->name('app_add_user');
+    Route::get('/resend-device-auth-code/{secret}', 'resendAuthCodeDv')->name('app_resend_device_auth_code');
+    Route::post('/confirm-authentication', 'confirmAuth')->name('app_confirm_auth');
+    Route::middleware('guest')->group(function(){
+        Route::match(['get', 'post'], '/user-authentication/{secret}', 'userAuthentication')->name('app_user_authentication');
+        Route::match(['get', 'post'], '/reset-password-page/{secret}', 'resetPassword')->name('app_reset_password');
+    });
 });

@@ -176,5 +176,31 @@ return [
     'loading' => "Chargement",
 
     'error_matriculer_register_message' => "Veuillez renseigner le matricule S.V.P!",
-    
+
+    'user_authentication' => "Authentification de l'utilisateur", 
+    'device_vrification' => "Vérification de l'appareil",
+
+    'code_email_utication_message' => "Nous venons d'envoyer votre code d'authentification par émail à",
+    'device_verification_code' => "Code de vérification de l'appareil",
+    'resend_code' => "Renvoyer le code",
+    'verify' => "Vérifier",
+    'powered_by' => "Propulsé par",
+
+    'please_verify_your_device' => "Veuillez vérifier votre appareil",
+    'a_sin_in_attempt_requires' => "Une tentative de connexion nécessite une vérification supplémentaire. Pour terminer la connexion, entrez le code de vérification.",
+    'device' => "Appareil",
+    'verification_code' => "Le code de vérification",
+    'if_you_did_not_attempt' => "Si vous n'avez pas tenté de vous connecter à votre compte, votre mot de passe peut être compromis.",
+    'visit' => "Visitez",
+    'to_create_a_new_strong' => "pour créer un nouveau mot de passe fort pour votre compte.",
+    'thanks' => "Merci,",
+    'the_exad_team' => "L'équipe EXAD",
+    'time_and_date' => "Heure et date",
+    'on' => "sur",
+    'click' => "Cliquez",
+    'here' => "ici",
+
+
+    'code_resend_successully' => "Code de vérification renvoyé avec succès.",
+    'verification_code_is_incorrect' => "Le code de vérification est incorrect.",
 ];

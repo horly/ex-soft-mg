@@ -16,7 +16,15 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', ''),
+
+    'email' => env('MAIL_FROM_ADDRESS', ''),
+    'mail_username' => env('MAIL_USERNAME', ''),
+    'mail_password' => env('MAIL_PASSWORD', ''),
+    'mail_port' => env('MAIL_PORT', ''),
+    'mail_host' => env('MAIL_HOST', ''),
+    'company_name' => env('APP_COMPANY_NAME', ''),
+
 
     /*
     |--------------------------------------------------------------------------

@@ -176,4 +176,30 @@ return [
 
     'error_matriculer_register_message' => "Enter the registration number please!",
 
+    'user_authentication' => "User aunthenticattion", 
+    'device_vrification' => "Device verification",
+
+    'code_email_utication_message' => "We just sent your authentication code via email to",
+    'device_verification_code' => "Device verification code",
+    'resend_code' => "Resend code",
+    'verify' => "Verify",
+    'powered_by' => "Powered by",
+
+
+    'please_verify_your_device' => "Please verify your device",
+    'a_sin_in_attempt_requires' => "A sign in attempt requires further verification. To complete the sign in, enter the verification code.", 
+    'device' => "Device",
+    'verification_code' => "Verification code",
+    'if_you_did_not_attempt' => "If you did not attempt to sign in to your account, your password may be compromised.",
+    'visit' => "Visit",
+    'to_create_a_new_strong' => "to create a new, strong password for your account.",
+    'thanks' => "Thanks,",
+    'the_exad_team' => "The EXAD Team",
+    'time_and_date' => "Time and date",
+    'on' => "on", 
+    'click' => "Click",
+    'here' => "here",
+
+    'code_resend_successully' => "Verification code resend successfully.",
+    'verification_code_is_incorrect' => "Verification code is incorrect.",
 ];

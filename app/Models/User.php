@@ -25,8 +25,12 @@ class User extends Authenticatable
         'address',
         'phone_number',
         'matricule',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+        'two_factor_confirmed_at',
         'role_id',
         'grade_id',
+        'sub_id',
     ];
 
     /**
@@ -61,5 +65,17 @@ class User extends Authenticatable
     function grade()
     {
         return $this->belongsTo('App\Models\Grade', 'grade_id');
+    }
+
+    /** Un user contient plusieurs historique */
+    public function connectionHistory()
+    {
+        return $this->hasMany('App\Models\History');
+    }
+
+    /** Une user appartient à un abonnement */
+    function user()
+    {
+        return $this->belongsTo('App\Models\Subscription', 'sub_id');
     }
 }

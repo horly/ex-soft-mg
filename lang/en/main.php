@@ -20,4 +20,20 @@
 
         'online_service_card' => "Online service card",
 
+
+        'dashboard' => "Dashoard",
+        'profile' => "Profile",
+        'logout' => "Logout",
+
+
+        'main_menu' => "Main mnu",
+        'entreprises' => "Entreprises",
+
+        'home' => "Home",
+        'terms' => "Terms",
+        'privacy' => "Privacy",
+
+        'search' => "Search",
+        'create_entreprise' => "Create Entreprise",
+
 ];
