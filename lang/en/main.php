@@ -26,7 +26,7 @@
         'logout' => "Logout",
 
 
-        'main_menu' => "Main mnu",
+        'main_menu' => "Main menu",
         'entreprises' => "Entreprises",
 
         'home' => "Home",
@@ -36,4 +36,23 @@
         'search' => "Search",
         'create_entreprise' => "Create Entreprise",
 
+        'show' => 'Show',
+
+        'company_name' => "Company name",
+        'enter_company_name' => "Enter your company name",
+
+        'enter_your_companys_rccm' => "Enter your company's RCCM",
+        'enter_your_companys_national_identification' => "Enter your company's national identification",
+        'enter_your_companys_tax_id_number' => "Enter your company's tax identification number",
+        'enter_your_company_address' => "Enter your company address",
+        'enter_your_company_slogan' => "Enter your company slogan",
+        'enter_your_business_phone_number' => "Enter your company phone number",
+        'add_another_phone_number' => "Add another phone number",
+        
+        'email_address' => "Email address",
+        'enter_your_company_email_address' => "Enter your company email address",
+        'website' => "Website",
+        'enter_your_company_website' => "Enter your company website",
+        'save' => "Save",
+        'enter_your_company_name_please' => "Enter your company name please !",
 ];

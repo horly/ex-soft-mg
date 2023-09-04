@@ -78,4 +78,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Models\Subscription', 'sub_id');
     }
+
+    /** Un user possède plusieurs entreprise */
+    public function entreprise()
+    {
+        return $this->hasMany('App\Models\Entreprise');
+    }
 }

@@ -12,16 +12,22 @@
         {{-- Tout nos contenues seront affiché ici --}}
         @yield('content')
 
+        {{-- Datatable --}}
+        @include('datatable.datatable')
+
         {{-- Lib js include --}}
         {{-- Bootstrap need proper --}}
         <script src="{{ asset('assets/lib/proper/proper.js') }}"></script>
         <script src="{{ asset('assets/lib/bootstrap/js/bootstrap.js') }}"></script>
         <script src="{{ asset('assets/lib/jquery/jquery.js') }}"></script>
         <script src="{{ asset('assets/lib/sweet-alert/sweetalert.min.js') }}"></script>
+        <script src="{{ asset('assets/lib/DataTables/datatables.js') }}"></script>
 
         {{-- Les pages --}}
         <script src="{{ asset('assets/app/js/script.js') }}"></script>
         <script src="{{ asset('assets/app/js/register.js') }}"></script>
         <script src="{{ asset('assets/app/js/main.js') }}"></script>
+        <script src="{{ asset('assets/app/js/dataTables-init.js') }}"></script>
+        <script src="{{ asset('assets/app/js/entreprise.js') }}"></script>
     </body>
 </html>

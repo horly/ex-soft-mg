@@ -32,5 +32,24 @@
         'privacy' => "Confidentialité",
 
         'search' => "Rechercher",
-        'create_entreprise' => "Créer Entreprise",
+        'create_entreprise' => "Créer une Entreprise",
+
+        'show' => 'Voir',
+
+        'company_name' => "Nom de l'entreprise",
+        'enter_company_name' => "Entrez le nom de votre entreprise",
+
+        'enter_your_companys_rccm' => "Entrez le RCCM de votre entreprise",
+        'enter_your_companys_national_identification' => "Entrer l'identification nationale de votre entreprise",
+        'enter_your_companys_tax_id_number' => "Entrez le numéro d'identification fiscale de votre entreprise",
+        'enter_your_company_address' => "Entrez l'adresse de votre entreprise",
+        'enter_your_company_slogan' => "Entrez le slogan de votre entreprise",
+        'enter_your_business_phone_number' => "Entrez le numéro de téléphone de votre entreprise",
+        'add_another_phone_number' => "Ajouter un autre numéro de téléphone",
+
+        'email_address' => "Adresse émail",
+        'enter_your_company_email_address' => "Entrez l'adresse émail de votre entreprise",
+        'enter_your_company_website' => "Entrez le site web de votre entreprise",
+        'save' => "Enregistrer",
+        'enter_your_company_name_please' => "Entrez le nom de l'entreprise S.V.P !",
 ];

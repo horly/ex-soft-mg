@@ -30,6 +30,7 @@ Route::get('/', function () {
 Route::controller(HomeController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::match(['get', 'post'], '/main', 'main')->name('app_main');
+        Route::match(['get', 'post'], '/create-entreprise', 'createEntreprise')->name('app_create_entreprise');
     });
     Route::get('/infos-online-user/{matricule}', 'infosOnlineUser')->name('app_infos_online_user');
 });
