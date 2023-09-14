@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('rccm', 255);
             $table->string('id_nat');
             $table->text('address');
-            $table->string('url_logo', 255);
+            $table->string('url_logo', 255)->nullable();
             $table->bigInteger('id_user')->unsigned()->index();
             $table->foreign('id_user')
                     ->references('id')->on('users')

@@ -40,7 +40,7 @@
         'enter_company_name' => "Entrez le nom de votre entreprise",
 
         'enter_your_companys_rccm' => "Entrez le RCCM de votre entreprise",
-        'enter_your_companys_national_identification' => "Entrer l'identification nationale de votre entreprise",
+        'enter_your_companys_national_identification' => "Entrez l'identification nationale de votre entreprise",
         'enter_your_companys_tax_id_number' => "Entrez le numéro d'identification fiscale de votre entreprise",
         'enter_your_company_address' => "Entrez l'adresse de votre entreprise",
         'enter_your_company_slogan' => "Entrez le slogan de votre entreprise",
@@ -52,4 +52,20 @@
         'enter_your_company_website' => "Entrez le site web de votre entreprise",
         'save' => "Enregistrer",
         'enter_your_company_name_please' => "Entrez le nom de l'entreprise S.V.P !",
+
+        'enter_your_companys_rccm_please' => "Entrez le RCCM de votre entreprise S.V.P !",
+        'enter_your_companys_national_identification_please' => "Entrez l'identification nationale de votre entreprise S.V.P !",
+        'enter_your_companys_tax_id_number_please' => "Entrez le numéro d'identification fiscale de votre entreprise S.V.P !",
+        'enter_your_company_address_please' => "Entrez l'adresse de votre entreprise S.V.P !",
+        'enter_a_valid_phone_number_please' => "Entrez un numéro de téléphone valide S.V.P !",
+        'country' => "Pays",
+        'select_your_company_country' => "Séléctionnez le pays de votre entreprise",
+        'select_your_company_country_please' => "Séléctionnez le pays de votre entreprise S.V.P!",
+        'enter_a_valid_company_email_address_please' => "Entrez une adresse émail valide de votre entreprise S.V.P!",
+
+        'company_added_successfully' => "Entreprise ajoutée avec succès!",
+        
+        'user_management' => "Gestion des utilisateurs",
+        'my_login_history' => 'Mon historique de connexion',
+        'name' => "Nom",
 ];

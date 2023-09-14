@@ -28,20 +28,24 @@ Route::get('/', function () {
 });
 
 Route::controller(HomeController::class)->group(function(){
+    Route::get('/infos-online-user/{matricule}', 'infosOnlineUser')->name('app_infos_online_user');
+    Route::post('/save_entreprise', 'saveEntreprise')->name('app_save_entreprise');
     Route::middleware('auth')->group(function(){
         Route::match(['get', 'post'], '/main', 'main')->name('app_main');
-        Route::match(['get', 'post'], '/create-entreprise', 'createEntreprise')->name('app_create_entreprise');
+        Route::match(['get', 'post'], '/create_entreprise', 'createEntreprise')->name('app_create_entreprise');
+        Route::match(['get', 'post'], '/user_management', 'userManagement')->name('app_user_management');
     });
-    Route::get('/infos-online-user/{matricule}', 'infosOnlineUser')->name('app_infos_online_user');
 });
 
 Route::controller(LoginController::class)->group(function(){
     Route::get('/user_checker', 'userChecker')->name('user_checker');
     Route::get('/logout-user', 'logout')->name('app_logout');
-    Route::get('/add_user_page', 'addUserPage')->name('app_add_user_page');
     Route::post('/add_user', 'addUser')->name('app_add_user');
     Route::get('/resend-device-auth-code/{secret}', 'resendAuthCodeDv')->name('app_resend_device_auth_code');
     Route::post('/confirm-authentication', 'confirmAuth')->name('app_confirm_auth');
+    Route::middleware('auth')->group(function(){
+        Route::get('/add_user_page', 'addUserPage')->name('app_add_user_page');
+    });
     Route::middleware('guest')->group(function(){
         Route::match(['get', 'post'], '/user-authentication/{secret}', 'userAuthentication')->name('app_user_authentication');
         Route::match(['get', 'post'], '/reset-password-page/{secret}', 'resetPassword')->name('app_reset_password');

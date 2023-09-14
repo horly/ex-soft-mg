@@ -54,5 +54,21 @@
         'website' => "Website",
         'enter_your_company_website' => "Enter your company website",
         'save' => "Save",
-        'enter_your_company_name_please' => "Enter your company name please !",
+        'enter_your_company_name_please' => "Enter your company name please!",
+
+        'enter_your_companys_rccm_please' => "Enter your company's RCCM please!",
+        'enter_your_companys_national_identification_please' => "Enter your company's national identification please!",
+        'enter_your_companys_tax_id_number_please' => "Enter your company's tax identification number please!",
+        'enter_your_company_address_please' => "Enter your company address please!",
+        'enter_a_valid_phone_number_please' => "Enter a valid phone number please!",
+        'country' => "Country",
+        'select_your_company_country' => "Select your company country",
+        'select_your_company_country_please' => "Select your company country please!",
+        'enter_a_valid_company_email_address_please' => "Enter a valid company email address please!",
+
+        'company_added_successfully' => "Company added successfully!",
+
+        'user_management' => "User Management",
+        'my_login_history' => 'My login history',
+        'name' => "Name",
 ];

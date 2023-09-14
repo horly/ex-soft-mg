@@ -1,5 +1,6 @@
 <?php
-    return [
-		'en' => 'English',
-		'fr' => 'Français',
-    ];
+
+  return [
+    'en' => 'English',
+    'fr' => 'Français',
+];

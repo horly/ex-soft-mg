@@ -14,3 +14,11 @@
 .container-margin-top {
     margin-top: 100px;
 }
+
+#nav-login-dropdown{
+    width: 300px !important;
+}
+
+#nav-login-dropdown i {
+    width: 30px;
+}

@@ -30,13 +30,30 @@ return [
     'not_registered_yet' => 'Pas encore inscrit ?',
     'create_an_account' => 'Créer un compte',
 
-    'enter_your_email' => "Entrez l'adresse email",
-    'enter_your_password' => "Tapez le mot de passe",
+    'enter_your_email' => "Entrez votre adresse email",
+    'enter_the_email' => "Entrez l'adresse email",
+    'enter_the_email_please' => "Entrez l'adresse email S.V.P!",
 
-    'enter_your_firstname' => "Entrez le prénom",
-    'enter_your_lastname' => "Entrez le nom",
-    'create_your_password' => "Créer le mot de passe",
-    'confirm_your_password' => "Confirmez le mot de passe",
+    'enter_your_password' => "Tapez le mot de passe",
+    'create_the_password' => "Créer le mot de passe",
+    'create_the_password_please' => "Créer le mot de passe S.V.P!",
+
+    'enter_your_firstname' => "Entrez votre prénom",
+    'enter_your_firstname_please' => "Entrez votre prénom S.V.P!",
+    'enter_the_firstname' => "Entrez le prénom",
+    'enter_the_firstname_please' => "Entrez le prénom S.V.P!",
+    'enter_a_valid_firstname_please' => "Entrez un prénom valide S.V.P!",
+
+    'enter_your_lastname' => "Entrez votre nom",
+    'enter_your_lastname_please' => "Entrez votre nom S.V.P!",
+    'enter_the_lastname' => "Entrez le nom",
+    'enter_the_lastname_please' => "Entrez le nom S.V.P!",
+    'enter_a_valid_lastname_please' => "Entrez un nom valide S.V.P!",
+
+    'create_your_password' => "Créer votre mot de passe",
+    'confirm_your_password' => "Confirmez votre mot de passe",
+
+
 
     /*
     |--------------------------------------------------------------------------

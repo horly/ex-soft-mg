@@ -12,48 +12,76 @@
         </ol>
     </nav>
 
-    <form class="border bg-body-tertiary p-4" action="" method="POST">
+    <form class="border bg-body-tertiary p-4" id="save-entreprise-form" action="{{ route('app_save_entreprise') }}" method="POST" token={{ csrf_token() }}>
+        @csrf
+        
         <div class="mb-4 row">
-            <label for="name-entreprise" class="col-sm-4 col-form-label">{{ __('main.company_name') }}*</label>
+            <label for="name_entreprise" class="col-sm-4 col-form-label">{{ __('main.company_name') }}*</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" id="name-entreprise" name="name-entreprise" placeholder="{{ __('main.enter_company_name') }}" >
-              <small id="name-entreprise-error" class="text-danger"></small>
+              <input type="text" class="form-control @error('name_entreprise') is-invalid @enderror" id="name_entreprise" name="name_entreprise" placeholder="{{ __('main.enter_company_name') }}" value="{{ old('name_entreprise') }}">
+              <small class="text-danger">@error('name_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
         <div class="mb-4 row">
-            <label for="slogan-entreprise" class="col-sm-4 col-form-label">Slogan</label>
+            <label for="slogan_entreprise" class="col-sm-4 col-form-label">Slogan</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" id="slogan-entreprise" name="slogan-entreprise" placeholder="{{ __('main.enter_your_company_slogan') }}" >
+              <input type="text" class="form-control" id="slogan_entreprise" name="slogan_entreprise" placeholder="{{ __('main.enter_your_company_slogan') }}" >
             </div>
         </div>
         <div class="mb-4 row">
-            <label for="rccm-entreprise" class="col-sm-4 col-form-label">RCCM*</label>
+            <label for="rccm_entreprise" class="col-sm-4 col-form-label">RCCM*</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" id="rccm-entreprise" name="rccm-entreprise" placeholder="{{ __('main.enter_your_companys_rccm') }}" >
+              <input type="text" class="form-control @error('rccm_entreprise') is-invalid @enderror" id="rccm_entreprise" name="rccm_entreprise" placeholder="{{ __('main.enter_your_companys_rccm') }}" value="{{ old('rccm_entreprise') }}">
+              <small class="text-danger">@error('rccm_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
         <div class="mb-4 row">
-            <label for="idnat-entreprise" class="col-sm-4 col-form-label">ID NAT*</label>
+            <label for="idnat_entreprise" class="col-sm-4 col-form-label">ID NAT*</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" id="idnat-entreprise" name="idnat-entreprise" placeholder="{{ __('main.enter_your_companys_national_identification') }}" >
+              <input type="text" class="form-control @error('idnat_entreprise') is-invalid @enderror" id="idnat_entreprise" name="idnat_entreprise" placeholder="{{ __('main.enter_your_companys_national_identification') }}" value="{{ old('idnat_entreprise') }}">
+              <small class="text-danger">@error('idnat_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
         <div class="mb-4 row">
-            <label for="nif-entreprise" class="col-sm-4 col-form-label">NIF*</label>
+            <label for="nif_entreprise" class="col-sm-4 col-form-label">NIF*</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" id="nif-entreprise" name="nif-entreprise" placeholder="{{ __('main.enter_your_companys_tax_id_number') }}" >
+              <input type="text" class="form-control @error('nif_entreprise') is-invalid @enderror" id="nif_entreprise" name="nif_entreprise" placeholder="{{ __('main.enter_your_companys_tax_id_number') }}" value="{{ old('nif_entreprise') }}">
+              <small class="text-danger">@error('nif_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
         <div class="mb-4 row">
-            <label for="address-entreprise" class="col-sm-4 col-form-label">{{ __('main.address') }}*</label>
+            <label for="address_entreprise" class="col-sm-4 col-form-label">{{ __('main.address') }}*</label>
             <div class="col-sm-8">
-              <textarea class="form-control" name="address-entreprise" id="address-entreprise" rows="4" placeholder="{{ __('main.enter_your_company_address') }}"></textarea>
+              <textarea class="form-control @error('address_entreprise') is-invalid @enderror" name="address_entreprise" id="address_entreprise" rows="4" placeholder="{{ __('main.enter_your_company_address') }}">{{ old('address_entreprise') }}</textarea>
+              <small class="text-danger">@error('address_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
         <div class="mb-4 row">
-            <label for="phone1-entreprise" class="col-sm-4 col-form-label">{{ __('main.phone_number') }}*</label>
+          <label for="country_entreprise" class="col-sm-4 col-form-label">{{ __('main.country') }}*</label>
+          <div class="col-sm-8">
+            <select class="form-select @error('country_entreprise') is-invalid @enderror" name="country_entreprise" id="country_entreprise" onchange="changeIsoCode();">
+              <option value="" selected>{{ __('main.select_your_company_country') }}</option>
+                @if (Config::get('app.locale') == 'en')
+                    @foreach ($countries_gb as $country)
+                        <option iso-code="{{ $country->telephone_code }}" value="{{ $country->id }}">{{ $country->name_gb }} (+{{ $country->telephone_code }})</option>
+                    @endforeach
+                @else
+                    @foreach ($countries_fr as $country)
+                        <option iso-code="{{ $country->telephone_code }}" value="{{ $country->id }}">{{ $country->name_fr }} (+{{ $country->telephone_code }})</option>
+                    @endforeach
+                @endif
+            </select>
+            <small class="text-danger">@error('country_entreprise') {{ $message }} @enderror</small>
+          </div>
+        </div>
+        <div class="mb-4 row">
+            <label for="phone_entreprise" class="col-sm-4 col-form-label">{{ __('main.phone_number') }}*</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" id="phone1-entreprise" name="phone1-entreprise" placeholder="{{ __('main.enter_your_business_phone_number') }}" >
+              <div class="input-group">
+                <span class="input-group-text" id="iso-code-label"></span>
+                <input type="number" class="form-control @error('phone_entreprise') is-invalid @enderror" id="phone_entreprise" name="phone_entreprise" placeholder="{{ __('main.enter_your_business_phone_number') }}" value="{{ old('phone_entreprise') }}">
+              </div>
+              <small class="text-danger">@error('phone_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
         {{--
@@ -65,49 +93,36 @@
         </div>
         --}}
         <div class="mb-4 row">
-            <label for="email-entreprise" class="col-sm-4 col-form-label">{{ __('main.email_address') }}*</label>
+            <label for="email_entreprise" class="col-sm-4 col-form-label">{{ __('main.email_address') }}*</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" id="email-entreprise" name="email-entreprise" placeholder="{{ __('main.enter_your_company_email_address') }}" >
+              <input type="email" class="form-control @error('email_entreprise') is-invalid @enderror" id="email_entreprise" name="email_entreprise" placeholder="{{ __('main.enter_your_company_email_address') }}" value="{{ old('email_entreprise') }}">
+              <small class="text-danger">@error('email_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
         <div class="mb-4 row">
-          <label for="website-entreprise" class="col-sm-4 col-form-label">{{ __('main.website') }}</label>
+          <label for="website_entreprise" class="col-sm-4 col-form-label">{{ __('main.website') }}</label>
           <div class="col-sm-8">
               <div class="input-group">
                 <span class="input-group-text" id="basic-addon1">https://</span>
-                <input type="text" class="form-control" id="website-entreprise" name="website-entreprise" placeholder="{{ __('main.enter_your_company_website') }}" >
+                <input type="text" class="form-control" id="website_entreprise" name="website_entreprise" placeholder="{{ __('main.enter_your_company_website') }}" >
               </div>
           </div>
       </div>
       <div class="d-grid gap-2">
-        {{--
-          <button class="btn btn-primary" type="button" id="save-entreprise">
+        <button class="btn btn-primary save" type="submit">
           {{ __('main.save') }}
-        </button> 
-        --}}
-        <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
-        
-      </div>
-      
+        </button>
+        <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          {{ __('auth.loading') }}
+        </button>
+      </div> 
     </form>
 
-    <form>
-      <input type="hidden" id="#name-entreprise-error-message" value="{{ __('main.enter_your_company_name_please') }}">
-    </form>
-
-    
-
-    <div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="d-flex">
-        <div class="toast-body">
-          Hello, world! This is a toast message.
-        </div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-    </div>
 
     <div class="m-5">
       @include('menu.footer-global')
     </div>
 </div>
+
 @endsection

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddUserForm;
 use App\Models\User;
 use App\Repository\ConnectionHistoryRepo;
 use App\Services\Email\Email;
@@ -118,9 +119,9 @@ class LoginController extends Controller
         ]);
     }
 
-    public function addUser()
+    public function addUser(AddUserForm $requestF)
     {
-        $name = $this->request->input('name');
+        /*$name = $this->request->input('name');
         $email = $this->request->input('email');
         $password = $this->request->input('password');
         $role = $this->request->input('role');
@@ -146,6 +147,6 @@ class LoginController extends Controller
             'code' => 200,
             'status' => 'success',
             'user' => $user,
-        ]);
+        ]);*/
     }
 }

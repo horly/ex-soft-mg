@@ -33,11 +33,20 @@
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="{{ asset('assets/img/profile') }}/{{ Auth::user()->id }}{{ Auth::user()->matricule }}.jpeg" class="rounded-circle" alt="..." width="40"> {{ Auth::user()->name }}
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-chart-line"></i> {{ __('main.dashboard') }}</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end" id="nav-login-dropdown">
+                        <li><a class="dropdown-item" href="{{ route('app_main') }}"><i class="fa-solid fa-house"></i> {{ __('main.home') }}</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#"><i class="fa-solid fa-user"></i> {{ __('main.profile') }}</a></li>
                         <li><hr class="dropdown-divider"></li>
+
+                        @if(Auth::user()->role->name == "admin")
+                            <li><a class="dropdown-item" href="{{ route('app_user_management') }}"><i class="fa-solid fa-users"></i> {{ __('main.user_management') }}</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                        @endif
+
+                        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-list"></i> {{ __('main.my_login_history') }}</a></li>
+                        <li><hr class="dropdown-divider"></li>
+
                         <li><a class="dropdown-item" href="{{ route('app_logout') }}"><i class="fa-solid fa-right-from-bracket"></i> {{ __('main.logout') }}</a></li>
                     </ul>
                 </li>

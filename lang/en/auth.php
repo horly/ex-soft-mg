@@ -30,13 +30,32 @@ return [
     'not_registered_yet' => 'Not registered yet ?',
     'create_an_account' => 'Create an account',
 
-    'enter_your_email' => "Enter the email address",
-    'enter_your_password' => "Enter the password",
+    'enter_your_email' => "Enter your email address",
+    'enter_the_email' => "Enter the email address",
+    'enter_the_email_please' => "Enter the email address please!",
 
-    'enter_your_firstname' => "Enter the firstname",
-    'enter_your_lastname' => "Enter the lastname",
-    'create_your_password' => "Create the password",
-    'confirm_your_password' => "Confirm the password",
+    'enter_your_password' => "Enter your password",
+    'create_the_password' => "Enter the password",
+    'create_the_password_please' => "Enter the password please!",
+
+    'enter_your_firstname' => "Enter your first name",
+    'enter_your_firstname_please' => "Enter your first name please!",
+    'enter_the_firstname' => "Enter the firstname",
+    'enter_the_firstname_please' => "Enter the firstname please!",
+    'enter_a_valid_firstname_please' => "Enter a valid firstname please!",
+
+    'enter_your_lastname' => "Enter your last name",
+    'enter_your_lastname_please' => "Enter your last name please!",
+    'enter_the_lastname' => "Enter the last name",
+    'enter_the_lastname_please' => "Enter the last name please!",
+    'enter_a_valid_lastname_please' => "Enter a valid last name please!",
+    
+    'create_your_password' => "Create your password",
+    'confirm_your_password' => "Confirm your password",
+
+    
+
+    
 
     /*
     |--------------------------------------------------------------------------

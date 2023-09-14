@@ -19,6 +19,8 @@ class Entreprise extends Model
         'slogan',
         'url_logo',
         'id_user',
+        'id_country',
+        'sub_id',
     ];
 
     /** Une entreprise appartient à un user */
@@ -43,5 +45,17 @@ class Entreprise extends Model
     public function email()
     {
         return $this->hasMany('App\Models\BusinessEmail');
+    }
+
+    /** Une entreprise appartient à un pays */
+    function country()
+    {
+        return $this->belongsTo('App\Models\Country', 'id_country');
+    }
+
+    /** Une entreprise appartient à un subscription */
+    function subscription()
+    {
+        return $this->belongsTo('App\Models\Subscription', 'sub_id');
     }
 }

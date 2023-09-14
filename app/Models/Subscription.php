@@ -16,9 +16,15 @@ class Subscription extends Model
     ];
 
 
-    /** Un abonnement contient plusieurs historique */
+    /** Un abonnement contient plusieurs users */
     public function users()
     {
         return $this->hasMany('App\Models\User');
     }
+
+     /** Un abonnement contient entreprises users */
+     public function entreprises()
+     {
+         return $this->hasMany('App\Models\Entreprise');
+     }
 }

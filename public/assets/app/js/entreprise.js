@@ -1,15 +1,20 @@
-$('#save-entreprise').click(function(){
-    var name_entreprise = $('#name-entreprise').val();
+function changeIsoCode(){
+  var iscodeselected = $('#country_entreprise option:selected').attr('iso-code');
 
+  //alert(iscodeselected);
+  if(iscodeselected == undefined || iscodeselected == ""){
+    $('#iso-code-label').text("");
+  }else{
+    $('#iso-code-label').text("+"  + iscodeselected);
+  }
+}
 
-    if(name_entreprise != ""){
-        $('#name-entreprise-error').text('');
-        $('#name-entreprise').removeClass('is-invalid');
-        $('#name-entreprise').addClass('is-valid');
+/*const toastTrigger = document.getElementById('liveToastBtn')
+const toastLiveExample = document.getElementById('liveToast')
 
-    }else{
-        $('#name-entreprise-error').text($('#name-entreprise-error-message').val()); //Enter your company name please !
-        $('#name-entreprise').addClass('is-invalid');
-        $('#name-entreprise').removeClass('is-valid');
-    }
-});
+if (toastTrigger) {
+  const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+  toastTrigger.addEventListener('click', () => {
+    toastBootstrap.show()
+  })
+}*/
