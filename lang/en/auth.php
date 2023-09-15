@@ -31,10 +31,13 @@ return [
     'create_an_account' => 'Create an account',
 
     'enter_your_email' => "Enter your email address",
+    'enter_your_email_please' => "Enter your email address please!",
     'enter_the_email' => "Enter the email address",
     'enter_the_email_please' => "Enter the email address please!",
+    'enter_a_valid_email_please' => "Enter a valid email address please!",
 
     'enter_your_password' => "Enter your password",
+    'enter_your_password_please' => "Enter your password please!",
     'create_the_password' => "Enter the password",
     'create_the_password_please' => "Enter the password please!",
 
@@ -64,6 +67,7 @@ return [
     */
 
     'register' => 'Register',
+    'add' => 'Add',
     'create_an_account_if_you' => 'Create an account if you don\'t have one.',
     'first_name' => 'First name',
     'last_name' => 'Last name',
@@ -83,7 +87,7 @@ return [
 
     'error_role_register_message' => "Select a role please!",
     'error_function_register_message' => "Select a function please!",
-    'error_phone_number_register_message' => "The phone number you entered is invalid",
+    'error_phone_number_register_message' => "The phone number you entered is invalid!",
 
     /*
     |--------------------------------------------------------------------------

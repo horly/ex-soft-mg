@@ -53,7 +53,7 @@
     
                         <label for="verification-code" class="form-label">{{ __('auth.device_verification_code')}}</label>
                         <div class="input-group mb-4">
-                            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-calculator"></i></span>
+                            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
                             <input type="number" name="verification-code" id="verification-code" class="form-control @if(Session::has('verification-code-error')) is-invalid @endif" placeholder="XXXXXX"  autofocus>
                         </div>
 

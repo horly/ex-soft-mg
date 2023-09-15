@@ -25,6 +25,13 @@ class AddUserForm extends FormRequest
             //
             'firstName' => 'required|regex:/^[a-zA-Z ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ]+$/',
             'lastName' => 'required|regex:/^[a-zA-Z ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ]+$/',
+            'emailUsr' => 'required|email',
+            'passwordUsr' => 'required|min:8',
+            'passwordConfirm' => 'required|lte:passwordUsr',
+            'role' => 'required',
+            'function' => 'required',
+            'phoneNumber' => 'required|numeric',
+            'matricule' => 'required',
         ];
     }
 
@@ -37,6 +44,24 @@ class AddUserForm extends FormRequest
 
             'firstName.regex' => __('auth.enter_a_valid_firstname_please'),
             'lastName.regex' => __('auth.enter_a_valid_lastname_please'),
+
+            'emailUsr.required' => __('auth.enter_the_email_please'),
+            'emailUsr:email' => __('auth.enter_a_valid_email_please'),
+
+            'passwordUsr.required' => __('auth.create_the_password_please'),
+            'passwordUsr.min' => __('auth.error_password_register_message'),
+
+            'passwordConfirm.required' => __('auth.password_confirmation_register_message'),
+            'passwordConfirm.lte' => __('auth.password_confirmation_register_message'),
+
+            'role.required' => __('auth.error_role_register_message'),
+
+            'function.required' => __('auth.error_function_register_message'),
+
+            'phoneNumber.required' => __('auth.error_phone_number_register_message'),
+            'phoneNumber.numeric' => __('auth.error_phone_number_register_message'),
+
+            'matricule.required' => __('auth.error_matriculer_register_message'),
         ];
     }
 }

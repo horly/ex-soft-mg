@@ -31,10 +31,13 @@ return [
     'create_an_account' => 'Créer un compte',
 
     'enter_your_email' => "Entrez votre adresse email",
+    'enter_your_email_please' => "Entrez votre adresse email S.V.P!",
     'enter_the_email' => "Entrez l'adresse email",
     'enter_the_email_please' => "Entrez l'adresse email S.V.P!",
+    'enter_a_valid_email_please' => "Entrez une adresse email valide S.V.P!",
 
-    'enter_your_password' => "Tapez le mot de passe",
+    'enter_your_password' => "Entrez votre mot de passe",
+    'enter_your_password_please' => "Entrez votre mot de passe S.V.P!",
     'create_the_password' => "Créer le mot de passe",
     'create_the_password_please' => "Créer le mot de passe S.V.P!",
 
@@ -62,6 +65,7 @@ return [
     */
 
     'register' => 'S\'inscrire',
+    'add' => 'Ajouter',
     'create_an_account_if_you' => 'Créez un compte si vous n\'en avez pas.',
     'first_name' => 'Prénom',
     'last_name' => 'Nom',

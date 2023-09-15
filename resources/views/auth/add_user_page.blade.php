@@ -37,72 +37,72 @@
                 </div>
 
                 <div class="col-md-12 mb-4">
-                    <label for="email" class="form-label">{{ __('auth.email')}} *</label>
+                    <label for="emailUsr" class="form-label">{{ __('auth.email')}} *</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-envelope"></i></span>
-                        <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('auth.enter_the_email') }}" value="{{ old('email') }}">
+                        <input type="email" name="emailUsr" id="emailUsr" class="form-control @error('emailUsr') is-invalid @enderror" placeholder="{{ __('auth.enter_the_email') }}" value="{{ old('emailUsr') }}">
                     </div>
-                    <small class="error-register-field text-danger" id="error-email"></small>
+                    <small class="text-danger">@error('emailUsr'){{ $message }}@enderror</small>
                 </div>
 
                 <div class="col-md-6 mb-4">
-                    <label for="password" class="form-label">{{ __('auth.password')}} *</label>
+                    <label for="passwordUsr" class="form-label">{{ __('auth.password')}} *</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-lock"></i></span>
-                        <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('auth.create_your_password') }}">
+                        <input type="password" name="passwordUsr" id="passwordUsr" class="form-control @error('passwordUsr') is-invalid @enderror" placeholder="{{ __('auth.create_your_password') }}" value="{{ old('passwordUsr') }}">
                         <span class="input-group-text cursor-pointer" id="show-password"><i class="fa-solid fa-eye"></i></span>
                         <span class="input-group-text cursor-pointer d-none" id="hide-password"><i class="fa-solid fa-eye-slash"></i></span>
                     </div>
-                    <small class="error-register-field text-danger" id="error-password"></small>
+                    <small class="text-danger">@error('passwordUsr'){{ $message }}@enderror</small>
                 </div>
 
                 <div class="col-md-6 mb-4">
-                    <label for="password-confirm" class="form-label">{{ __('auth.password_confirmation')}} *</label>
+                    <label for="passwordConfirm" class="form-label">{{ __('auth.password_confirmation')}} *</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-lock"></i></span>
-                        <input type="password" name="password-confirm" id="password-confirm" class="form-control" placeholder="{{ __('auth.confirm_your_password') }}">
+                        <input type="password" name="passwordConfirm" id="passwordConfirm" class="form-control @error('passwordConfirm') is-invalid @enderror" placeholder="{{ __('auth.confirm_your_password') }}" value="{{ old('passwordConfirm') }}">
                         <span class="input-group-text cursor-pointer" id="show-password-confirm"><i class="fa-solid fa-eye"></i></span>
                         <span class="input-group-text cursor-pointer d-none" id="hide-password-confirm"><i class="fa-solid fa-eye-slash"></i></span>
                     </div>
-                    <small class="error-register-field text-danger" id="error-password-confirmation"></small>
+                    <small class="text-danger">@error('passwordConfirm'){{ $message }}@enderror</small>
                 </div>
 
                 <div class="col-md-6 mb-4">
                     <label for="role" class="form-label">Role *</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-universal-access"></i></span>
-                        <select class="form-select" id="role" name="role">
+                        <select class="form-select @error('role') is-invalid @enderror" id="role" name="role">
                             <option value="" selected>{{ __('main.choose') }}...</option>
                             @foreach ($roles as $role)
                                 <option value="{{ $role->id }}">{{ __('main.' . $role->name) }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <small class="error-register-field text-danger" id="error-role"></small>
+                    <small class="text-danger">@error('role'){{ $message }}@enderror</small>
                 </div>
 
                 <div class="col-md-6 mb-4">
                     <label for="function" class="form-label">{{ __('main.function') }} *</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-briefcase"></i></span>
-                        <select class="form-select" id="function" name="function">
+                        <select class="form-select @error('function') is-invalid @enderror" id="function" name="function">
                             <option value="" selected>{{ __('main.choose') }}...</option>
                             @foreach ($grades as $grade)
                                 <option value="{{ $grade->id }}">{{ $grade->name }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <small class="error-register-field text-danger" id="error-function"></small>
+                    <small class="text-danger">@error('function'){{ $message }}@enderror</small>
                 </div>
 
                 <div class="col-md-6 mb-4">
-                    <label for="phone-number" class="form-label">{{ __('main.phone_number')}} *</label>
+                    <label for="phoneNumber" class="form-label">{{ __('main.phone_number')}} *</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-phone"></i></span>
                         <span class="input-group-text" id="phone-number-ind">+243</span>
-                        <input type="text" name="phone-number" id="phone-number" class="form-control" placeholder="ex : 896587458">
+                        <input type="number" name="phoneNumber" id="phoneNumber" class="form-control @error('phoneNumber') is-invalid @enderror" placeholder="ex : 896587458" value="{{ old('phoneNumber') }}">
                     </div>
-                    <small class="error-register-field text-danger" id="error-phone-number"></small>
+                    <small class="text-danger">@error('phoneNumber'){{ $message }}@enderror</small>
                 </div>
 
 
@@ -110,9 +110,9 @@
                     <label for="matricule" class="form-label">{{ __('main.registration_number')}} *</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-barcode"></i></span>
-                        <input type="text" name="matricule" id="matricule" class="form-control" placeholder="{{ __('main.enter_the_registration_number')}}">
+                        <input type="text" name="matricule" id="matricule" class="form-control @error('matricule') is-invalid @enderror" placeholder="{{ __('main.enter_the_registration_number')}}" value="{{ old('matricule') }}">
                     </div>
-                    <small class="error-register-field text-danger" id="error-matricule"></small>
+                    <small class="text-danger">@error('matricule'){{ $message }}@enderror</small>
                 </div>
 
                 <div class="col-md-12 mb-4">
@@ -121,7 +121,7 @@
                 </div>
 
                 <div class="d-grid gap-2">
-                    <button class="btn btn-primary save" type="submit">{{ __('auth.register')}}</button>
+                    <button class="btn btn-primary save" type="submit">{{ __('auth.add')}}</button>
                     <button class="btn btn-primary btn-loading d-none" type="button" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         {{ __('auth.loading') }}

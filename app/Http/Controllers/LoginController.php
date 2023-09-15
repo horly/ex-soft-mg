@@ -121,14 +121,14 @@ class LoginController extends Controller
 
     public function addUser(AddUserForm $requestF)
     {
-        /*$name = $this->request->input('name');
-        $email = $this->request->input('email');
-        $password = $this->request->input('password');
-        $role = $this->request->input('role');
-        $grade = $this->request->input('grade');
-        $phone_number = $this->request->input('phone_number');
-        $address = $this->request->input('address');
-        $matricule = $this->request->input('matricule');
+        $name = $requestF->input('firstName') . " " . $requestF->input('lastName');
+        $email = $requestF->input('emailUsr');
+        $password = $requestF->input('passwordUsr');
+        $role = $requestF->input('role');
+        $grade = $requestF->input('function');
+        $phone_number = $requestF->input('phoneNumber');
+        $address = $requestF->input('address');
+        $matricule = $requestF->input('matricule');
 
         $array = array(
             'name' => $name,
@@ -141,12 +141,8 @@ class LoginController extends Controller
             'address' => $address
         );
 
-        $user = User::create($array);
+        User::create($array);
 
-        return response()->json([
-            'code' => 200,
-            'status' => 'success',
-            'user' => $user,
-        ]);*/
+        return redirect()->route('app_user_management')->with('success', __('main.user_added'));
     }
 }
