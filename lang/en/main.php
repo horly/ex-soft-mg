@@ -71,4 +71,5 @@
         'user_management' => "User Management",
         'my_login_history' => 'My login history',
         'name' => "Name",
+        'bank_account' => "Bank Account", 
 ];

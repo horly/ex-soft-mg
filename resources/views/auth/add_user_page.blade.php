@@ -120,13 +120,8 @@
                     <textarea class="form-control" id="address" name="address" rows="3"></textarea>
                 </div>
 
-                <div class="d-grid gap-2">
-                    <button class="btn btn-primary save" type="submit">{{ __('auth.add')}}</button>
-                    <button class="btn btn-primary btn-loading d-none" type="button" disabled>
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        {{ __('auth.loading') }}
-                    </button>
-                </div>
+                {{-- Button ajout --}}
+                @include('button.add-button')
             </div>
         </form>
  

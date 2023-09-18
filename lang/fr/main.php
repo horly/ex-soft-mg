@@ -68,4 +68,5 @@
         'user_management' => "Gestion des utilisateurs",
         'my_login_history' => 'Mon historique de connexion',
         'name' => "Nom",
+        'bank_account' => "Compte bancaire", 
 ];

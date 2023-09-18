@@ -19,7 +19,7 @@
         
         @if(Auth::user()->role->name == "admin")
             <div class="border-bottom p-4">
-                <a href="{{ route('app_create_entreprise') }}" class="btn btn-primary" role="button"><i class="fa-solid fa-briefcase"></i> 
+                <a href="{{ route('app_create_entreprise') }}" class="btn btn-primary" role="button"><i class="fa-solid fa-building-circle-check"></i> 
                     &nbsp;{{ __('main.create_entreprise') }}
                 </a>
             </div>
@@ -38,10 +38,10 @@
                     @foreach ($entreprises as $entreprise)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td><a href="#">{{ $entreprise->name }}</a></td>
+                            <td><a href="{{ route('app_entreprise', ['id' => $entreprise->id]) }}">{{ $entreprise->name }}</a></td>
                             <td>{{ $entreprise->rccm }}</td>
                             <td>{{ $entreprise->id_nat }}</td>
-                            <td><a href="#">{{ __('main.show') }}</a></td>
+                            <td><a href="{{ route('app_entreprise', ['id' => $entreprise->id]) }}">{{ __('main.show') }}</a></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -49,7 +49,7 @@
         </div>
     </div>
 
-    <div class="m-5">
+    <div class="m-5 fixed-bottom">
         @include('menu.footer-global')
       </div>
 </div>

@@ -44,7 +44,7 @@
                             <li><hr class="dropdown-divider"></li>
                         @endif
 
-                        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-list"></i> {{ __('main.my_login_history') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('app_login_history') }}"><i class="fa-solid fa-list"></i> {{ __('main.my_login_history') }}</a></li>
                         <li><hr class="dropdown-divider"></li>
 
                         <li><a class="dropdown-item" href="{{ route('app_logout') }}"><i class="fa-solid fa-right-from-bracket"></i> {{ __('main.logout') }}</a></li>

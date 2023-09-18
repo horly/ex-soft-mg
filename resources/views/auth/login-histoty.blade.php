@@ -1,8 +1,9 @@
 @extends('base')
-@section('title', __('main.user_management'))
+@section('title', __('main.my_login_history'))
 @section('content')
 
 @include('menu.login-nav')
+
 
 <div class="container container-margin-top">
     <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
@@ -17,37 +18,22 @@
 
     <div class="border">
         
-        @if(Auth::user()->role->name == "admin")
-            <div class="border-bottom p-4">
-                <a href="{{ route('app_add_user_page') }}" class="btn btn-primary" role="button"><i class="fa-solid fa-user-plus"></i> 
-                    &nbsp;{{ __('main.add_user') }}
-                </a>
-            </div>
-        @endif
-        
         <div class="p-4">
             <table class="table table-striped table-hover border bootstrap-datatable">
                 <thead>
                     <th>N°</th>
-                    <th>{{ __('main.name') }}</th>
-                    <th>{{ __('main.registration_number') }}</th>
-                    <th>{{ __('auth.email') }}</th>
-                    <th>{{ __('main.function') }}</th>
-                    <th>Action</th>
+                    <th>{{ __('auth.device') }}</th>
+                    <th>IP</th>
+                    <th>Date</th>
                 </thead>
                 <tbody>
-                    @foreach ($users as $user)
-                        @php
-                            $grade = DB::table('grades')->where('id', $user->grade_id)->first();
-                        @endphp
+                    @foreach ($histories as $history)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td><a href="#">{{ $user->name }}</a></td>
-                            <td>{{ $user->matricule }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $grade->name }}</td>
-                            <td><a href="#">{{ __('main.show') }}</a></td>
-                        </tr>     
+                            <td>{{ $history->browser }} {{ __('auth.on') }} {{ $history->platform }}</td>
+                            <td>{{ $history->ip }}</td>
+                            <td>{{ $history->created_at->format("Y-m-d H:i:s") }}</td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -58,5 +44,6 @@
         @include('menu.footer-global')
       </div>
 </div>
+
 
 @endsection

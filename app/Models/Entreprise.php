@@ -58,4 +58,10 @@ class Entreprise extends Model
     {
         return $this->belongsTo('App\Models\Subscription', 'sub_id');
     }
+
+    /** Une entreprise possède plusieurs adrresses emaiil */
+    public function functionalUnit()
+    {
+        return $this->hasMany('App\Models\FunctionalUnit');
+    }
 }
