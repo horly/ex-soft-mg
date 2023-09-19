@@ -17,4 +17,7 @@ return [
     'functional_unit_saved_successfully' => "Functional unit saved successfully!",
     
     'same_address_as_company' => "Same address as company",
+
+    'update_the_company' => "Update the company",
+    'add_a_new_number' => "Add a new number",
 ];

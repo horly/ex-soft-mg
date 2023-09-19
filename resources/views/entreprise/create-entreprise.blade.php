@@ -78,7 +78,7 @@
             <label for="phone_entreprise" class="col-sm-4 col-form-label">{{ __('main.phone_number') }}*</label>
             <div class="col-sm-8">
               <div class="input-group">
-                <span class="input-group-text" id="iso-code-label"></span>
+                <span class="input-group-text iso-code-label"></span>
                 <input type="number" class="form-control @error('phone_entreprise') is-invalid @enderror" id="phone_entreprise" name="phone_entreprise" placeholder="{{ __('main.enter_your_business_phone_number') }}" value="{{ old('phone_entreprise') }}">
               </div>
               <small class="text-danger">@error('phone_entreprise') {{ $message }} @enderror</small>

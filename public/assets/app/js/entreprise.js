@@ -3,9 +3,9 @@ function changeIsoCode(){
 
   //alert(iscodeselected);
   if(iscodeselected == undefined || iscodeselected == ""){
-    $('#iso-code-label').text("");
+    $('.iso-code-label').text("");
   }else{
-    $('#iso-code-label').text("+"  + iscodeselected);
+    $('.iso-code-label').text("+"  + iscodeselected);
   }
 }
 

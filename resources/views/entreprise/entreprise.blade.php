@@ -117,10 +117,10 @@
 
                             @if (Auth::user()->role->name == "admin")
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-primary" type="button">
+                                    <a class="btn btn-primary" role="button" href="{{ route('app_update_entreprise', ['id' => $entreprise->id]) }}">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                         {{ __('entreprise.edit') }}
-                                    </button>
+                                    </a>
                                 </div>
                             @endif
             
@@ -156,6 +156,7 @@
                 <tbody>
                     @foreach ($functionalUnits as $functionalUnit)
                         <tr>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $functionalUnit->name }}</td>
                             <td>{{ $functionalUnit->address }}</td>
                             <td><a href="#">{{ __('main.show') }}</a></td>

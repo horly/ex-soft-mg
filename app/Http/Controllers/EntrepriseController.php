@@ -9,6 +9,7 @@ use App\Models\BusinessEmail;
 use App\Models\Entreprise;
 use App\Models\FunctionalUnit;
 use App\Repository\EntrepriseRepo;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -87,7 +88,7 @@ class EntrepriseController extends Controller
     public function entreprise($id)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
-        $functionalUnits =  FunctionalUnit::all();
+        $functionalUnits =  FunctionalUnit::all()->sortByDesc('id');
 
         return view('entreprise.entreprise', compact('entreprise', 'functionalUnits'));
     }
@@ -103,7 +104,49 @@ class EntrepriseController extends Controller
     {
         $name = $requestionF->input('unit_name');
         $address = $requestionF->input('unit_address');
+        $id_entreprise = $requestionF->input('id_entreprise');
 
-        return redirect()->route('app_entreprise')->with('success', __('entreprise.functional_unit_saved_successfully'));
+        FunctionalUnit::create([
+            'name' => $name,
+            'address' => $address, 
+            'id_entreprise' => $id_entreprise,
+        ]);
+
+        return redirect()->route('app_entreprise', ['id' => $id_entreprise])->with('success', __('entreprise.functional_unit_saved_successfully'));
+    }
+
+    public function updateEntreprise($id)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+
+        $countries_gb = DB::table('countries')
+                        ->orderBy('name_gb', 'asc')
+                        ->get();
+
+        $countries_fr = DB::table('countries')
+                        ->orderBy('name_fr', 'asc')
+                        ->get();
+
+        $entrepriseContry = DB::table('countries')
+                        ->where('id', $entreprise->id_country)
+                        ->first();
+
+        $phoneNumbers = DB::table('business_contacts')
+                        ->where('id_entreprise', $entreprise->id)
+                        ->orderByDesc('id')
+                        ->get();
+
+        return view('entreprise.update-entreprise', compact(
+                            'entreprise', 
+                            'countries_gb', 
+                            'countries_fr',
+                            'entrepriseContry',
+                            'phoneNumbers'
+        ));
+    }
+
+    public function addNewPhoneNumber()
+    {
+        
     }
 }

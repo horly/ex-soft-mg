@@ -17,4 +17,7 @@ return [
     'functional_unit_saved_successfully' => "Unité fonctionnelle enregistré avec succès!",
 
     'same_address_as_company' => "Adresse identique à l'entreprise",
+
+    'update_the_company' => "Mettre à jour l'entreprise",
+    'add_a_new_number' => "Ajouter un nouveau numéro",
 ];

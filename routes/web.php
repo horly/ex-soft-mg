@@ -61,9 +61,11 @@ Route::controller(EntrepriseController::class)->group(function(){
         Route::middleware('admin')->group(function(){
             Route::get('/create_entreprise', 'createEntreprise')->name('app_create_entreprise');
             Route::get('/create_functional_unit/{id:int}', 'createFunctionalUnit')->name('app_create_functional_unit');
+            Route::get('/update_entreprise/{id:int}', 'updateEntreprise')->name('app_update_entreprise');
         });
         Route::get('/entreprise/{id:int}', 'entreprise')->name('app_entreprise');
         Route::post('/save_entreprise', 'saveEntreprise')->name('app_save_entreprise');
         Route::post('/save_functional_unit', 'saveFunctionalUnit')->name('app_save_functional_unit');
+        Route::post('/add_new_phone_number_entreprise', 'addNewPhoneNumber')->name('app_add_new_phone_number_entreprise');
     });
 });

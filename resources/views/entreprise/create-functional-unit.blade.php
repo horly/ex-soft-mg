@@ -15,6 +15,8 @@
     <form class="border bg-body-tertiary p-4" action="{{ route('app_save_functional_unit') }}" method="POST">
         @csrf
 
+        <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
+
         <div class="mb-4 row">
             <label for="unit_name" class="col-sm-4 col-form-label">{{ __('entreprise.unit_name') }}*</label>
             <div class="col-sm-8">
