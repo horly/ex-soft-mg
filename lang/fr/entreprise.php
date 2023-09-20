@@ -4,6 +4,7 @@ return [
     'functional_unit' => "Unité fonctionnelle",
     'company_information' =>  "Informations sur l'Entreprise",
     'edit' => "Modifier",
+    'delete' => "Supprimer",
     'edit_logo' => "Modifier le logo",
     'create_a_functional_unit' => "Créer une unité fonctionnelle",
     'unit_name' => "Nom de l'unité",
@@ -20,4 +21,37 @@ return [
 
     'update_the_company' => "Mettre à jour l'entreprise",
     'add_a_new_number' => "Ajouter un nouveau numéro",
+    'edit_the_phone_number' => "Modifier le numéro de téléphone",
+
+    'phone_number_added_successfully' => "Numéro de téléphone ajouté avec succès!",
+    'phone_number_updated_successfully' => "Numéro de téléphone mis à jour avec succès!",
+    'add_new_email_address' => "Ajouter une nouvelle adresse émail",
+
+    'email_address_added_successfully' => "Adresse émail ajouté avec succès!",
+
+    'add_a_new_bank_account' => "Ajouter un nouveau compte bancaire",
+    'account_title' => "Titre du compte",
+    'enter_your_account_title' => "Entrez votre titre de compte",
+    'enter_your_account_title_please' => "Entrez votre titre de compte S.V.P!",
+
+    'account_number' => "Numéro de compte",
+    'enter_your_account_number' => "Entrez votre numéro de compte",
+    'enter_your_account_number_please' => "Entrez votre numéro de compte S.V.P!",
+
+    'currency' => "Devise",
+    'select_your_curreny' => "Séléctionnez votre devise",
+    'select_your_curreny_please' => "Séléctionnez votre devise S.V.P!",
+
+    'bank_account_added_successfully' => "Compte bancaire ajouté avec succès!",
+
+    'all_your_phone_numbers' => "Tous vos numéros de téléphone",
+    'all_your_email_address' => "Tous vos adresses émail",
+    'all_your_bank_account' => "Tous vos comptes bancaires",
+
+    'are_you_sure_to_delete' => "Êtes-vous sûr de vouloir supprimer?",
+    'this_action_is_irreversible' => "Cette action est irréversible",
+    'yes_delete_it' => "Oui, supprimez-le !!",
+    'deleted' => "Supprimé!",
+    'the_item_was_successfully_deleted' => "L'élément a été supprimé avec succès",
+    'phone_number_deleted_successfully' => "Numéro de téléphone supprimé avec succès!",
 ];

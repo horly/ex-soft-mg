@@ -9,6 +9,8 @@ class FunctionalUnit extends Model
 {
     use HasFactory;
 
+    protected $table = "functional_units";
+
     protected $fillable = [
         'name',
         'address',

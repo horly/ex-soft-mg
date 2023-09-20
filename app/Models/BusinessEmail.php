@@ -9,6 +9,8 @@ class BusinessEmail extends Model
 {
     use HasFactory;
 
+    protected $table = "business_emails";
+
     protected $fillable = [
         'email',
         'id_entreprise',

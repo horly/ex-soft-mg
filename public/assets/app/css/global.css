@@ -22,3 +22,7 @@
 #nav-login-dropdown i {
     width: 30px;
 }
+
+.mini-accordion-button-header {
+    height: 40px !important;
+} 

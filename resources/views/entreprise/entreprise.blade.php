@@ -81,15 +81,6 @@
                                 $emailBs = DB::table('business_emails')->where('id_entreprise', $entreprise->id)->get();
                                 $bankAc = DB::table('bank_accounts')->where('id_entreprise', $entreprise->id)->get();
                             @endphp
-                            
-                            <div class="row mb-4">
-                                <div class="col-md-6"><i class="fa-solid fa-building-columns"></i>&nbsp;&nbsp;&nbsp;{{ __('main.bank_account') }}</div>
-                                <div class="col-md-6 text-primary fw-bold">
-                                    @foreach ($bankAc as $bank)
-                                        <span>{{ $bank->account_title }} </span> - 
-                                    @endforeach
-                                </div>
-                            </div>
             
                             <div class="row mb-4">
                                 <div class="col-md-6"><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;&nbsp;{{ __('main.phone_number') }}</div>
@@ -105,7 +96,16 @@
                                 <div class="col-md-6"><i class="fa-solid fa-envelope"></i>&nbsp;&nbsp;&nbsp;{{ __('main.email_address') }}</div>
                                 <div class="col-md-6 text-primary fw-bold">
                                     @foreach ($emailBs as $email)
-                                        <span>{{ $email->email }} </span> - 
+                                        <span>{{ $email->email }} </span> | 
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6"><i class="fa-solid fa-building-columns"></i>&nbsp;&nbsp;&nbsp;{{ __('main.bank_account') }}</div>
+                                <div class="col-md-6 text-primary fw-bold">
+                                    @foreach ($bankAc as $bank)
+                                        <span>{{ $bank->account_number }} </span> - 
                                     @endforeach
                                 </div>
                             </div>

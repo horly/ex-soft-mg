@@ -66,6 +66,11 @@ Route::controller(EntrepriseController::class)->group(function(){
         Route::get('/entreprise/{id:int}', 'entreprise')->name('app_entreprise');
         Route::post('/save_entreprise', 'saveEntreprise')->name('app_save_entreprise');
         Route::post('/save_functional_unit', 'saveFunctionalUnit')->name('app_save_functional_unit');
+
         Route::post('/add_new_phone_number_entreprise', 'addNewPhoneNumber')->name('app_add_new_phone_number_entreprise');
+        Route::post('/delete_phone_number_entreprise', 'deletePhoneNumberEntr')->name('app_delete_phone_number_entreprise');
+
+        Route::post('/add_new_email_entreprise', 'addNewEmail')->name('app_add_new_email_entreprise');
+        Route::post('/add_new_bank_account_entreprise', 'addNewBankAccount')->name('app_add_new_bank_account_entreprise');
     });
 });

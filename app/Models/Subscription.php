@@ -9,6 +9,8 @@ class Subscription extends Model
 {
     use HasFactory;
 
+    protected $table = "subscriptions";
+
     protected $fillable = [
         'type',
         'start_date',

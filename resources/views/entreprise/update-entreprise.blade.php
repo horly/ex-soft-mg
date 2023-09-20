@@ -12,6 +12,9 @@
         </ol>
     </nav>
 
+    {{-- On inlut les messages flash--}}
+    @include('message.flash-message')
+
     <form class="border bg-body-tertiary p-4" action="{{ route('app_save_entreprise') }}" method="POST">
         @csrf
 
@@ -87,14 +90,77 @@
             <input type="hidden" name="phone_entreprise" id="phone_entreprise" value="123456789">
             <label for="phone_entreprise" class="col-sm-4 col-form-label">{{ __('main.phone_number') }}</label>
             <div class="col-sm-8">
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                          <button class="accordion-button mini-accordion-button-header" type="button" data-bs-toggle="collapse" data-bs-target="#phones" aria-expanded="true" aria-controls="phones">
+                                {{ __('entreprise.all_your_phone_numbers') }}
+                          </button>
+                        </h2>
+                        <div id="phones" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <ul class="list-group list-group-flush border mb-3">
+                                    @foreach ($phoneNumbers as $phone)
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <span><i class="fa-solid fa-phone"></i></span>&nbsp;&nbsp;
+                                                <span class="">+{{ $entrepriseContry->telephone_code }}</span>
+                                                <span>{{ chunk_split($phone->phone_number, 3, ' ') }}</span>
+                                            </div>
+                                            <div>
+                                                <button class="btn btn-success" type="button" onclick="editNewPhoneNModal('{{ $phone->id }}', '{{ $phone->phone_number }}');" title="{{ __('entreprise.edit') }}" data-bs-toggle="modal" data-bs-target="#newPhone">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                                <button class="btn btn-danger" type="button" onclick="deletePhoneNumberEntr('{{ $phone->id }}');" title="{{ __('entreprise.delete') }}">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                    <form id="form_phone_delete" action="{{ route('app_delete_phone_number_entreprise') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="id_phone_delete" id="id_phone_delete" value="{{ $phone->id }}">
+                                                    </form>
+                                                </button>
+                                            </div>
+                                            
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                <button class="btn btn-primary" type="button" onclick="addNewPhoneNModal();" data-bs-toggle="modal" data-bs-target="#newPhone">
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                    {{ __('entreprise.add_a_new_number') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-4 row">
+            {{-- Hidden input seulement pour valider le formulaire --}}
+            <input type="hidden" name="email_entreprise" id="email_entreprise" value="sales@exadgroup.org">
+            <label for="email_entreprise" class="col-sm-4 col-form-label">{{ __('main.email_address') }}</label>
+            <div class="col-sm-8">
                 <div class="input-group mb-3">
-                    <span class="input-group-text iso-code-label">+{{ $entrepriseContry->telephone_code }}</span>
-                    @foreach ($phoneNumbers as $phone)
-                        <span class="input-group-text">{{ chunk_split($phone->phone_number, 3, ' ') }}</span>
+                    @foreach ($emailAdresss as $emails)
+                        <span class="input-group-text">{{ $emails->email }}</span>
                     @endforeach
-                    <button class="btn btn-primary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#newPhone">
+                    <button class="btn btn-primary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#newEmail">
                         <i class="fa-solid fa-circle-plus"></i>
-                        {{ __('entreprise.add_a_new_number') }}
+                        {{ __('entreprise.add_new_email_address') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-4 row">
+            <label for="bank_account_entreprise" class="col-sm-4 col-form-label">{{ __('main.bank_account') }}</label>
+            <div class="col-sm-8">
+                <div class="input-group mb-3">
+                    @foreach ($bankAccounts as $bank)
+                        <span class="input-group-text">{{ $bank->account_number }} - {{ $bank->account_title }}</span>
+                    @endforeach
+                    <button class="btn btn-primary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#newAccount">
+                        <i class="fa-solid fa-circle-plus"></i>
+                        {{ __('entreprise.add_a_new_bank_account') }}
                     </button>
                 </div>
             </div>
@@ -108,29 +174,41 @@
     </div>
 </div>
 
-{{-- Modals--}}
+@php
+    $country = DB::table('countries')->where('id', $entreprise->id_country)->first();
+@endphp
+
+{{-- Modal new phone--}}
 <div class="modal fade" id="newPhone" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form class="modal-content" action="{{ route('app_add_new_phone_number_entreprise') }}" method="POST">
+        <form class="modal-content" id="form_new_phone_number_entreprise" action="{{ route('app_add_new_phone_number_entreprise') }}" method="POST">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ __('entreprise.add_a_new_number') }}</h1>
+                <h1 class="modal-title fs-5" id="new-number-phone-modal">{{-- Le est complété selon la requête avec javascript --}}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body bg-body-tertiary  p-4">
                 @csrf
+                <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
+                <input type="hidden" name="modalRequest" id="modalRequest" value="add"> {{-- Default is add but can be edit also --}}
+                <input type="hidden" name="id_phone" id="id_phone" value="0"> {{-- Default value of number is 0 but can be changed if edit--}}
 
-                
+                <label for="new_phone_number" class="form-label"> {{ __('main.phone_number') }} </label>
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon1">+{{ $country->telephone_code }}</span>
+                    <input type="number" class="form-control" id="new_phone_number" name="new_phone_number" placeholder="{{ __('main.enter_your_business_phone_number') }}">
+                </div>
+                <small class="text-danger" id="error_new_phone_number"></small>
             </div>
             <div class="modal-footer">
                 {{-- button de fermeture modale --}}
                 @include('button.close-button')
                 
                 <div class="d-grid gap-2">
-                    <button class="btn btn-primary save" type="button" id="save-number_entreprise">
+                    <button class="btn btn-primary saveP" type="button" id="save_number_entreprise">
                         <i class="fa-solid fa-floppy-disk"></i>
                       {{ __('main.save') }}
                     </button>
-                    <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+                    <button class="btn btn-primary btn-loadingP d-none" type="button" disabled>
                       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                       {{ __('auth.loading') }}
                     </button>
@@ -139,5 +217,116 @@
         </form>
     </div>
 </div>
+
+{{-- Modal new email--}}
+<div class="modal fade" id="newEmail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content" id="form_new_email_entreprise" action="{{ route('app_add_new_email_entreprise') }}" method="POST">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ __('entreprise.add_new_email_address') }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-body-tertiary p-4">
+                @csrf
+                <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
+                <div class="mb-3">
+                    <label for="new_email_address" class="form-label"> {{ __('main.email_address') }} </label>
+                    <input type="email" class="form-control" id="new_email_address" name="new_email_address" placeholder="{{ __('main.enter_your_company_email_address') }}">
+                    <small class="text-danger" id="error_new_email_addressr"></small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                {{-- button de fermeture modale --}}
+                @include('button.close-button')
+                
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary saveP" type="button" id="save_email_entreprise">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                      {{ __('main.save') }}
+                    </button>
+                    <button class="btn btn-primary btn-loadingP d-none" type="button" disabled>
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      {{ __('auth.loading') }}
+                    </button>
+                </div> 
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- Modal new Account--}}
+<div class="modal fade" id="newAccount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content" id="form_new_bank_account_entreprise" action="{{ route('app_add_new_bank_account_entreprise') }}" method="POST">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ __('entreprise.add_a_new_bank_account') }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-body-tertiary p-4">
+                @csrf
+                <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
+                <div class="mb-3">
+                    <label for="account_title" class="form-label"> {{ __('entreprise.account_title') }} </label>
+                    <input type="text" class="form-control" id="account_title" name="account_title" placeholder="{{ __('entreprise.enter_your_account_title') }}">
+                    <small class="text-danger" id="error_account_title"></small>
+                </div>
+                <div class="mb-3">
+                    <label for="account_number" class="form-label"> {{ __('entreprise.account_number') }} </label>
+                    <input type="number" class="form-control" id="account_number" name="account_number" placeholder="{{ __('entreprise.enter_your_account_number') }}">
+                    <small class="text-danger" id="error_account_number"></small>
+                </div>
+                <div class="mb-3">
+                    <label for="account_currency" class="form-label"> {{ __('entreprise.currency') }} </label>
+                    <select name="account_currency" id="account_currency" class="form-select">
+                        <option value="" selected>{{ __('entreprise.select_your_curreny') }}</option>
+                        @if (Config::get('app.locale') == 'en')
+                            @foreach ($devises as $devise)
+                                <option value="{{ $devise->id }}">{{ $devise->iso_code }} - {{ $devise->motto_en }}</option>
+                            @endforeach
+                        @else
+                            @foreach ($devises as $devise)
+                                <option value="{{ $devise->id }}">{{ $devise->iso_code }} - {{ $devise->motto }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                    <small class="text-danger" id="error_account_currency"></small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                {{-- button de fermeture modale --}}
+                @include('button.close-button')
+                
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary saveP" type="button" id="save_bank_account_entreprise">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                      {{ __('main.save') }}
+                    </button>
+                    <button class="btn btn-primary btn-loadingP d-none" type="button" disabled>
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      {{ __('auth.loading') }}
+                    </button>
+                </div> 
+            </div>
+        </form>
+    </div>
+</div>
+
+<form>
+    <input type="hidden" id="message_new_phone_number_entreprise" value="{{ __('main.enter_a_valid_phone_number_please') }}">
+    <input type="hidden" id="message_new_email_entreprise" value="{{ __('main.enter_a_valid_company_email_address_please') }}">
+    <input type="hidden" id="message_account_title" value="{{ __('entreprise.enter_your_account_title_please') }}">
+    <input type="hidden" id="message_account_number" value="{{ __('entreprise.enter_your_account_number_please') }}">
+    <input type="hidden" id="message_account_currency" value="{{ __('entreprise.select_your_curreny_please') }}">
+
+    <input type="hidden" id="title_add_a_new_number" value="{{ __('entreprise.add_a_new_number') }}">
+    <input type="hidden" id="title_edit_the_phone_number" value="{{ __('entreprise.edit_the_phone_number') }}">
+
+    <input type="hidden" id="are_you_sure_to_delete" value="{{ __('entreprise.are_you_sure_to_delete') }}">
+    <input type="hidden" id="this_action_is_irreversible" value="{{ __('entreprise.this_action_is_irreversible') }}">
+    <input type="hidden" id="yes_delete_it" value="{{ __('entreprise.yes_delete_it') }}">
+    <input type="hidden" id="deleted" value="{{ __('entreprise.deleted') }}">
+    <input type="hidden" id="the_item_was_successfully_deleted" value="{{ __('entreprise.the_item_was_successfully_deleted') }}">
+
+</form>
 
 @endsection

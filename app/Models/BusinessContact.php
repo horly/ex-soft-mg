@@ -9,6 +9,8 @@ class BusinessContact extends Model
 {
     use HasFactory;
 
+    protected $table = "business_contacts";
+
     protected $fillable = [
         'phone_number',
         'id_entreprise',

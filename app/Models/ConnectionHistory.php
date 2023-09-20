@@ -9,6 +9,8 @@ class ConnectionHistory extends Model
 {
     use HasFactory;
 
+    protected $table = "connection_histories";
+
     protected $fillable = [
         'ip',
         'platform',
