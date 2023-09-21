@@ -30,6 +30,7 @@ return [
     'email_address_added_successfully' => "Email address added successfully!",
 
     'add_a_new_bank_account' => "Add a new bank account",
+    'edit_a_new_bank_account' => "Edit bank account",
     'account_title' => "Account title",
     'enter_your_account_title' => "Enter your account title",
     'enter_your_account_title_please' => "Enter your account title please!",
@@ -54,4 +55,14 @@ return [
     'deleted' => "Deleted!",
     'the_item_was_successfully_deleted' => "The item was successfully deleted",
     'phone_number_deleted_successfully' => "Phone number deleted successfully!",
+    
+    'edit_the_email_address' => "Edit the email address",
+    'edit_the_bank_account' => "Edit the bank account",
+    'email_updated_successfully' => "Email address updated successfully!",
+    'email_address_deleted_successfully' => "Email address deleted successfully!",
+    
+    'bank_name' => "Bank name",
+    'enter_your_bank_name' => "Enter your bank name",
+    'enter_your_bank_name_please' => "Enter your bank name please!",
+
 ];

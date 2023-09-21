@@ -71,6 +71,10 @@ Route::controller(EntrepriseController::class)->group(function(){
         Route::post('/delete_phone_number_entreprise', 'deletePhoneNumberEntr')->name('app_delete_phone_number_entreprise');
 
         Route::post('/add_new_email_entreprise', 'addNewEmail')->name('app_add_new_email_entreprise');
+        Route::post('/delete_email_entreprise', 'deleteEmailAddress')->name('app_delete_email_entreprise');
+
         Route::post('/add_new_bank_account_entreprise', 'addNewBankAccount')->name('app_add_new_bank_account_entreprise');
+
+        Route::post('/get_all_devise_json_format', 'getAlldevise')->name('app_get_all_devise_json_format');
     });
 });

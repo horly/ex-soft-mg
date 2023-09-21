@@ -30,6 +30,7 @@ return [
     'email_address_added_successfully' => "Adresse émail ajouté avec succès!",
 
     'add_a_new_bank_account' => "Ajouter un nouveau compte bancaire",
+    'edit_a_new_bank_account' => "Modifier le compte bancaire",
     'account_title' => "Titre du compte",
     'enter_your_account_title' => "Entrez votre titre de compte",
     'enter_your_account_title_please' => "Entrez votre titre de compte S.V.P!",
@@ -54,4 +55,13 @@ return [
     'deleted' => "Supprimé!",
     'the_item_was_successfully_deleted' => "L'élément a été supprimé avec succès",
     'phone_number_deleted_successfully' => "Numéro de téléphone supprimé avec succès!",
+
+    'edit_the_email_address' => "Modifier l'adresse émail",
+    'edit_the_bank_account' => "Modifier le compte bancaire",
+    'email_updated_successfully' => "Adresse émail mis à jour avec succès!",
+    'email_address_deleted_successfully' => "Adresse émail supprimé avec succès!",
+
+    'bank_name' => "Nom de la banque",
+    'enter_your_bank_name' => "Entrez le nom de votre banque",
+    'enter_your_bank_name_please' => "Entrez le nom de votre banque S.V.P!",
 ];

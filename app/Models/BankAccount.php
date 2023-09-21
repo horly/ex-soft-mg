@@ -12,6 +12,7 @@ class BankAccount extends Model
     protected $table = "bank_accounts";
 
     protected $fillable = [
+        'bank_name',
         'account_number',
         'account_title',
         'account_title',

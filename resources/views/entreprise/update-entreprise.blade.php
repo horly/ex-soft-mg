@@ -111,21 +111,17 @@
                                                 <button class="btn btn-success" type="button" onclick="editNewPhoneNModal('{{ $phone->id }}', '{{ $phone->phone_number }}');" title="{{ __('entreprise.edit') }}" data-bs-toggle="modal" data-bs-target="#newPhone">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
-                                                <button class="btn btn-danger" type="button" onclick="deletePhoneNumberEntr('{{ $phone->id }}');" title="{{ __('entreprise.delete') }}">
+                                                <button class="btn btn-danger" type="button" onclick="deletePhoneNumberEntr('{{ $phone->id }}', '{{ route('app_delete_phone_number_entreprise') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
                                                     <i class="fa-solid fa-trash-can"></i>
-                                                    <form id="form_phone_delete" action="{{ route('app_delete_phone_number_entreprise') }}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="id_phone_delete" id="id_phone_delete" value="{{ $phone->id }}">
-                                                    </form>
                                                 </button>
                                             </div>
                                             
                                         </li>
                                     @endforeach
                                 </ul>
-                                <button class="btn btn-primary" type="button" onclick="addNewPhoneNModal();" data-bs-toggle="modal" data-bs-target="#newPhone">
+                                <button class="btn btn-primary" type="button" onclick="addNewPhoneNModal();"  data-bs-toggle="modal" data-bs-target="#newPhone">
                                     <i class="fa-solid fa-circle-plus"></i>
-                                    {{ __('entreprise.add_a_new_number') }}
+                                    {{ __('auth.add') }}
                                 </button>
                             </div>
                         </div>
@@ -139,14 +135,41 @@
             <input type="hidden" name="email_entreprise" id="email_entreprise" value="sales@exadgroup.org">
             <label for="email_entreprise" class="col-sm-4 col-form-label">{{ __('main.email_address') }}</label>
             <div class="col-sm-8">
-                <div class="input-group mb-3">
-                    @foreach ($emailAdresss as $emails)
-                        <span class="input-group-text">{{ $emails->email }}</span>
-                    @endforeach
-                    <button class="btn btn-primary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#newEmail">
-                        <i class="fa-solid fa-circle-plus"></i>
-                        {{ __('entreprise.add_new_email_address') }}
-                    </button>
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button mini-accordion-button-header" type="button" data-bs-toggle="collapse" data-bs-target="#emails" aria-expanded="true" aria-controls="phones">
+                                  {{ __('entreprise.all_your_email_address') }}
+                            </button>
+                        </h2>
+
+                        <div id="emails" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <ul class="list-group list-group-flush border mb-3">
+                                    @foreach ($emailAdresss as $emails)
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <span><i class="fa-solid fa-envelope"></i></span>&nbsp;&nbsp;
+                                                <span>{{ $emails->email }}</span>
+                                            </div>
+                                            <div>
+                                                <button class="btn btn-success" type="button" onclick="editNewEmailNModal('{{ $emails->id }}', '{{ $emails->email }}');" title="{{ __('entreprise.edit') }}" data-bs-toggle="modal" data-bs-target="#newEmail">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                                <button class="btn btn-danger" type="button" onclick="deleteEmailEntr('{{ $emails->id }}', '{{ route('app_delete_email_entreprise') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                <button class="btn btn-primary" type="button" onclick="addNewEmailNModal();" data-bs-toggle="modal" data-bs-target="#newEmail">
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                    {{ __('auth.add') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -154,15 +177,52 @@
         <div class="mb-4 row">
             <label for="bank_account_entreprise" class="col-sm-4 col-form-label">{{ __('main.bank_account') }}</label>
             <div class="col-sm-8">
-                <div class="input-group mb-3">
-                    @foreach ($bankAccounts as $bank)
-                        <span class="input-group-text">{{ $bank->account_number }} - {{ $bank->account_title }}</span>
-                    @endforeach
-                    <button class="btn btn-primary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#newAccount">
-                        <i class="fa-solid fa-circle-plus"></i>
-                        {{ __('entreprise.add_a_new_bank_account') }}
-                    </button>
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button mini-accordion-button-header" type="button" data-bs-toggle="collapse" data-bs-target="#banks" aria-expanded="true" aria-controls="phones">
+                                  {{ __('entreprise.all_your_bank_account') }}
+                            </button>
+                        </h2>
+                        <div id="banks" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <ul class="list-group list-group-flush border mb-3">
+                                    @foreach ($bankAccounts as $bank)
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            @php
+                                                $devise = DB::table('devises')->where('id', $bank->id_devise)->first();
+                                            @endphp
+                                            <div>
+                                                <span><i class="fa-solid fa-building-columns"></i></span>&nbsp;&nbsp;
+                                                <span>{{ $bank->bank_name }}</span>&nbsp;&nbsp;
+                                                <span>-</span>&nbsp;&nbsp;
+                                                <span>{{ $bank->account_number }}</span>&nbsp;&nbsp;
+                                                <span>-</span>&nbsp;&nbsp;
+                                                <span>{{ $devise->iso_code }}</span>&nbsp;&nbsp;
+                                                <span>-</span>&nbsp;&nbsp;
+                                                <span>{{ $bank->account_title }}</span>&nbsp;&nbsp;
+                                            </div>
+                                            <div>
+                                                <button class="btn btn-success" type="button" onclick="editBankAccountNModal('{{ $bank->id }}', '{{ $bank->bank_name }}', '{{ $bank->account_title }}', '{{ $bank->account_number }}', '{{ $devise->id }}', '{{ $devise->iso_code }}', '{{ $devise->motto_en }}', '{{ $devise->motto }}', '{{ route('app_get_all_devise_json_format') }}', '{{ csrf_token() }}', '{{ Config::get('app.locale') }}');" title="{{ __('entreprise.edit') }}" data-bs-toggle="modal" data-bs-target="#newAccount">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                                <button class="btn btn-danger" type="button" onclick="deleteEmailEntr('{{ $emails->id }}', '{{ route('app_delete_email_entreprise') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                <button class="btn btn-primary" type="button" onclick="addBankAccountNModal();" data-bs-toggle="modal" data-bs-target="#newAccount">
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                    {{ __('auth.add') }}
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
+
             </div>
         </div>
         
@@ -223,12 +283,15 @@
     <div class="modal-dialog">
         <form class="modal-content" id="form_new_email_entreprise" action="{{ route('app_add_new_email_entreprise') }}" method="POST">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ __('entreprise.add_new_email_address') }}</h1>
+                <h1 class="modal-title fs-5" id="new-email-modal">{{ __('entreprise.add_new_email_address') }}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-body-tertiary p-4">
                 @csrf
                 <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
+                <input type="hidden" name="modalRequest" id="modalRequest" value="add"> {{-- Default is add but can be edit also --}}
+                <input type="hidden" name="id_email" id="id_email" value="0"> {{-- Default value of number is 0 but can be changed if edit--}}
+
                 <div class="mb-3">
                     <label for="new_email_address" class="form-label"> {{ __('main.email_address') }} </label>
                     <input type="email" class="form-control" id="new_email_address" name="new_email_address" placeholder="{{ __('main.enter_your_company_email_address') }}">
@@ -259,12 +322,20 @@
     <div class="modal-dialog">
         <form class="modal-content" id="form_new_bank_account_entreprise" action="{{ route('app_add_new_bank_account_entreprise') }}" method="POST">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ __('entreprise.add_a_new_bank_account') }}</h1>
+                <h1 class="modal-title fs-5" id="new-bank-account-modal">{{ __('entreprise.add_a_new_bank_account') }}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-body-tertiary p-4">
                 @csrf
                 <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
+                <input type="hidden" name="modalRequest" id="modalRequest" value="add"> {{-- Default is add but can be edit also --}}
+                <input type="hidden" name="id_bank" id="id_bank" value="0"> {{-- Default value of number is 0 but can be changed if edit--}}
+
+                <div class="mb-3">
+                    <label for="bank_name" class="form-label"> {{ __('entreprise.bank_name') }} </label>
+                    <input type="text" class="form-control" id="bank_name" name="bank_name" placeholder="{{ __('entreprise.enter_your_bank_name') }}">
+                    <small class="text-danger" id="error_bank_name"></small>
+                </div>
                 <div class="mb-3">
                     <label for="account_title" class="form-label"> {{ __('entreprise.account_title') }} </label>
                     <input type="text" class="form-control" id="account_title" name="account_title" placeholder="{{ __('entreprise.enter_your_account_title') }}">
@@ -317,9 +388,16 @@
     <input type="hidden" id="message_account_title" value="{{ __('entreprise.enter_your_account_title_please') }}">
     <input type="hidden" id="message_account_number" value="{{ __('entreprise.enter_your_account_number_please') }}">
     <input type="hidden" id="message_account_currency" value="{{ __('entreprise.select_your_curreny_please') }}">
+    <input type="hidden" id="message_bank_name" value="{{ __('entreprise.enter_your_bank_name_please') }}">
 
     <input type="hidden" id="title_add_a_new_number" value="{{ __('entreprise.add_a_new_number') }}">
     <input type="hidden" id="title_edit_the_phone_number" value="{{ __('entreprise.edit_the_phone_number') }}">
+
+    <input type="hidden" id="title_add_new_email_address" value="{{ __('entreprise.add_new_email_address') }}">
+    <input type="hidden" id="title_edit_the_email_address" value="{{ __('entreprise.edit_the_email_address') }}">
+
+    <input type="hidden" id="title_add_a_new_bank_account" value="{{ __('entreprise.add_a_new_bank_account') }}">
+    <input type="hidden" id="title_edit_a_new_bank_account" value="{{ __('entreprise.edit_a_new_bank_account') }}">
 
     <input type="hidden" id="are_you_sure_to_delete" value="{{ __('entreprise.are_you_sure_to_delete') }}">
     <input type="hidden" id="this_action_is_irreversible" value="{{ __('entreprise.this_action_is_irreversible') }}">

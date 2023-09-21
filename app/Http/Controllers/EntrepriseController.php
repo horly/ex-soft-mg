@@ -203,29 +203,80 @@ class EntrepriseController extends Controller
     {
         $email = $this->request->input('new_email_address');
         $id_entreprise = $this->request->input('id_entreprise');
+        $modalRequest = $this->request->input('modalRequest');
+        $id_email = $this->request->input('id_email');
 
-        BusinessEmail::create([
-            'email' => $email,
-            'id_entreprise' => $id_entreprise
-        ]);
+        if($modalRequest != "edit")
+        {
+            BusinessEmail::create([
+                'email' => $email,
+                'id_entreprise' => $id_entreprise
+            ]);
+    
+            return redirect()->back()->with('success', __('entreprise.email_address_added_successfully'));
+        }
+        else
+        {
+            DB::table('business_emails')
+                    ->where('id', $id_email)
+                    ->update([
+                        'email' => $email,
+                        'updated_at' => new \DateTimeImmutable,
+                    ]);
 
-        return redirect()->back()->with('success', __('entreprise.email_address_added_successfully'));
+            return redirect()->back()->with('success', __('entreprise.email_updated_successfully'));
+        }
+    }
+
+    public function deleteEmailAddress()
+    {
+        $id_email = $this->request->input('id_email_delete');
+
+        DB::table('business_emails')
+                    ->where('id', $id_email)
+                    ->delete();
+
+        return redirect()->back()->with('success', __('entreprise.email_address_deleted_successfully'));
     }
 
     public function addNewBankAccount()
     {
+        $bank_name = $this->request->input('bank_name');
         $account_title = $this->request->input('account_title');
         $account_number = $this->request->input('account_number');
         $account_currency = $this->request->input('account_currency');
         $id_entreprise = $this->request->input('id_entreprise');
+        $modalRequest = $this->request->input('modalRequest');
+        $id_bank = $this->request->input('id_bank');
 
-        BankAccount::create([
-            'account_number' => $account_number,
-            'account_title' => $account_title,
-            'id_entreprise' => $id_entreprise,
-            'id_devise' => $account_currency,
+        if($modalRequest != "edit")
+        {
+            BankAccount::create([
+                'bank_name' => $bank_name,
+                'account_number' => $account_number,
+                'account_title' => $account_title,
+                'id_entreprise' => $id_entreprise,
+                'id_devise' => $account_currency,
+            ]);
+    
+            return redirect()->back()->with('success', __('entreprise.bank_account_added_successfully'));
+        }
+        else
+        {
+
+        }
+    }
+
+    public function getAlldevise()
+    {
+        $devises = DB::table('devises')
+                    ->orderBy('iso_code')
+                    ->get();
+
+        return response()->json([
+            'code' => 200,
+            'devises' => $devises,
+            'status' => 'success'
         ]);
-
-        return redirect()->back()->with('success', __('entreprise.bank_account_added_successfully'));
     }
 }
