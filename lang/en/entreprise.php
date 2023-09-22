@@ -65,4 +65,8 @@ return [
     'enter_your_bank_name' => "Enter your bank name",
     'enter_your_bank_name_please' => "Enter your bank name please!",
 
+    'bank_account_updated_successfully' => "Bank account updated successfully!",
+    'bank_account_deleted_successfully' => "Bank account deleted successfully!",
+    'company_updated_successfully' => "Company updated successfully!",
+    'company_deleted_successfully' => "Company deleted successfully!",
 ];

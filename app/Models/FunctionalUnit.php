@@ -17,9 +17,21 @@ class FunctionalUnit extends Model
         'id_entreprise',
     ];
 
-     /** Une entreprise appartient à un subscription */
-     function entreprise()
-     {
-         return $this->belongsTo('App\Models\Entreprise', 'id_entreprise');
-     }
+    /** Une entreprise appartient à un subscription */
+    function entreprise()
+    {
+        return $this->belongsTo('App\Models\Entreprise', 'id_entreprise');
+    }
+
+    /** Une UF possède plusieurs numéro de téléphone */
+    public function phones()
+    {
+        return $this->hasMany('App\Models\FunctionalUnitPhone');
+    }
+
+    /** Une UF possède plusieurs numéro de téléphone */
+    public function emails()
+    {
+        return $this->hasMany('App\Models\FunctionalunitEmail');
+    }
 }

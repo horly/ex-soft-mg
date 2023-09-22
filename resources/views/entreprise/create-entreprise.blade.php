@@ -14,6 +14,9 @@
 
     <form class="border bg-body-tertiary p-4" id="save-entreprise-form" action="{{ route('app_save_entreprise') }}" method="POST" token={{ csrf_token() }}>
         @csrf
+
+        <input type="hidden" name="id_entreprise" value="0">
+        <input type="hidden" name="entrepriseRequest" id="entrepriseRequest" value="add"> {{-- Default is add but can be edit also --}}
         
         <div class="mb-4 row">
             <label for="name_entreprise" class="col-sm-4 col-form-label">{{ __('main.company_name') }}*</label>
@@ -107,7 +110,7 @@
                 <input type="text" class="form-control" id="website_entreprise" name="website_entreprise" placeholder="{{ __('main.enter_your_company_website') }}" >
               </div>
           </div>
-      </div>
+        </div>
 
       {{-- button de sauvegarde --}}
       @include('button.save-button')

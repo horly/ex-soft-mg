@@ -18,6 +18,9 @@
     <form class="border bg-body-tertiary p-4" action="{{ route('app_save_entreprise') }}" method="POST">
         @csrf
 
+        <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
+        <input type="hidden" name="entrepriseRequest" id="entrepriseRequest" value="edit"> {{-- Default is add but can be edit also --}}
+
         <div class="mb-4 row">
             <label for="name_entreprise" class="col-sm-4 col-form-label">{{ __('main.company_name') }}*</label>
             <div class="col-sm-8">
@@ -111,7 +114,7 @@
                                                 <button class="btn btn-success" type="button" onclick="editNewPhoneNModal('{{ $phone->id }}', '{{ $phone->phone_number }}');" title="{{ __('entreprise.edit') }}" data-bs-toggle="modal" data-bs-target="#newPhone">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
-                                                <button class="btn btn-danger" type="button" onclick="deletePhoneNumberEntr('{{ $phone->id }}', '{{ route('app_delete_phone_number_entreprise') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                                <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $phone->id }}', '{{ route('app_delete_phone_number_entreprise') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
                                                     <i class="fa-solid fa-trash-can"></i>
                                                 </button>
                                             </div>
@@ -156,7 +159,7 @@
                                                 <button class="btn btn-success" type="button" onclick="editNewEmailNModal('{{ $emails->id }}', '{{ $emails->email }}');" title="{{ __('entreprise.edit') }}" data-bs-toggle="modal" data-bs-target="#newEmail">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
-                                                <button class="btn btn-danger" type="button" onclick="deleteEmailEntr('{{ $emails->id }}', '{{ route('app_delete_email_entreprise') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                                <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $emails->id }}', '{{ route('app_delete_email_entreprise') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
                                                     <i class="fa-solid fa-trash-can"></i>
                                                 </button>
                                             </div>
@@ -195,7 +198,7 @@
                                             <div>
                                                 <span><i class="fa-solid fa-building-columns"></i></span>&nbsp;&nbsp;
                                                 <span>{{ $bank->bank_name }}</span>&nbsp;&nbsp;
-                                                <span>-</span>&nbsp;&nbsp;
+                                                <span>/</span>&nbsp;&nbsp;
                                                 <span>{{ $bank->account_number }}</span>&nbsp;&nbsp;
                                                 <span>-</span>&nbsp;&nbsp;
                                                 <span>{{ $devise->iso_code }}</span>&nbsp;&nbsp;
@@ -206,7 +209,7 @@
                                                 <button class="btn btn-success" type="button" onclick="editBankAccountNModal('{{ $bank->id }}', '{{ $bank->bank_name }}', '{{ $bank->account_title }}', '{{ $bank->account_number }}', '{{ $devise->id }}', '{{ $devise->iso_code }}', '{{ $devise->motto_en }}', '{{ $devise->motto }}', '{{ route('app_get_all_devise_json_format') }}', '{{ csrf_token() }}', '{{ Config::get('app.locale') }}');" title="{{ __('entreprise.edit') }}" data-bs-toggle="modal" data-bs-target="#newAccount">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
-                                                <button class="btn btn-danger" type="button" onclick="deleteEmailEntr('{{ $emails->id }}', '{{ route('app_delete_email_entreprise') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                                <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $bank->id }}', '{{ route('app_delete_bank_account') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
                                                     <i class="fa-solid fa-trash-can"></i>
                                                 </button>
                                             </div>
@@ -225,6 +228,19 @@
 
             </div>
         </div>
+
+        <div class="mb-4 row">
+            <label for="website_entreprise" class="col-sm-4 col-form-label">{{ __('main.website') }}</label>
+            <div class="col-sm-8">
+                <div class="input-group">
+                  <span class="input-group-text" id="basic-addon1">https://</span>
+                  <input type="text" class="form-control" id="website_entreprise" name="website_entreprise" placeholder="{{ __('main.enter_your_company_website') }}" value="{{ $entreprise->website }}">
+                </div>
+            </div>
+        </div>
+
+        {{-- button de sauvegarde --}}
+        @include('button.save-button')
         
     </form>
 
@@ -346,9 +362,9 @@
                     <input type="number" class="form-control" id="account_number" name="account_number" placeholder="{{ __('entreprise.enter_your_account_number') }}">
                     <small class="text-danger" id="error_account_number"></small>
                 </div>
-                <div class="mb-3">
-                    <label for="account_currency" class="form-label"> {{ __('entreprise.currency') }} </label>
-                    <select name="account_currency" id="account_currency" class="form-select">
+                <div class="mb-3" id="save-select-entreprise">
+                    <label for="account_currency_save" class="form-label"> {{ __('entreprise.currency') }} </label>
+                    <select name="account_currency_save" id="account_currency_save" class="form-select">
                         <option value="" selected>{{ __('entreprise.select_your_curreny') }}</option>
                         @if (Config::get('app.locale') == 'en')
                             @foreach ($devises as $devise)
@@ -361,6 +377,11 @@
                         @endif
                     </select>
                     <small class="text-danger" id="error_account_currency"></small>
+                </div>
+                <div class="mb-3 d-none" id="update-select-entreprise">
+                    <label for="account_currency_update" class="form-label"> {{ __('entreprise.currency') }} </label>
+                    <select name="account_currency_update" id="account_currency_update" class="form-select">
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">
@@ -398,12 +419,6 @@
 
     <input type="hidden" id="title_add_a_new_bank_account" value="{{ __('entreprise.add_a_new_bank_account') }}">
     <input type="hidden" id="title_edit_a_new_bank_account" value="{{ __('entreprise.edit_a_new_bank_account') }}">
-
-    <input type="hidden" id="are_you_sure_to_delete" value="{{ __('entreprise.are_you_sure_to_delete') }}">
-    <input type="hidden" id="this_action_is_irreversible" value="{{ __('entreprise.this_action_is_irreversible') }}">
-    <input type="hidden" id="yes_delete_it" value="{{ __('entreprise.yes_delete_it') }}">
-    <input type="hidden" id="deleted" value="{{ __('entreprise.deleted') }}">
-    <input type="hidden" id="the_item_was_successfully_deleted" value="{{ __('entreprise.the_item_was_successfully_deleted') }}">
 
 </form>
 

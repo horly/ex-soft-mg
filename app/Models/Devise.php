@@ -23,4 +23,10 @@ class Devise extends Model
     {
         return $this->hasMany('App\Models\BankAccount');
     }
+
+    /** Une devise comporte plusieurs compte bancaire */
+    public function deviseGestUf()
+    {
+        return $this->hasMany('App\Models\DeviseGestionUF');
+    }
 }

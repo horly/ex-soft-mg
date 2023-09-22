@@ -57,7 +57,10 @@ $('#save_bank_account_entreprise').click(function(){
   var bank_name = $('#bank_name');
   var account_title = $('#account_title');
   var account_number = $('#account_number');
-  var account_currency = $('#account_currency');
+  var account_currency = $('#account_currency_save');
+  //var account_currencyU = $('#account_currency_update');
+  var modalRequest = $('#newAccount #modalRequest');
+
   
   if(bank_name.val() != ""){
 
@@ -74,21 +77,30 @@ $('#save_bank_account_entreprise').click(function(){
         account_number.removeClass('is-invalid');
         $('#error_account_number').text("");
 
-        if(account_currency.val() != ""){
+        if(modalRequest.val() != "edit"){
+          if(account_currency.val() != ""){
 
-          account_currency.removeClass('is-invalid');
-          $('#error_account_currency').text("");
-          
-          $('.saveP').addClass('d-none');
-          $('.btn-loadingP').removeClass('d-none');
+            account_currency.removeClass('is-invalid');
+            $('#error_account_currency').text("");
+            
+            $('.saveP').addClass('d-none');
+            $('.btn-loadingP').removeClass('d-none');
 
-          setTimeout(function(){
-            form.submit();
-          }, 2000);
+            setTimeout(function(){
+              form.submit();
+            }, 2000);
 
+          }else{
+            account_currency.addClass('is-invalid');
+            $('#error_account_currency').text($('#message_account_currency').val());
+          }
         }else{
-          account_currency.addClass('is-invalid');
-          $('#error_account_currency').text($('#message_account_currency').val());
+            $('.saveP').addClass('d-none');
+            $('.btn-loadingP').removeClass('d-none');
+
+            setTimeout(function(){
+              form.submit();
+            }, 2000);
         }
       }else{
         account_number.addClass('is-invalid');
@@ -144,6 +156,12 @@ function addBankAccountNModal(){
   document.getElementById("form_new_bank_account_entreprise").reset(); //on reintialise le formulaire
   $('#newAccount #modalRequest').val("add");
   $('#id_bank').val("0");
+
+  var DivselectU = $('#update-select-entreprise');
+  var DivselectS = $('#save-select-entreprise');
+
+  DivselectU.addClass('d-none');
+  DivselectS.removeClass('d-none');
 }
 
 function editBankAccountNModal(id, bank_name, account_title, account_number, devise_id, 
@@ -155,22 +173,41 @@ function editBankAccountNModal(id, bank_name, account_title, account_number, dev
   $('#account_title').val(account_title);
   $('#account_number').val(account_number);
 
-  var select = $('#account_currency');
-  select.html("");
+  var DivselectU = $('#update-select-entreprise');
+  var DivselectS = $('#save-select-entreprise');
+  var update_select = $('#account_currency_update');
+
+  DivselectU.removeClass('d-none');
+  DivselectS.addClass('d-none');
+
+  update_select.html("");
+  var optionDefautl = "";
   var option = "";
-  
-  var devises = getAllDevises(token, url);
+  var response = getAllDevises(token, url);
 
-  //console.log(devises);
+  //console.log(response);
 
+  /*for (var i = 0; i < response.length; i++) {
+    console.log(response[i].iso_code);
+  }*/
+                                  
   if(app_local == "en"){
-    option += '<option value="' + devise_id + '" >' + devise_iso_code + ' - ' + devise_motto_en +'</option>';
+    optionDefautl += '<option value="' + devise_id + '" seleted>' + devise_iso_code + ' - ' + devise_motto_en +'</option>';
+
+    for (var i = 0; i < response.length; i++) {
+      option += '<option value="' + response[i].id + '" seleted>' + response[i].iso_code + ' - ' + response[i].motto_en +'</option>';
+    }
     
   }else{
-    option += '<option value="' + devise_id + '" >' + devise_iso_code + ' - ' + devise_motto +'</option>';
+    optionDefautl += '<option value="' + devise_id + '" selected>' + devise_iso_code + ' - ' + devise_motto +'</option>';
+
+    for (var i = 0; i < response.length; i++) {
+      option += '<option value="' + response[i].id + '" seleted>' + response[i].iso_code + ' - ' + response[i].motto +'</option>';
+    }
   }
 
-  select.append(option);
+  update_select.append(optionDefautl);
+  update_select.append(option);
 
   //console.log(app_local);
   
@@ -194,69 +231,6 @@ function getAllDevises(token, url){
 
   return devises;
 }
-
-function deletePhoneNumberEntr(id, url, token){
-
-  swal({
-    title: $('#are_you_sure_to_delete').val(),
-    text: $('#this_action_is_irreversible').val(),
-    type: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#DD6B55",
-    confirmButtonText: $('#yes_delete_it').val(),
-    closeOnConfirm: false
-},
-function(){
-    swal({
-      title : $('#deleted').val(), 
-      text : $('#the_item_was_successfully_deleted').val(), 
-      type : "success",
-    }, function(){
-      //$('#form_phone_delete').submit();
-      //console.log(id);
-      //console.log(url);
-      //console.log(token);
-      var inputs = '';
-      inputs += '<input type="hidden" name="id_phone_delete" value="' + id + '" />' 
-                + '<input type="hidden" name="_token" value="' + token + '" />';
-      
-      $("body").append('<form action="' + url + '" method="POST" id="poster">' + inputs + '</form>');
-      $("#poster").submit();
-    });
-  });
-}
-
-function deleteEmailEntr(id, url, token){
-
-  swal({
-    title: $('#are_you_sure_to_delete').val(),
-    text: $('#this_action_is_irreversible').val(),
-    type: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#DD6B55",
-    confirmButtonText: $('#yes_delete_it').val(),
-    closeOnConfirm: false
-},
-function(){
-    swal({
-      title : $('#deleted').val(), 
-      text : $('#the_item_was_successfully_deleted').val(), 
-      type : "success",
-    }, function(){
-      //$('#form_phone_delete').submit();
-      //console.log(id);
-      //console.log(url);
-      //console.log(token);
-      var inputs = '';
-      inputs += '<input type="hidden" name="id_email_delete" value="' + id + '" />' 
-                + '<input type="hidden" name="_token" value="' + token + '" />';
-      
-      $("body").append('<form action="' + url + '" method="POST" id="poster">' + inputs + '</form>');
-      $("#poster").submit();
-    });
-  });
-}
-
 
 /*const toastTrigger = document.getElementById('liveToastBtn') 
 const toastLiveExample = document.getElementById('liveToast')

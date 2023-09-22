@@ -64,4 +64,9 @@ return [
     'bank_name' => "Nom de la banque",
     'enter_your_bank_name' => "Entrez le nom de votre banque",
     'enter_your_bank_name_please' => "Entrez le nom de votre banque S.V.P!",
+
+    'bank_account_updated_successfully' => "Compte bancaire mis à jour avec succès!",
+    'bank_account_deleted_successfully' => "Compte bancaire supprimé avec succès!",
+    'company_updated_successfully' => "Entreprise mis à jour avec succès!",
+    'company_deleted_successfully' => "Entreprise supprimée succès!",
 ];

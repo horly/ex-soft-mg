@@ -45,7 +45,9 @@ class EntrepriseController extends Controller
     }
 
     public function saveEntreprise(CreateEntrepriseForm $requestF)
-    {
+    {   
+        $id_entreprise = $requestF->input('id_entreprise');
+        $entrepriseRequest = $requestF->input('entrepriseRequest');
         $name_entreprise = $requestF->input('name_entreprise');
         $slogan_entreprise = $requestF->input('slogan_entreprise');
         $rccm_entreprise = $requestF->input('rccm_entreprise');
@@ -59,32 +61,62 @@ class EntrepriseController extends Controller
 
         $user = Auth::user();
 
-        $array = array(
-            'name' => $name_entreprise,
-            'slogan' => $slogan_entreprise,
-            'rccm' => $rccm_entreprise,
-            'id_nat' => $idnat_entreprise,
-            'nif' => $nif_entreprise,
-            'address' => $address_entreprise,
-            'id_user' => $user->id,
-            'id_country' => $id_country,
-            'website' => $website_entreprise,
-            'sub_id' => $user->sub_id,
-        );
+        if($entrepriseRequest != "edit")
+        {
+            $entreprise = Entreprise::create([
+                'name' => $name_entreprise,
+                'slogan' => $slogan_entreprise,
+                'rccm' => $rccm_entreprise,
+                'id_nat' => $idnat_entreprise,
+                'nif' => $nif_entreprise,
+                'address' => $address_entreprise,
+                'id_user' => $user->id,
+                'id_country' => $id_country,
+                'website' => $website_entreprise,
+                'sub_id' => $user->sub_id,
+            ]);
 
-        $entreprise = Entreprise::create($array);
+            BusinessContact::create([
+                'phone_number' => $phone_entreprise,
+                'id_entreprise' => $entreprise->id,
+            ]); 
 
-        BusinessContact::create([
-            'phone_number' => $phone_entreprise,
-            'id_entreprise' => $entreprise->id,
-        ]); 
+            BusinessEmail::create([
+                'email' => $email_entreprise,
+                'id_entreprise' => $entreprise->id,
+            ]);
 
-        BusinessEmail::create([
-            'email' => $email_entreprise,
-            'id_entreprise' => $entreprise->id,
-        ]);
+            return redirect()->route('app_main')->with('success', __('main.company_added_successfully'));
+        }
+        else
+        {
+            DB::table('entreprises')
+                ->where('id', $id_entreprise)
+                ->update([
+                    'name' => $name_entreprise,
+                    'slogan' => $slogan_entreprise,
+                    'rccm' => $rccm_entreprise,
+                    'id_nat' => $idnat_entreprise,
+                    'nif' => $nif_entreprise,
+                    'address' => $address_entreprise,
+                    'id_country' => $id_country,
+                    'website' => $website_entreprise,
+                    'updated_at' => new \DateTimeImmutable,
+                ]);
+            
+            return redirect()->route('app_entreprise', ['id' => $id_entreprise])->with('success', __('entreprise.company_updated_successfully'));
+        }
+    }
 
-        return redirect()->route('app_main')->with('success', __('main.company_added_successfully'));
+    public function deleteEntreprise()
+    {
+        $id_entreprise = $this->request->input('id_element');
+
+        DB::table('entreprises')
+                    ->where('id', $id_entreprise)
+                    ->delete();
+
+        return redirect()->route('app_main')->with('success', __('entreprise.company_deleted_successfully'));
     }
 
     public function entreprise($id)
@@ -190,7 +222,7 @@ class EntrepriseController extends Controller
 
     public function deletePhoneNumberEntr()
     {
-        $id_phone = $this->request->input('id_phone_delete');
+        $id_phone = $this->request->input('id_element');
 
         DB::table('business_contacts')
                     ->where('id', $id_phone)
@@ -230,7 +262,7 @@ class EntrepriseController extends Controller
 
     public function deleteEmailAddress()
     {
-        $id_email = $this->request->input('id_email_delete');
+        $id_email = $this->request->input('id_element');
 
         DB::table('business_emails')
                     ->where('id', $id_email)
@@ -244,7 +276,8 @@ class EntrepriseController extends Controller
         $bank_name = $this->request->input('bank_name');
         $account_title = $this->request->input('account_title');
         $account_number = $this->request->input('account_number');
-        $account_currency = $this->request->input('account_currency');
+        $account_currency_save = $this->request->input('account_currency_save');
+        $account_currency_update = $this->request->input('account_currency_update');
         $id_entreprise = $this->request->input('id_entreprise');
         $modalRequest = $this->request->input('modalRequest');
         $id_bank = $this->request->input('id_bank');
@@ -256,15 +289,37 @@ class EntrepriseController extends Controller
                 'account_number' => $account_number,
                 'account_title' => $account_title,
                 'id_entreprise' => $id_entreprise,
-                'id_devise' => $account_currency,
+                'id_devise' => $account_currency_save,
             ]);
     
             return redirect()->back()->with('success', __('entreprise.bank_account_added_successfully'));
         }
         else
         {
+            DB::table('bank_accounts')
+                    ->where('id', $id_bank)
+                    ->update([
+                        'bank_name' => $bank_name,
+                        'account_number' => $account_number,
+                        'account_title' => $account_title,
+                        'id_entreprise' => $id_entreprise,
+                        'id_devise' => $account_currency_update,
+                        'updated_at' => new \DateTimeImmutable,
+                    ]);
 
+            return redirect()->back()->with('success', __('entreprise.bank_account_updated_successfully'));
         }
+    }
+
+    public function deleteBankAccount()
+    {
+        $id_bank = $this->request->input('id_element');
+
+        DB::table('bank_accounts')
+                    ->where('id', $id_bank)
+                    ->delete();
+
+        return redirect()->back()->with('success', __('entreprise.bank_account_deleted_successfully'));
     }
 
     public function getAlldevise()

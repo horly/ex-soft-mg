@@ -16,6 +16,9 @@
         {{-- Datatable --}}
         @include('datatable.datatable')
 
+        {{--Sweet alerte delete--}}
+        @include('global.delete-sweet-alert')
+
         {{-- Lib js include --}}
         {{-- Bootstrap need proper --}}
         <script src="{{ asset('assets/lib/proper/proper.js') }}"></script>
