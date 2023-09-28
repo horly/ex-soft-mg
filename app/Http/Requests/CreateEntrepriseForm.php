@@ -27,10 +27,10 @@ class CreateEntrepriseForm extends FormRequest
             'rccm_entreprise' => 'required',
             'idnat_entreprise' => 'required',
             'nif_entreprise' => 'required',
-            'address_entreprise' => 'required',
+            //'address_entreprise' => 'required',
             'country_entreprise' => 'required',
-            'phone_entreprise' => 'required|numeric',
-            'email_entreprise' => 'required|email',
+            //'phone_entreprise' => 'required|numeric',
+            //'email_entreprise' => 'required|email',
         ];
     }
 
@@ -42,14 +42,14 @@ class CreateEntrepriseForm extends FormRequest
             'rccm_entreprise.required' => __('main.enter_your_companys_rccm_please'),
             'idnat_entreprise.required' => __('main.enter_your_companys_national_identification_please'),
             'nif_entreprise.required' => __('main.enter_your_companys_tax_id_number_please'),
-            'address_entreprise.required' => __('main.enter_your_company_address_please'),
+            //'address_entreprise.required' => __('main.enter_your_company_address_please'),
             'country_entreprise.required' => __('main.select_your_company_country_please'),
 
-            'phone_entreprise.required' => __('main.enter_a_valid_phone_number_please'),
-            'phone_entreprise.numeric' => __('main.enter_a_valid_phone_number_please'),
+            //'phone_entreprise.required' => __('main.enter_a_valid_phone_number_please'),
+            //'phone_entreprise.numeric' => __('main.enter_a_valid_phone_number_please'),
 
-            'email_entreprise.required' => __('main.enter_a_valid_company_email_address_please'),
-            'email_entreprise.email' => __('main.enter_a_valid_company_email_address_please'),
+            //'email_entreprise.required' => __('main.enter_a_valid_company_email_address_please'),
+            //'email_entreprise.email' => __('main.enter_a_valid_company_email_address_please'),
 
         ];
     }

@@ -52,6 +52,7 @@
               <small class="text-danger">@error('nif_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
+        {{--
         <div class="mb-4 row">
             <label for="address_entreprise" class="col-sm-4 col-form-label">{{ __('main.address') }}*</label>
             <div class="col-sm-8">
@@ -59,6 +60,7 @@
               <small class="text-danger">@error('address_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
+        --}}
         <div class="mb-4 row">
           <label for="country_entreprise" class="col-sm-4 col-form-label">{{ __('main.country') }}*</label>
           <div class="col-sm-8">
@@ -77,6 +79,7 @@
             <small class="text-danger">@error('country_entreprise') {{ $message }} @enderror</small>
           </div>
         </div>
+        {{--
         <div class="mb-4 row">
             <label for="phone_entreprise" class="col-sm-4 col-form-label">{{ __('main.phone_number') }}*</label>
             <div class="col-sm-8">
@@ -87,6 +90,7 @@
               <small class="text-danger">@error('phone_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
+        --}}
         {{--
         <div class="mb-4 row">
             <label class="col-sm-4 col-form-label"></label>
@@ -95,6 +99,7 @@
             </div>
         </div>
         --}}
+        {{--
         <div class="mb-4 row">
             <label for="email_entreprise" class="col-sm-4 col-form-label">{{ __('main.email_address') }}*</label>
             <div class="col-sm-8">
@@ -102,6 +107,7 @@
               <small class="text-danger">@error('email_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
+        --}}
         <div class="mb-4 row">
           <label for="website_entreprise" class="col-sm-4 col-form-label">{{ __('main.website') }}</label>
           <div class="col-sm-8">

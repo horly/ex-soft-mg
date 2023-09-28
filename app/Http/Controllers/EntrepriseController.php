@@ -53,10 +53,10 @@ class EntrepriseController extends Controller
         $rccm_entreprise = $requestF->input('rccm_entreprise');
         $idnat_entreprise = $requestF->input('idnat_entreprise');
         $nif_entreprise = $requestF->input('nif_entreprise');
-        $address_entreprise = $requestF->input('address_entreprise');
+        //$address_entreprise = $requestF->input('address_entreprise');
         $id_country = $requestF->input('country_entreprise');
-        $phone_entreprise = $requestF->input('phone_entreprise');
-        $email_entreprise = $requestF->input('email_entreprise');
+        //$phone_entreprise = $requestF->input('phone_entreprise');
+        //$email_entreprise = $requestF->input('email_entreprise');
         $website_entreprise = $requestF->input('website_entreprise');
 
         $user = Auth::user();
@@ -69,14 +69,14 @@ class EntrepriseController extends Controller
                 'rccm' => $rccm_entreprise,
                 'id_nat' => $idnat_entreprise,
                 'nif' => $nif_entreprise,
-                'address' => $address_entreprise,
+                //'address' => $address_entreprise,
                 'id_user' => $user->id,
                 'id_country' => $id_country,
                 'website' => $website_entreprise,
                 'sub_id' => $user->sub_id,
             ]);
 
-            BusinessContact::create([
+            /*BusinessContact::create([
                 'phone_number' => $phone_entreprise,
                 'id_entreprise' => $entreprise->id,
             ]); 
@@ -84,7 +84,7 @@ class EntrepriseController extends Controller
             BusinessEmail::create([
                 'email' => $email_entreprise,
                 'id_entreprise' => $entreprise->id,
-            ]);
+            ]);*/
 
             return redirect()->route('app_main')->with('success', __('main.company_added_successfully'));
         }
@@ -98,7 +98,7 @@ class EntrepriseController extends Controller
                     'rccm' => $rccm_entreprise,
                     'id_nat' => $idnat_entreprise,
                     'nif' => $nif_entreprise,
-                    'address' => $address_entreprise,
+                    //'address' => $address_entreprise,
                     'id_country' => $id_country,
                     'website' => $website_entreprise,
                     'updated_at' => new \DateTimeImmutable,

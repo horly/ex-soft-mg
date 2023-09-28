@@ -69,4 +69,8 @@ return [
     'bank_account_deleted_successfully' => "Bank account deleted successfully!",
     'company_updated_successfully' => "Company updated successfully!",
     'company_deleted_successfully' => "Company deleted successfully!",
+    
+    'edit_photo' => "Edit photo",
+    'import' => "Import",
+    'photo_saved_successfully' => "Photo saved successfully!",
 ];

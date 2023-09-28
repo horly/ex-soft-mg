@@ -1,18 +1,21 @@
 <div class="row">
     <div class="col-md-4">
         <div class="p-4">
-            <div class="text-center mb-4">
-                <img src="{{ asset('assets/img/logo/entreprise')}}/{{ $entreprise->url_logo }}.png" class="rounded-circle img-fluid img-thumbnail" alt="...">
+            <div class="text-center mb-4 profile">
+                <img src="{{ asset('assets/img/logo/entreprise')}}/{{ $entreprise->url_logo }}.png" class="image rounded-circle img-fluid img-thumbnail" alt="...">
+                <div class="middle">
+                    @if (Auth::user()->role->name == "admin")
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#edit-photo">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                {{ __('entreprise.edit_logo') }}
+                            </button>
+                        </div>
+                    @endif
+                </div>
             </div>
 
-            @if (Auth::user()->role->name == "admin")
-                <div class="d-grid gap-2">
-                    <button class="btn btn-primary" type="button">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                        {{ __('entreprise.edit_logo') }}
-                    </button>
-                </div>
-            @endif
+            
         </div>
     </div>
 
@@ -44,11 +47,12 @@
                 <div class="col-md-8 text-primary fw-bold">{{ $entreprise->nif }}</div>
             </div>
 
+            {{--
             <div class="row mb-4">
                 <div class="col-md-4"><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;&nbsp;{{ __('main.address') }}</div>
                 <div class="col-md-8 text-primary fw-bold">{{ $entreprise->address }}</div>
             </div>
-
+            
             @php
                 $phones = DB::table('business_contacts')->where('id_entreprise', $entreprise->id)->get();
                 $country = DB::table('countries')->where('id', $entreprise->id_country)->first();
@@ -81,6 +85,11 @@
                     @endforeach
                 </div>
             </div>
+            --}}
+
+            @php
+                $bankAc = DB::table('bank_accounts')->where('id_entreprise', $entreprise->id)->get();
+            @endphp
 
             <div class="row mb-4">
                 <div class="col-md-4"><i class="fa-solid fa-building-columns"></i>&nbsp;&nbsp;&nbsp;{{ __('main.bank_account') }}</div>
@@ -129,3 +138,7 @@
         </div>
     </div>
 </div>
+
+
+{{-- modal modifier la photo de profile --}}
+@include('entreprise.edit-photo-modal')

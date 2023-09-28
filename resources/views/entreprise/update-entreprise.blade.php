@@ -59,7 +59,7 @@
               <small class="text-danger">@error('nif_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
-
+        {{--
         <div class="mb-4 row">
             <label for="address_entreprise" class="col-sm-4 col-form-label">{{ __('main.address') }}*</label>
             <div class="col-sm-8">
@@ -67,6 +67,7 @@
               <small class="text-danger">@error('address_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
+        --}}
 
         <div class="mb-4 row">
             <label for="country_entreprise" class="col-sm-4 col-form-label">{{ __('main.country') }}*</label>
@@ -87,9 +88,10 @@
               <small class="text-danger">@error('country_entreprise') {{ $message }} @enderror</small>
             </div>
         </div>
-
+        {{--
         <div class="mb-4 row">
             {{-- Hidden input seulement pour valider le formulaire --}}
+            {{--
             <input type="hidden" name="phone_entreprise" id="phone_entreprise" value="123456789">
             <label for="phone_entreprise" class="col-sm-4 col-form-label">{{ __('main.phone_number') }}</label>
             <div class="col-sm-8">
@@ -132,9 +134,11 @@
                 </div>
             </div>
         </div>
-
+        --}}
+        {{--
         <div class="mb-4 row">
             {{-- Hidden input seulement pour valider le formulaire --}}
+            {{--
             <input type="hidden" name="email_entreprise" id="email_entreprise" value="sales@exadgroup.org">
             <label for="email_entreprise" class="col-sm-4 col-form-label">{{ __('main.email_address') }}</label>
             <div class="col-sm-8">
@@ -176,6 +180,7 @@
                 </div>
             </div>
         </div>
+        --}}
 
         <div class="mb-4 row">
             <label for="bank_account_entreprise" class="col-sm-4 col-form-label">{{ __('main.bank_account') }}</label>

@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,4 +81,8 @@ Route::controller(EntrepriseController::class)->group(function(){
 
         Route::post('/get_all_devise_json_format', 'getAlldevise')->name('app_get_all_devise_json_format');
     });
+});
+
+Route::controller(ProfileController::class)->group(function(){
+    Route::post('/save_photo', 'savePhoto')->name('app_save_photo');
 });

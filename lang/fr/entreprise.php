@@ -69,4 +69,8 @@ return [
     'bank_account_deleted_successfully' => "Compte bancaire supprimé avec succès!",
     'company_updated_successfully' => "Entreprise mis à jour avec succès!",
     'company_deleted_successfully' => "Entreprise supprimée succès!",
+    
+    'edit_photo' => "Modifier la photo",
+    'import' => "Importer",
+    'photo_saved_successfully' => "Photo enregistrée avec succès!",
 ];
