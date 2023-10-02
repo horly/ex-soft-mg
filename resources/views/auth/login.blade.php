@@ -36,29 +36,27 @@
 
                     <div class="card-body bg-body-tertiary p-5">
 
-                        @error('email')
-                            <div class="alert alert-danger text-center" role="alert">
-                                {{ $message }}
-                            </div>
-                        @enderror
-
-                        @error('password')
-                            <div class="alert alert-danger text-center" role="alert">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                        @include('message.flash-message')
 
                         <label for="email" class="form-label">{{ __('auth.email')}}</label>
-                        <div class="input-group mb-4">
-                            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-envelope"></i></span>
-                            <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('auth.enter_your_email') }}" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                        <div class="mb-4">
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-envelope"></i></span>
+                                <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('auth.enter_your_email') }}" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                            </div>
+                            <small class="text-danger">@error('email'){{ $message }}@enderror</small>
                         </div>
 
+
                         <label for="password" class="form-label">{{ __('auth.password')}}</label>
-                        <div class="input-group mb-4">
-                            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-lock"></i></span>
-                            <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('auth.enter_your_password') }}" required autocomplete="current-password">
+                        <div class="mb-4">
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-lock"></i></span>
+                                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('auth.enter_your_password') }}" required>
+                            </div>
+                            <small class="text-danger">@error('password'){{ $message }}@enderror</small>
                         </div>
+                        
                         
 
                         <div class="row mb-4">

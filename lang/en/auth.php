@@ -52,6 +52,8 @@ return [
     'enter_the_lastname' => "Enter the last name",
     'enter_the_lastname_please' => "Enter the last name please!",
     'enter_a_valid_lastname_please' => "Enter a valid last name please!",
+
+    'enter_your_name_please' => "Enter your name please!",
     
     'create_your_password' => "Create your password",
     'confirm_your_password' => "Confirm your password",
@@ -225,4 +227,6 @@ return [
 
     'code_resend_successully' => "Verification code resend successfully.",
     'verification_code_is_incorrect' => "Verification code is incorrect.",
+
+    'role' => "Role",
 ];

@@ -27,6 +27,22 @@ class EntrepriseController extends Controller
         $this->request = $request;
         $this->entrepriseRepo = $entrepriseRepo;
     }
+
+    public function entreprise($id)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnits = DB::table('functional_units')->where('id_entreprise', $entreprise->id)->get();
+
+        return view('entreprise.entreprise', compact('entreprise', 'functionalUnits'));
+    }
+
+    public function entrepriseInfo($id)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnits = DB::table('functional_units')->where('id_entreprise', $entreprise->id)->get();
+
+        return view('entreprise.entreprise-info-page', compact('entreprise', 'functionalUnits'));
+    }
     
     public function createEntreprise()
     {
@@ -117,14 +133,6 @@ class EntrepriseController extends Controller
                     ->delete();
 
         return redirect()->route('app_main')->with('success', __('entreprise.company_deleted_successfully'));
-    }
-
-    public function entreprise($id)
-    {
-        $entreprise = DB::table('entreprises')->where('id', $id)->first();
-        $functionalUnits = DB::table('functional_units')->where('id_entreprise', $entreprise->id)->get();
-
-        return view('entreprise.entreprise', compact('entreprise', 'functionalUnits'));
     }
 
     public function createFunctionalUnit($id)

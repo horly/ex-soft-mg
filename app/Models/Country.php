@@ -21,10 +21,16 @@ class Country extends Model
         'vat_rat',
     ];
 
-      /** Un pays possède plusieurs entreprise */
-      public function companies()
-      {
-          return $this->hasMany('App\Models\Entreprise');
-      }
+        /** Un pays possède plusieurs entreprise */
+        public function companies()
+        {
+            return $this->hasMany('App\Models\Entreprise');
+        }
+
+        /** Un user possède plusieurs users */
+        public function users()
+        {
+            return $this->hasMany('App\Models\User');
+        }
   
 }

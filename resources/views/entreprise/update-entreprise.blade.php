@@ -72,7 +72,7 @@
         <div class="mb-4 row">
             <label for="country_entreprise" class="col-sm-4 col-form-label">{{ __('main.country') }}*</label>
             <div class="col-sm-8">
-              <select class="form-select @error('country_entreprise') is-invalid @enderror" name="country_entreprise" id="country_entreprise" onchange="changeIsoCode();">
+              <select class="form-select country-select @error('country_entreprise') is-invalid @enderror" name="country_entreprise" id="country_entreprise">
                   @if (Config::get('app.locale') == 'en')
                         <option iso-code="{{ $entrepriseContry->telephone_code }}" value="{{ $entrepriseContry->id }}" selected>{{ $entrepriseContry->name_gb }}</option>
                         @foreach ($countries_gb as $country)

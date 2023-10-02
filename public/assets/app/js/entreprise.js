@@ -1,14 +1,3 @@
-function changeIsoCode(){
-  var iscodeselected = $('#country_entreprise option:selected').attr('iso-code');
-
-  //alert(iscodeselected);
-  if(iscodeselected == undefined || iscodeselected == ""){
-    $('.iso-code-label').text("");
-  }else{
-    $('.iso-code-label').text("+"  + iscodeselected);
-  }
-}
-
 $('#save_number_entreprise').click(function(){
     var new_phone_number = $('#new_phone_number');
     var form = $('#form_new_phone_number_entreprise');

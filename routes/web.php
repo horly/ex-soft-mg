@@ -65,6 +65,8 @@ Route::controller(EntrepriseController::class)->group(function(){
             Route::get('/update_entreprise/{id:int}', 'updateEntreprise')->name('app_update_entreprise');
         });
         Route::get('/entreprise/{id:int}', 'entreprise')->name('app_entreprise');
+        Route::get('/entreprise_info_page/{id:int}', 'entrepriseInfo')->name('app_entreprise_info_page');
+
         Route::post('/save_entreprise', 'saveEntreprise')->name('app_save_entreprise');
         Route::post('/delete_entreprise', 'deleteEntreprise')->name('app_delete_entreprise');
 
@@ -84,5 +86,14 @@ Route::controller(EntrepriseController::class)->group(function(){
 });
 
 Route::controller(ProfileController::class)->group(function(){
-    Route::post('/save_photo', 'savePhoto')->name('app_save_photo');
+    Route::middleware('auth')->group(function(){
+        Route::get('/profile', 'profile')->name('app_profile');
+        //Route::get('/email_password', 'emailPassword')->name('app_email_password');
+        Route::get('/edit_profile_info', 'editProfileInfo')->name('app_edit_profile_info');
+        
+        Route::post('/save_photo', 'savePhoto')->name('app_save_photo');
+        Route::post('/save_profile_info', 'saveProfileInfo')->name('app_save_profile_info');
+        Route::get('/change_email_address_request', 'changeEmailAddressRequest')->name('app_change_email_address_request');
+        Route::post('/change_email_address/{token}', 'changeEmailAddress')->name('app_change_email_address');
+    });
 });

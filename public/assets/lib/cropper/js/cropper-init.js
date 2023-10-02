@@ -177,7 +177,7 @@ $('.docs-buttons').on('click', '[data-method]', function() {
 
                     var image = result.toDataURL(uploadedImageType);
                     var image_input = $('#image-saved');
-                    var form = $('#save-logo-entreprise');
+                    var form = $('#save-image-form');
                     image_input.val(image);
 
                     form.submit();

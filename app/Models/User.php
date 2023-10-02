@@ -27,12 +27,14 @@ class User extends Authenticatable
         'address',
         'phone_number',
         'matricule',
+        'photo_profile_url',
         'two_factor_secret',
         'two_factor_recovery_codes',
         'two_factor_confirmed_at',
         'role_id',
         'grade_id',
         'sub_id',
+        'id_country',
     ];
 
     /**
@@ -85,5 +87,11 @@ class User extends Authenticatable
     public function entreprise()
     {
         return $this->hasMany('App\Models\Entreprise');
+    }
+
+    /** Une user appartient à un pays */
+    function country()
+    {
+        return $this->belongsTo('App\Models\Country', 'id_country');
     }
 }

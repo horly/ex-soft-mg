@@ -1,5 +1,5 @@
 @extends('base')
-@section('title', __('auth.register'))
+@section('title', __('main.add_user'))
 @section('content')
 
 @include('menu.login-nav')
@@ -14,7 +14,7 @@
             </ol>
         </nav>
 
-        <form id="form-register" class="p-5 rounded border bg-body-tertiary" action="{{ route('app_add_user') }}" method="post" token={{ csrf_token() }}>
+        <form id="form-register" class="p-5 border bg-body-tertiary" action="{{ route('app_add_user') }}" method="post" token={{ csrf_token() }}>
             @csrf
 
             <div class="row">
@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="col-md-6 mb-4">
-                    <label for="role" class="form-label">Role *</label>
+                    <label for="role" class="form-label">{{ __('auth.role') }} *</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-universal-access"></i></span>
                         <select class="form-select @error('role') is-invalid @enderror" id="role" name="role">
@@ -99,7 +99,7 @@
                     <label for="phoneNumber" class="form-label">{{ __('main.phone_number')}} *</label>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-phone"></i></span>
-                        <span class="input-group-text" id="phone-number-ind">+243</span>
+                        <span class="input-group-text"><span>+</span id="phone-number-ind">243</span>
                         <input type="number" name="phoneNumber" id="phoneNumber" class="form-control @error('phoneNumber') is-invalid @enderror" placeholder="ex : 896587458" value="{{ old('phoneNumber') }}">
                     </div>
                     <small class="text-danger">@error('phoneNumber'){{ $message }}@enderror</small>

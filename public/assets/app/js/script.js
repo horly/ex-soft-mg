@@ -32,3 +32,13 @@ function deleteElement(id, url, token){
         });
     });
 }
+
+$('.country-select').change(function(){
+  var iscodeselected = $('.country-select option:selected').attr('iso-code');
+  //console.log(iscodeselected);
+  if(iscodeselected == undefined || iscodeselected == ""){
+    $('.country-code-label').text("");
+  }else{
+    $('.country-code-label').text(iscodeselected);
+  }
+});

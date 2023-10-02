@@ -7,7 +7,14 @@
             </div>
             <div class="modal-body">
                 <div class="img-container1">
-                    <img id="image" class="image img-fluid border" src="{{ asset('assets/img/logo/entreprise')}}/{{ $entreprise->url_logo }}.png">
+
+                    @if (Request::route()->getName() == "app_entreprise_info_page")
+                        <img id="image" class="image img-fluid border" src="{{ asset('assets/img/logo/entreprise')}}/{{ $entreprise->url_logo }}.png">
+                    @endif
+                    
+                    @if (Request::route()->getName() == "app_profile")
+                        <img id="image" class="image img-fluid border" src="{{ asset('assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png">
+                    @endif
                 </div>
 
                 {{-- les informations utilisateur à passer --}}
@@ -86,13 +93,24 @@
             <div class="modal-footer docs-buttons">
                 @include('button.close-button')
                
-                <form id="save-logo-entreprise" class="d-grid gap-2" action="{{ route('app_save_photo') }}" method="POST">
+                <form id="save-image-form" class="d-grid gap-2" action="{{ route('app_save_photo') }}" method="POST">
                     @csrf
+                    
+                    @if (Request::route()->getName() == "app_entreprise_info_page")
+                        <input type="hidden" name="id-entreprise" id="id-entreprise" value="{{ $entreprise->id }}">
+                        <input type="hidden" name="id-user" id="id-user" value="null">
+                        <input type="hidden" name="type-photo" id="type-photo" value="entreprise">
+                    @endif
 
-                    <input type="hidden" name="id-entreprise" id="id-entreprise" value="{{ $entreprise->id }}">
+                    @if (Request::route()->getName() == "app_profile")
+                        <input type="hidden" name="id-user" id="id-user" value="{{ Auth::user()->id }}">
+                        <input type="hidden" name="id-entreprise" id="id-entreprise" value="null">
+                        <input type="hidden" name="type-photo" id="type-photo" value="user">
+                        
+                    @endif
+                    
                     <input type="hidden" name="image-saved" id="image-saved">
-                    <input type="hidden" name="type-photo" id="type-photo" value="entreprise">
-
+                    
                     <button class="btn btn-primary saveP" type="submit" data-method="getCroppedCanvas" data-option="{ &quot;maxWidth&quot;: 4096, &quot;maxHeight&quot;: 4096 }">
                         <i class="fa-solid fa-floppy-disk"></i>
                       {{ __('main.save') }}

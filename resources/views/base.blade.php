@@ -27,7 +27,7 @@
         <script src="{{ asset('assets/lib/sweet-alert/sweetalert.min.js') }}"></script>
         <script src="{{ asset('assets/lib/DataTables/datatables.js') }}"></script>
 
-        @if (Request::route()->getName() == "app_entreprise")
+        @if (Request::route()->getName() == "app_entreprise_info_page" || Request::route()->getName() == "app_profile")
             <script src="{{ asset('assets/lib/cropper/js/cropper.js') }}"></script>
             <script src="{{ asset('assets/lib/cropper/js/cropper-init.js') }}"></script>
         @endif

@@ -31,12 +31,12 @@
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{{ asset('assets/img/profile') }}/{{ Auth::user()->id }}{{ Auth::user()->matricule }}.jpeg" class="rounded-circle" alt="..." width="40"> {{ Auth::user()->name }}
+                        <img src="{{ asset('assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png" class="rounded-circle border" alt="..." width="40"> {{ Auth::user()->name }}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" id="nav-login-dropdown">
                         <li><a class="dropdown-item" href="{{ route('app_main') }}"><i class="fa-solid fa-house"></i> {{ __('main.home') }}</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-user"></i> {{ __('main.profile') }}</a></li>
+                        <li><a class="dropdown-item" href="{{ route('app_profile') }}"><i class="fa-solid fa-user"></i> {{ __('main.profile') }}</a></li>
                         <li><hr class="dropdown-divider"></li>
 
                         @if(Auth::user()->role->name == "admin")

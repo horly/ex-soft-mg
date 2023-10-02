@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangeEmailAddressForm;
+use App\Http\Requests\UpdateProfileInfoForm;
+use App\Services\Email\Email;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -10,10 +13,22 @@ class ProfileController extends Controller
 {
     //
     protected $request;
+    protected $email;
 
-    function __construct(Request $request)
+    function __construct(Request $request, Email $email)
     {
         $this->request = $request;
+        $this->email = $email;
+    }
+
+    public function profile()
+    {
+        return view('profile.profile');
+    }
+
+    public function emailPassword()
+    {
+        return view('profile.email-password');
     }
 
     public function savePhoto()
@@ -21,6 +36,7 @@ class ProfileController extends Controller
         $image = $this->request->input('image-saved');
         $type = $this->request->input('type-photo');
         $id_entreprise = $this->request->input('id-entreprise');
+        $id_user = $this->request->input('id-user');
 
 
         if($type == "entreprise")
@@ -46,7 +62,79 @@ class ProfileController extends Controller
         }
         else
         {
+            //on hashe uplodad_profile + le md5 uniqid + l'id de l'utilisateur
+            $image_hash = 'upload_profile' . md5(uniqid()) . $id_user;
+            //$folderPath = base_path() . '/public_html/images/profile/';
+            $folderPath = public_path() . '/assets/img/profile/';
 
+            $image_parts = explode(";base64,", $image);
+            $image_base64 = base64_decode($image_parts[1]);
+            $file = $folderPath . $image_hash . '.png';
+            file_put_contents($file, $image_base64);
+
+            DB::table('users')
+                ->where('id', $id_user)
+                ->update([
+                'photo_profile_url' => $image_hash,
+                'updated_at' => new \DateTimeImmutable
+            ]);
+
+            return redirect()->back()->with('success', __('entreprise.photo_saved_successfully'));
         }
+    }
+
+    public function editProfileInfo()
+    {
+
+        $grades = DB::table('grades')->get();
+
+        $countries_gb = DB::table('countries')
+                        ->orderBy('name_gb', 'asc')
+                        ->get();
+
+        $countries_fr = DB::table('countries')
+                        ->orderBy('name_fr', 'asc')
+                        ->get();
+
+        return view('profile.edit-profile', compact('grades', 'countries_gb', 'countries_fr'));
+    }
+
+    public function saveProfileInfo(UpdateProfileInfoForm $requestF)
+    {
+        $user = Auth::user();
+        $name_profile = $requestF->input('name_profile');
+        $function_profile = $requestF->input('function_profile');
+        $country_profile = $requestF->input('country_profile');
+        $phone_number_profile = $requestF->input('phone_number_profile');
+        $registration_number_profile = $requestF->input('registration_number_profile');
+        $address_profile = $requestF->input('address_profile');
+
+        DB::table('users')
+            ->where('id', $user->id)
+            ->update([
+                'name' => $name_profile,
+                'grade_id' => $function_profile,
+                'id_country' => $country_profile,
+                'phone_number' => $phone_number_profile,
+                'matricule' => $registration_number_profile,
+                'address' => $address_profile,
+                'updated_at' => new \DateTimeImmutable
+            ]);
+        
+        return redirect()->route('app_profile')->with('success', __('profile.information_updated_successfully'));
+    }
+
+    public function changeEmailAddressRequest()
+    {
+        $user = Auth::user();
+
+        $this->email->changeEmailAdressRequest($user);
+
+        return redirect()->back()->with('success', __('profile.change_email_address_request_message'));
+    }
+
+    public function changeEmailAddress($token)
+    {
+        
     }
 }

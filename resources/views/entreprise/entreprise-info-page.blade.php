@@ -17,15 +17,16 @@
         </div>
 
         <div class="p-4" id="myTabContent">
-               
-            @include('entreprise.functional-unite')
-                
+            
+            @include('entreprise.entreprise-info')    
+            
         </div>
     </div>    
 
     <div class="m-5">
         @include('menu.footer-global')
     </div>
+
 </div>
 
 @endsection

@@ -141,4 +141,4 @@
 
 
 {{-- modal modifier la photo de profile --}}
-@include('entreprise.edit-photo-modal')
+@include('global.edit-photo-modal')

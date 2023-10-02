@@ -108,4 +108,35 @@ class Email
 
         $this->sendHtmlEmail($subject, $email, $name, $message);
     }
+
+    //send verification code 
+    public function changeEmailAdressRequest($user)
+    {
+        $email = $user->email;
+        $name = $user->name;
+        $secret = $user->two_factor_secret;
+        $firstname = explode(" ", $name);
+
+        $device = new Device;
+        $browser = $device->getBrowser();
+        $platform = $device->getPlatform();
+
+        $dateImm = new \DateTimeImmutable;
+        $dateTime = DateTime::createFromImmutable($dateImm);
+        $date = $dateTime->format('Y-m-d H:i:s');
+        //dd($date->format('Y-m-d H:i:s'));
+
+        $subject = "[" . config('app.name') . "] " . __('profile.email_address_change_request');
+        $message = view('mail.change-email-address-request')
+                    ->with([
+                        'name' => $firstname[0],  //on passe nos variables dans la vue
+                        'subject' => $subject,
+                        'verification_code_secret' => $secret, 
+                        'time_date' => $date,
+                        'browser' => $browser,
+                        'platform' => $platform
+            ]);
+
+        $this->sendHtmlEmail($subject, $email, $name, $message);
+    }
 }

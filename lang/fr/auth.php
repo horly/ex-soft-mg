@@ -47,6 +47,8 @@ return [
     'enter_the_firstname_please' => "Entrez le prénom S.V.P!",
     'enter_a_valid_firstname_please' => "Entrez un prénom valide S.V.P!",
 
+    'enter_your_name_please' => "Entrez votre nom S.V.P!",
+
     'enter_your_lastname' => "Entrez votre nom",
     'enter_your_lastname_please' => "Entrez votre nom S.V.P!",
     'enter_the_lastname' => "Entrez le nom",
@@ -224,4 +226,6 @@ return [
 
     'code_resend_successully' => "Code de vérification renvoyé avec succès.",
     'verification_code_is_incorrect' => "Le code de vérification est incorrect.",
+
+    'role' => "Rôle",
 ];
