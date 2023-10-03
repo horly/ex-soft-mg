@@ -11,25 +11,7 @@
                 <p class="text-muted text-center h5 mb-5"> {{ __('auth.device_vrification') }}</p>
 
                 <div class="d-flex justify-content-end mb-3">
-                    <div class="dropdown">
-                        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-language"></i> Lang
-                            @if (Config::get('app.locale') == 'en')
-                                <i class="flag-icon flag-icon-gb rounded"></i>
-                            @else
-                                <i class="flag-icon flag-icon-fr rounded"></i>
-                            @endif
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" href="{{ route('app_language', ['lang' => 'fr']) }}"><i class="flag-icon flag-icon-fr rounded"></i> Français</a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('app_language', ['lang' => 'en']) }}"><i class="flag-icon flag-icon-gb rounded"></i> English</a>
-                            </li>
-                        </ul>
-                    </div>
+                    @include('button.language-dropdown')
                 </div>
 
                 <form class="card" method="post" action="{{ route('app_confirm_auth') }}">
@@ -57,9 +39,24 @@
                             <input type="number" name="verification-code" id="verification-code" class="form-control @if(Session::has('verification-code-error')) is-invalid @endif" placeholder="XXXXXX"  autofocus>
                         </div>
 
-                        <div class="text-end mb-3">
-                            <a href="{{ route('app_resend_device_auth_code', ['secret' => $secret]) }}" role="button" class="link-underline-light">{{ __('auth.resend_code')}}</a>
+                        <div class="d-flex justify-content-between mb-3">
+                            <div>
+                                <a href="{{ route('app_change_email_address_request', ['token' => $secret ]) }}" class="link-underline-light save">{{ __('auth.change_email_address') }}</a>
+                                <a href="#" class="link-underline-light btn-loading d-none">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    {{ __('auth.loading') }}
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{ route('app_resend_device_auth_code', ['secret' => $secret]) }}" role="button" class="link-underline-light save">{{ __('auth.resend_code')}}</a>
+                                <a href="#" class="link-underline-light btn-loading d-none">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    {{ __('auth.loading') }}
+                                </a>
+                            </div>
                         </div>
+
+                        
     
                         <div class="d-grid gap-2">
                             <button class="btn btn-primary" type="submit">{{ __('auth.verify')}}</button>
@@ -71,6 +68,7 @@
         </div>
     </div>
 </div>
+
 
 
 <div class="container">

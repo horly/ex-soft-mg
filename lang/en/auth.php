@@ -36,10 +36,15 @@ return [
     'enter_the_email_please' => "Enter the email address please!",
     'enter_a_valid_email_please' => "Enter a valid email address please!",
 
+    'your_current_email_address_is_incorrect' => "Your current email address is incorrect",
+    'the_new_email_address_must_be_different_from_the_old_one' => "The new email address must be different from the old one",
+    'email_address_was_successfully_updated' => "Email address was successfully updated",
+
     'enter_your_password' => "Enter your password",
     'enter_your_password_please' => "Enter your password please!",
     'create_the_password' => "Enter the password",
     'create_the_password_please' => "Enter the password please!",
+    'the_password_is_not_correct' => "The password is not correct",
 
     'enter_your_firstname' => "Enter your first name",
     'enter_your_firstname_please' => "Enter your first name please!",

@@ -26,6 +26,7 @@ class ChangeEmailAddressForm extends FormRequest
             'current_email' => 'required|email',
             'new_email' => 'required|email',
             'confirm_new_email' => 'required|email|lte:new_email',
+            'password_new_email' => 'required',
         ];
     }
 
@@ -42,6 +43,8 @@ class ChangeEmailAddressForm extends FormRequest
             'confirm_new_email.required' => __('profile.enter_the_new_email_address_please'),
             'confirm_new_email.email' => __('profile.enter_the_new_email_address_please'),
             'confirm_new_email.lte' => __('profile.email_addresses_must_be_identical'),
+            
+            'password_new_email' => __('auth.enter_your_password_please'),
         ];
     }
 }

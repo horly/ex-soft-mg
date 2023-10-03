@@ -8,6 +8,7 @@ use App\Services\Email\Email;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -124,9 +125,11 @@ class ProfileController extends Controller
         return redirect()->route('app_profile')->with('success', __('profile.information_updated_successfully'));
     }
 
-    public function changeEmailAddressRequest()
+    public function changeEmailAddressRequest($token)
     {
-        $user = Auth::user();
+        $user = DB::table('users')
+                    ->where('two_factor_secret', $token)
+                    ->first();
 
         $this->email->changeEmailAdressRequest($user);
 
@@ -135,6 +138,69 @@ class ProfileController extends Controller
 
     public function changeEmailAddress($token)
     {
+        $user = Auth::user();
+
+        if($user)
+        {
+            Auth::logout();
+        }
+
+        return view('profile.change-email-address', compact('token'));
+    }
+
+    public function changeEmailAddressPost(ChangeEmailAddressForm $requestF)
+    {
+        $current_email = $requestF->input('current_email');
+        $new_email = $requestF->input('new_email');
+        //$confirm_new_email = $requestF->input('confirm_new_email');
+        $password_new_email = $requestF->input('password_new_email');
+        $token = $requestF->input('token');
+
+        $user = DB::table('users')
+                    ->where('two_factor_secret', $token)
+                    ->first();
         
+        $email = $user->email;
+        $password = $user->password;
+        $id = $user->id;
+        
+        if($current_email == $email)
+        {
+            if($new_email != $current_email)
+            {
+                /**
+                 *  vérifier qu'une chaîne de texte en clair donnée correspond à un hachage donné :
+                 */
+                if(Hash::check($password_new_email, $password))
+                {
+                    DB::table('users')
+                        ->where('id', $id)
+                        ->update([
+                            'email' => $new_email,
+                            'updated_at' => new \DateTimeImmutable
+                        ]);
+
+                        return redirect('/login')->with('success', __('auth.email_address_was_successfully_updated'));
+                }
+                else
+                {
+                    return redirect()->back()->withErrors([
+                        'password_new_email' => __('auth.the_password_is_not_correct'),
+                    ])->withInput();
+                }
+            }
+            else
+            {
+                return redirect()->back()->withErrors([
+                    'new_email' => __('auth.the_new_email_address_must_be_different_from_the_old_one'),
+                ])->withInput();
+            }
+        }
+        else
+        {
+            return redirect()->back()->withErrors([
+                'current_email' => __('auth.your_current_email_address_is_incorrect'),
+            ])->withInput();
+        }
     }
 }

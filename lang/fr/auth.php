@@ -36,10 +36,15 @@ return [
     'enter_the_email_please' => "Entrez l'adresse email S.V.P!",
     'enter_a_valid_email_please' => "Entrez une adresse email valide S.V.P!",
 
+    'your_current_email_address_is_incorrect' => "Votre adresse émail actuelle est incorrecte",
+    'the_new_email_address_must_be_different_from_the_old_one' => "La nouvelle adresse émail doit être différente de l'ancienne",
+    'email_address_was_successfully_updated' => "L'adresse émail a été mise à jour avec succès",
+
     'enter_your_password' => "Entrez votre mot de passe",
     'enter_your_password_please' => "Entrez votre mot de passe S.V.P!",
     'create_the_password' => "Créer le mot de passe",
     'create_the_password_please' => "Créer le mot de passe S.V.P!",
+    'the_password_is_not_correct' => "Le mot de passe n'est pas correct",
 
     'enter_your_firstname' => "Entrez votre prénom",
     'enter_your_firstname_please' => "Entrez votre prénom S.V.P!",

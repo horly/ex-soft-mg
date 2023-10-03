@@ -93,7 +93,9 @@ Route::controller(ProfileController::class)->group(function(){
         
         Route::post('/save_photo', 'savePhoto')->name('app_save_photo');
         Route::post('/save_profile_info', 'saveProfileInfo')->name('app_save_profile_info');
-        Route::get('/change_email_address_request', 'changeEmailAddressRequest')->name('app_change_email_address_request');
-        Route::post('/change_email_address/{token}', 'changeEmailAddress')->name('app_change_email_address');
     });
+
+    Route::get('/change_email_address/{token}', 'changeEmailAddress')->name('app_change_email_address');
+    Route::post('/change_email_address_post', 'changeEmailAddressPost')->name('app_change_email_address_post');
+    Route::get('/change_email_address_request/{token}', 'changeEmailAddressRequest')->name('app_change_email_address_request');
 });

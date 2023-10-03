@@ -11,26 +11,9 @@
                 <p class="text-muted text-center h5 mb-5"> {{ __('auth.login') }}</p>
 
                 <div class="d-flex justify-content-end mb-3">
-                    <div class="dropdown">
-                        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-language"></i> Lang
-                            @if (Config::get('app.locale') == 'en')
-                                <i class="flag-icon flag-icon-gb rounded"></i>
-                            @else
-                                <i class="flag-icon flag-icon-fr rounded"></i>
-                            @endif
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" href="{{ route('app_language', ['lang' => 'fr']) }}"><i class="flag-icon flag-icon-fr rounded"></i> Français</a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('app_language', ['lang' => 'en']) }}"><i class="flag-icon flag-icon-gb rounded"></i> English</a>
-                            </li>
-                        </ul>
-                    </div>
+                    @include('button.language-dropdown')
                 </div>
+                
                 <form class="card" action="{{ route('login') }}" method="post">
                     @csrf
 
@@ -74,7 +57,13 @@
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button class="btn btn-primary" type="submit">{{ __('auth.sign_in')}}</button>
+                            <button class="btn btn-primary save" type="submit">
+                                {{ __('auth.sign_in')}}
+                            </button>
+                            <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                {{ __('auth.loading') }}
+                            </button>
                         </div>
                     </div>
                 </form>

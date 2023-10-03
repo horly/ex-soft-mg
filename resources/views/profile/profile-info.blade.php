@@ -30,7 +30,18 @@
                 <div class="col-md-8 text-primary fw-bold">
                     <span>{{ Auth::user()->email }}</span>
                     <span> | </span>
-                    <span><a href="{{ route('app_change_email_address_request') }}"><i class="fa-solid fa-pen-to-square"></i> {{ __('entreprise.edit') }}</a></span>
+                    <span class="save">
+                        <a href="{{ route('app_change_email_address_request', ['token' => Auth::user()->two_factor_secret]) }}" role="button" class="btn btn-primary">
+                            <i class="fa-solid fa-pen-to-square"></i> 
+                            {{ __('entreprise.edit') }}
+                        </a>
+                    </span>
+                    <span>
+                        <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            {{ __('auth.loading') }}
+                        </button>
+                    </span>
                 </div>
             </div>
 
@@ -39,7 +50,11 @@
                 <div class="col-md-8 text-primary fw-bold">
                     <span>***********</span>
                     <span> | </span>
-                    <span><a href="#"><i class="fa-solid fa-pen-to-square"></i> {{ __('entreprise.edit') }}</a></span>
+                    <span>
+                        <a href="#" role="button" class="btn btn-primary">
+                            <i class="fa-solid fa-pen-to-square"></i> {{ __('entreprise.edit') }}
+                        </a>
+                    </span>
                 </div>
             </div>
 
