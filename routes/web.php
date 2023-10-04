@@ -53,7 +53,8 @@ Route::controller(LoginController::class)->group(function(){
     });
     Route::middleware('guest')->group(function(){
         Route::get('/user-authentication/{secret}', 'userAuthentication')->name('app_user_authentication');
-        Route::get('/reset-password-page/{secret}', 'resetPassword')->name('app_reset_password');
+        Route::get('/email_reset_password_request', 'emailResetPasswordRequest')->name('app_email_reset_password_request');
+        Route::post('/email_reset_password_post', 'emailResetPasswordPost')->name('app_email_reset_password_post');
     });
 });
 
@@ -95,7 +96,10 @@ Route::controller(ProfileController::class)->group(function(){
         Route::post('/save_profile_info', 'saveProfileInfo')->name('app_save_profile_info');
     });
 
-    Route::get('/change_email_address/{token}', 'changeEmailAddress')->name('app_change_email_address');
     Route::post('/change_email_address_post', 'changeEmailAddressPost')->name('app_change_email_address_post');
+    Route::post('/change_password_post', 'changePasswordPost')->name('app_change_password_post');
+    Route::get('/reset-password-page/{secret}', 'resetPassword')->name('app_reset_password');
+    Route::get('/change_email_address/{token}', 'changeEmailAddress')->name('app_change_email_address');
     Route::get('/change_email_address_request/{token}', 'changeEmailAddressRequest')->name('app_change_email_address_request');
+    Route::get('/change_password_request/{token}', 'changePasswordRequest')->name('app_change_password_request');
 });

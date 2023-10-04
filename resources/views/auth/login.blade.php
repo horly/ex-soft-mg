@@ -6,7 +6,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-5 mx-auto">
-                <img class="rounded mx-auto d-block" src="{{ asset('assets/img/logo/exad.jpeg') }}" alt="" srcset="" width="200">
+                @include('global.logo')
+                
                 <p class="text-center text-muted">ERP</p>
                 <p class="text-muted text-center h5 mb-5"> {{ __('auth.login') }}</p>
 
@@ -25,7 +26,7 @@
                         <div class="mb-4">
                             <div class="input-group">
                                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-envelope"></i></span>
-                                <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('auth.enter_your_email') }}" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('auth.enter_your_email') }}" value="{{ old('email') }}">
                             </div>
                             <small class="text-danger">@error('email'){{ $message }}@enderror</small>
                         </div>
@@ -35,7 +36,7 @@
                         <div class="mb-4">
                             <div class="input-group">
                                 <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-lock"></i></span>
-                                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('auth.enter_your_password') }}" required>
+                                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('auth.enter_your_password') }}">
                             </div>
                             <small class="text-danger">@error('password'){{ $message }}@enderror</small>
                         </div>
@@ -52,7 +53,7 @@
                             </div>
 
                             <div class="col-md-6 text-end">
-                                <a href="#" class="link-underline-light">{{ __('auth.forgot_password')}}</a>
+                                <a href="{{ route('app_email_reset_password_request') }}" class="link-underline-light">{{ __('auth.forgot_password')}}</a>
                             </div>
                         </div>
 

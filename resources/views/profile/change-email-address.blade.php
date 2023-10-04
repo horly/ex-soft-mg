@@ -6,7 +6,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-5 mx-auto">
-                <img class="rounded mx-auto d-block" src="{{ asset('assets/img/logo/exad.jpeg') }}" alt="" srcset="" width="200">
+                @include('global.logo')
+                
                 <p class="text-center text-muted">ERP</p>
                 <p class="text-muted text-center h5 mb-5"> {{ __('auth.change_email_address') }}</p>
 

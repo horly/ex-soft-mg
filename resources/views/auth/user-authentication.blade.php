@@ -6,7 +6,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-5 mx-auto">
-                <img class="rounded mx-auto d-block" src="{{ asset('assets/img/logo/exad.jpeg') }}" alt="" srcset="" width="200">
+                @include('global.logo')
+                
                 <p class="text-center text-muted">ERP</p>
                 <p class="text-muted text-center h5 mb-5"> {{ __('auth.device_vrification') }}</p>
 
@@ -41,8 +42,8 @@
 
                         <div class="d-flex justify-content-between mb-3">
                             <div>
-                                <a href="{{ route('app_change_email_address_request', ['token' => $secret ]) }}" class="link-underline-light save">{{ __('auth.change_email_address') }}</a>
-                                <a href="#" class="link-underline-light btn-loading d-none">
+                                <a href="{{ route('app_change_email_address_request', ['token' => $secret ]) }}" id="change-email-request-save" class="link-underline-light">{{ __('auth.change_email_address') }}</a>
+                                <a href="#" class="link-underline-light d-none" id="change-email-request-loading">
                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                     {{ __('auth.loading') }}
                                 </a>

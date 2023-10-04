@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddUserForm;
+use App\Http\Requests\PasswordResetRequestForm;
 use App\Models\User;
 use App\Repository\ConnectionHistoryRepo;
 use App\Services\Email\Email;
@@ -15,10 +16,12 @@ class LoginController extends Controller
 {
     //
     protected $request;
+    protected $email;
 
-    function __construct(Request $request)
+    function __construct(Request $request, Email $email)
     {
         $this->request = $request;
+        $this->email = $email;
     }
 
     public function logout(Request $request)
@@ -103,19 +106,25 @@ class LoginController extends Controller
         }
     }
 
-    public function resetPassword($secret)
-    {
-        return view('auth.reset-password');
-    }
-
     public function addUserPage()
     {
         $grades = DB::table('grades')->get();
         $roles = DB::table('roles')->get();
 
+
+        $countries_gb = DB::table('countries')
+                        ->orderBy('name_gb', 'asc')
+                        ->get();
+
+        $countries_fr = DB::table('countries')
+                        ->orderBy('name_fr', 'asc')
+                        ->get();
+
         return view('auth.add_user_page', [
             'grades' => $grades,
             'roles' => $roles,
+            'countries_gb' => $countries_gb,
+            'countries_fr' => $countries_fr,
         ]);
     }
 
@@ -123,26 +132,81 @@ class LoginController extends Controller
     {
         $name = $requestF->input('firstName') . " " . $requestF->input('lastName');
         $email = $requestF->input('emailUsr');
-        $password = $requestF->input('passwordUsr');
+        //$password = $requestF->input('passwordUsr');
         $role = $requestF->input('role');
         $grade = $requestF->input('function');
         $phone_number = $requestF->input('phoneNumber');
         $address = $requestF->input('address');
         $matricule = $requestF->input('matricule');
 
-        $array = array(
-            'name' => $name,
-            'email' => $email,
-            'password' => Hash::make($password),
-            'role_id' => $role,
-            'grade_id' => $grade,
-            'phone_number' => $phone_number,
-            'matricule' => $matricule,
-            'address' => $address
-        );
+        $userExit = DB::table('users')
+                        ->where('email', $email)
+                        ->first();
+        if(!$userExit)
+        {
+            /**
+             * on génère un mot de passe de 8 caratère 
+             */
+            $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+            $pass = array(); //remember to declare $pass as an array
+            $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+            for ($i = 0; $i < 15; $i++) {
+                $n = rand(0, $alphaLength);
+                $pass[] = $alphabet[$n];
+            }
+            $password = implode($pass); //turn the array into a string
 
-        User::create($array);
+            dd($password);
 
-        return redirect()->route('app_user_management')->with('success', __('main.user_added'));
+            $array = array(
+                'name' => $name,
+                'email' => $email,
+                'password' => Hash::make($password),
+                'role_id' => $role,
+                'grade_id' => $grade,
+                'phone_number' => $phone_number,
+                'matricule' => $matricule,
+                'address' => $address
+            );
+
+            User::create($array);
+
+            return redirect()->route('app_user_management')->with('success', __('main.user_added'));
+        }
+        else
+        {
+            return redirect()->back()->withErrors([
+                'emailUsr' => __('auth.this_email_address_is_already_used')
+            ])->withInput();
+        }
+    }
+
+    public function emailResetPasswordRequest()
+    {
+        return view('auth.email-to-reset-password-request');
+    }
+
+    public function emailResetPasswordPost(PasswordResetRequestForm $requestF)
+    {
+        $emailPassReq = $requestF->input('emailPassReq');
+
+        $user = DB::table('users')
+                ->where('email', $emailPassReq)
+                ->first();
+
+        if($user)
+        {
+            $this->email->changePasswordRequest($user);
+
+            return redirect()->back()->with('success', __('profile.your_password_change_request_has_been'))->withInput();
+        }
+        else
+        {
+            return redirect()->back()
+                ->withErrors([
+                    'emailPassReq' => __('auth.this_email_address_does_not_correspond_to_any_user')
+                ])
+                ->withInput();
+        }
     }
 }

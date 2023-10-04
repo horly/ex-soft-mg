@@ -26,8 +26,9 @@ class AddUserForm extends FormRequest
             'firstName' => 'required|regex:/^[a-zA-Z ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ]+$/',
             'lastName' => 'required|regex:/^[a-zA-Z ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ]+$/',
             'emailUsr' => 'required|email',
-            'passwordUsr' => 'required|min:8',
-            'passwordConfirm' => 'required|lte:passwordUsr',
+            //'passwordUsr' => 'required|min:8',
+            //'passwordConfirm' => 'required|same:passwordUsr',
+            'countryUsr' => 'required',
             'role' => 'required',
             'function' => 'required',
             'phoneNumber' => 'required|numeric',
@@ -48,11 +49,13 @@ class AddUserForm extends FormRequest
             'emailUsr.required' => __('auth.enter_the_email_please'),
             'emailUsr:email' => __('auth.enter_a_valid_email_please'),
 
-            'passwordUsr.required' => __('auth.create_the_password_please'),
-            'passwordUsr.min' => __('auth.error_password_register_message'),
+            //'passwordUsr.required' => __('auth.create_the_password_please'),
+            //'passwordUsr.min' => __('auth.error_password_register_message'),
 
-            'passwordConfirm.required' => __('auth.password_confirmation_register_message'),
-            'passwordConfirm.lte' => __('auth.password_confirmation_register_message'),
+            //'passwordConfirm.required' => __('auth.password_confirmation_register_message'),
+            //'passwordConfirm.same' => __('auth.password_confirmation_register_message'),
+
+            'countryUsr.required' => __('auth.select_the_country_please'),
 
             'role.required' => __('auth.error_role_register_message'),
 

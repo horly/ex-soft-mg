@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ChangeEmailAddressForm;
+use App\Http\Requests\changePasswordForm;
 use App\Http\Requests\UpdateProfileInfoForm;
 use App\Services\Email\Email;
 use Illuminate\Http\Request;
@@ -202,5 +203,50 @@ class ProfileController extends Controller
                 'current_email' => __('auth.your_current_email_address_is_incorrect'),
             ])->withInput();
         }
+    }
+
+    public function changePasswordRequest($token)
+    {
+        $user = DB::table('users')
+                ->where('two_factor_secret', $token)
+                ->first();
+        
+        $this->email->changePasswordRequest($user);
+
+        return redirect()->back()->with('success', __('profile.your_password_change_request_has_been'));
+    }
+
+    public function resetPassword($secret)
+    {
+        $user = Auth::user();
+
+        if($user)
+        {
+            Auth::logout();
+        }
+
+        return view('profile.reset-password', compact('secret'));
+    }
+
+    public function changePasswordPost(changePasswordForm $requestF)
+    {
+        $new_password = $requestF->input('new_password');
+
+        $token = $requestF->input('token');
+
+        $user = DB::table('users')
+                    ->where('two_factor_secret', $token)
+                    ->first();
+        
+        $id = $user->id;
+
+        DB::table('users')
+            ->where('id', $id)
+            ->update([
+                'password' => Hash::make($new_password),
+                'updated_at' => new \DateTimeImmutable
+        ]);
+
+        return redirect('/login')->with('success', __('profile.your_password_has_been_successfully_updated'));
     }
 }

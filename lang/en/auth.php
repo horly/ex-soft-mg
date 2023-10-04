@@ -81,8 +81,12 @@ return [
     'password_confirmation' => 'Password confirmation',
     'country' => 'Country',
     'select_your_country' => 'Select your country',
+    'select_the_country' => 'Select the country',
+    'select_the_country_please' => 'Select the country please!',
     'agree_terms' => 'Agree terms',
     'already_have_an_account' => 'Already have an account?',
+    'enter_the_phone_number' => 'Enter the phone number',
+    'enter_the_address' => "Enter the address",
 
     'error_firstname_register_message' => 'First Name is not valid!',
     'error_lastname_register_message' => 'Last Name is not valid!',
@@ -234,4 +238,7 @@ return [
     'verification_code_is_incorrect' => "Verification code is incorrect.",
 
     'role' => "Role",
+
+    'provide_your_email_and_we_will' => "Provide your email and we will send you instructions to change your password.",
+    'this_email_address_does_not_correspond_to_any_user' => "This email address does not correspond to any user.",
 ];

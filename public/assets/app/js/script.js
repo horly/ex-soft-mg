@@ -3,6 +3,12 @@ $('.save').click(function(){
     $('.btn-loading').removeClass('d-none');
 });
 
+$('#change-email-request-save').click(function(){
+  $('#change-email-request-save').addClass('d-none');
+  $('#change-email-request-loading').removeClass('d-none');
+}); 
+
+
 function deleteElement(id, url, token){
     swal({
         title: $('#are_you_sure_to_delete').val(),

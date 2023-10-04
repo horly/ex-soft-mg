@@ -23,4 +23,10 @@ return [
     'change_email_address_message_request_we_receive' => "We received a request to change your email address. If you requested this change, please click the link below.",
     'email_address_change_request' => "Email address change request",
     'change_email_address_request_message' => "Your request to change your email address has been sent successfully. Please check your inbox.",
+
+    'reset_password_request' => "Reset password request",
+    'weve_received_a_request_to_reset_your_password' => "We've received a request to reset your password. No changes have been made to your account yet.",
+    'if_you_did_not_request_a_new_password' => "If you are not the author of this request, please notify us immediately by responding to this email.",
+    'your_password_change_request_has_been' => "Your password change request has been successfully sent. Please check your inbox.",
+    'your_password_has_been_successfully_updated' => "Your password has been successfully updated.",
 ];

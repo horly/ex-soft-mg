@@ -72,7 +72,7 @@
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-phone"></i></span>
                         <span class="input-group-text">
-                            +<span class="country-code-label">243</span>
+                            +<span class="country-code-label">{{ Auth::user()->country->telephone_code }}</span>
                         </span>
                         <input type="number" class="form-control @error('phone_number_profile') is-invalid @enderror" name="phone_number_profile" id="phone_number_profile" value="{{ Auth::user()->phone_number }}">
                     </div>

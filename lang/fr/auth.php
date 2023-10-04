@@ -79,8 +79,12 @@ return [
     'password_confirmation' => 'Confirmer le mot de passe',
     'country' => 'Pays',
     'select_your_country' => 'Sélectionnez votre pays',
+    'select_the_country' => 'Sélectionnez le pays',
+    'select_the_country_please' => 'Sélectionnez le pays S.V.P!',
     'agree_terms' => 'Accepter nos conditions',
     'already_have_an_account' => 'Vous avez déjà un compte ?',
+    'enter_the_phone_number' => 'Entrez le numéro de téléphone',
+    'enter_the_address' => "Entrez l'adresse",
 
     'error_firstname_register_message' => 'Le prénom n\'est pas valide !',
     'error_lastname_register_message' => 'Le nom n\'est pas valide !',
@@ -233,4 +237,7 @@ return [
     'verification_code_is_incorrect' => "Le code de vérification est incorrect.",
 
     'role' => "Rôle",
+
+    'provide_your_email_and_we_will' => "Fournissez votre email et nous vous enverrons des instructions pour changer votre mot de passe.",
+    'this_email_address_does_not_correspond_to_any_user' => "Cette adresse émail ne correspond à aucun utilisateur.",
 ];

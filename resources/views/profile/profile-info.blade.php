@@ -30,14 +30,14 @@
                 <div class="col-md-8 text-primary fw-bold">
                     <span>{{ Auth::user()->email }}</span>
                     <span> | </span>
-                    <span class="save">
-                        <a href="{{ route('app_change_email_address_request', ['token' => Auth::user()->two_factor_secret]) }}" role="button" class="btn btn-primary">
+                    <span>
+                        <a href="{{ route('app_change_email_address_request', ['token' => Auth::user()->two_factor_secret]) }}" id="change-email-request-save" role="button" class="btn btn-primary">
                             <i class="fa-solid fa-pen-to-square"></i> 
                             {{ __('entreprise.edit') }}
                         </a>
                     </span>
                     <span>
-                        <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+                        <button class="btn btn-primary d-none" type="button" id="change-email-request-loading" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             {{ __('auth.loading') }}
                         </button>
@@ -51,9 +51,15 @@
                     <span>***********</span>
                     <span> | </span>
                     <span>
-                        <a href="#" role="button" class="btn btn-primary">
+                        <a href="{{ route('app_change_password_request', ['token' => Auth::user()->two_factor_secret]) }}" role="button" class="btn btn-primary save">
                             <i class="fa-solid fa-pen-to-square"></i> {{ __('entreprise.edit') }}
                         </a>
+                    </span>
+                    <span>
+                        <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            {{ __('auth.loading') }}
+                        </button>
                     </span>
                 </div>
             </div>
