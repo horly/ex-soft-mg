@@ -49,7 +49,7 @@ class LoginController extends Controller
             ->update([
                 'two_factor_secret' => $verification_code_secret,
                 'two_factor_recovery_codes' => $verification_code,
-            ]);
+        ]);
         
         $mail = new Email;
         $mail->sendVerifactionCode($user, $verification_code, $verification_code_secret);
@@ -136,6 +136,7 @@ class LoginController extends Controller
         $role = $requestF->input('role');
         $grade = $requestF->input('function');
         $phone_number = $requestF->input('phoneNumber');
+        $countryUsr = $requestF->input('countryUsr');
         $address = $requestF->input('address');
         $matricule = $requestF->input('matricule');
 
@@ -150,13 +151,14 @@ class LoginController extends Controller
             $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
             $pass = array(); //remember to declare $pass as an array
             $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
-            for ($i = 0; $i < 15; $i++) {
+            for ($i = 0; $i < 10; $i++) {
                 $n = rand(0, $alphaLength);
                 $pass[] = $alphabet[$n];
             }
             $password = implode($pass); //turn the array into a string
 
-            dd($password);
+            //dd($password);
+
 
             $array = array(
                 'name' => $name,
@@ -164,12 +166,36 @@ class LoginController extends Controller
                 'password' => Hash::make($password),
                 'role_id' => $role,
                 'grade_id' => $grade,
+                'id_country' => $countryUsr,
                 'phone_number' => $phone_number,
                 'matricule' => $matricule,
                 'address' => $address
             );
 
-            User::create($array);
+            $userP1 = User::create($array);
+
+            $userExp = Auth::user();
+
+            //on génère de nombre aleotoire de 6 chiffres si l'utilisateur choisie de copier coller le code
+            $verification_code = "";
+            $longeur_code = 6;
+            $verification_code_secret = md5(uniqid()) . $userP1->id . sha1($userP1->email);
+
+            for($i = 0; $i < $longeur_code; $i++)
+            {
+                $verification_code .= mt_rand(0,9);
+            }
+
+            DB::table('users')
+                ->where('id', $userP1->id)
+                ->update([
+                    'two_factor_secret' => $verification_code_secret,
+                    'two_factor_recovery_codes' => $verification_code,
+            ]);
+
+            $userP2 = DB::table('users')->where('id', $userP1->id)->first();
+
+            $this->email->inviteUser($userP2, $userExp, $password);
 
             return redirect()->route('app_user_management')->with('success', __('main.user_added'));
         }

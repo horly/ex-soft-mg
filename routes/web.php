@@ -34,6 +34,8 @@ Route::controller(HomeController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::middleware('admin')->group(function(){
             Route::get('/user_management', 'userManagement')->name('app_user_management');
+            Route::get('/user_management_info/{id:int}', 'userManagementInfo')->name('app_user_management_info');
+            Route::post('/delete_user', 'deleteUser')->name('app_delete_user');
         });
         Route::get('/main', 'main')->name('app_main');
         Route::get('/login_history', 'loginHistory')->name('app_login_history');

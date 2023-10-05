@@ -240,4 +240,10 @@ return [
 
     'provide_your_email_and_we_will' => "Fournissez votre email et nous vous enverrons des instructions pour changer votre mot de passe.",
     'this_email_address_does_not_correspond_to_any_user' => "Cette adresse émail ne correspond à aucun utilisateur.",
+
+    'has_invited_you_to_join' => "vous a invité à rejoindre l'équipe" . config('app.name') . ".",
+    'your_credentials_is' => "Vos informations d'identification sont",
+    'you_can_login' => "Vous pouvez vous connecter",
+    'or_you_can_create' => "ou vous pouvez créer un nouveau mot de passe",
+    'email_verification' => "Vérification de l'émail",
 ];

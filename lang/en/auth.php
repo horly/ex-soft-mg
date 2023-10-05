@@ -241,4 +241,10 @@ return [
 
     'provide_your_email_and_we_will' => "Provide your email and we will send you instructions to change your password.",
     'this_email_address_does_not_correspond_to_any_user' => "This email address does not correspond to any user.",
+    
+    'has_invited_you_to_join' => "has invited you to join " . config('app.name') . " team.",
+    'your_credentials_is' => "Your credentials is",
+    'you_can_login' => "You can login",
+    'or_you_can_create' => "Or you can create a new password",
+    'email_verification' => "Email verification",
 ];

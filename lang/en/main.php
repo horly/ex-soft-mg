@@ -72,4 +72,7 @@
         'my_login_history' => 'My login history',
         'name' => "Name",
         'bank_account' => "Bank Account", 
+
+        'user_information' => "User information",
+        'user_deleted_successfully' => "User deleted successfully",
 ];

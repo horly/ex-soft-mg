@@ -170,4 +170,34 @@ class Email
 
         $this->sendHtmlEmail($subject, $email, $name, $message);
     }
+
+    //invite user management
+    public function inviteUser($user, $userInv, $passwordClear)
+    {
+        $email = $user->email;
+        $name = $user->name;
+        $secret = $user->two_factor_secret;
+        $firstname = explode(" ", $name);
+
+        $nameExp = $userInv->name;
+
+        $dateImm = new \DateTimeImmutable;
+        $dateTime = DateTime::createFromImmutable($dateImm);
+        $date = $dateTime->format('Y-m-d H:i:s');
+        //dd($date->format('Y-m-d H:i:s'));
+
+        $subject = "[" . config('app.name') . "] " . __('auth.email_verification');
+        $message = view('mail.user-invitation-join')
+                    ->with([
+                        'name' => $firstname[0],  //on passe nos variables dans la vue
+                        'nameExp' => $nameExp,
+                        'subject' => $subject,
+                        'verification_code_secret' => $secret, 
+                        'time_date' => $date,
+                        'email' => $email,
+                        'password' => $passwordClear,
+            ]);
+
+        $this->sendHtmlEmail($subject, $email, $name, $message);
+    }
 }

@@ -8,6 +8,7 @@ use App\Repository\EntrepriseRepo;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -63,5 +64,23 @@ class HomeController extends Controller
         $histories = $this->connectHistory->getHistoryByUser($user->id);
 
         return view('auth.login-histoty', compact('histories'));
+    }
+
+    public function userManagementInfo($id)
+    {
+        $user = User::where('id', $id)->first();
+        
+        return view('main.user-management-info', compact('user'));
+    }
+
+    public function deleteUser()
+    {
+        $id_user = $this->request->input('id_element');
+
+        DB::table('users')
+                    ->where('id', $id_user)
+                    ->delete();
+
+        return redirect()->route('app_user_management')->with('success', __('main.user_deleted_successfully'));
     }
 }

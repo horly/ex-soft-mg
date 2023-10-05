@@ -69,4 +69,7 @@
         'my_login_history' => 'Mon historique de connexion',
         'name' => "Nom",
         'bank_account' => "Compte bancaire", 
+
+        'user_information' => "Informations de l'utilisateur",
+        'user_deleted_successfully' => "Utilisateur supprimé avec succès",
 ];
