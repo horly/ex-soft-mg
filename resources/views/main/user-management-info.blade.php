@@ -12,6 +12,9 @@
         </ol>
     </nav>
 
+    {{-- On inlut les messages flash--}}
+    @include('message.flash-message')
+
     <div class="border">
 
         <div class="p-4" id="myTabContent">
@@ -76,6 +79,55 @@
                             <div class="col-md-4"><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;&nbsp;{{ __('main.address') }}</div>
                             <div class="col-md-8 text-primary fw-bold">{{ $user->address }}</div>
                         </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4"><i class="fa-solid fa-building-circle-check"></i>&nbsp;&nbsp;&nbsp;{{ __('main.company') }}</div>
+                            <div class="col-sm-8">
+                                <div class="accordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button mini-accordion-button-header" type="button" data-bs-toggle="collapse" data-bs-target="#banks" aria-expanded="true" aria-controls="phones">
+                                                  {{ __('main.companies_managed') }}
+                                            </button>
+                                        </h2>
+                                        <div id="banks" class="accordion-collapse collapse show">
+                                            <div class="accordion-body">
+                                                <ul class="list-group list-group-flush border mb-3">
+                                                    @php
+                                                        $entreprises = DB::table('manages')
+                                                                        ->join('entreprises', 'manages.id_entreprise', '=', 'entreprises.id')
+                                                                        ->where('manages.id_user', $user->id)
+                                                                        ->get();
+                                                    @endphp
+                                                    @foreach ($entreprises as $entreprise)
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <span><i class="fa-solid fa-building-columns"></i></span>&nbsp;&nbsp;
+                                                                <span>{{ $entreprise->name }}</span>
+                                                            </div>
+                                                            <div>
+                                                                <button class="btn btn-success" type="button">
+                                                                    <i class="fa-solid fa-gear"></i>
+                                                                </button>
+                                                                <button class="btn btn-danger" type="button" onclick="deleteElementTwoVal('{{ $entreprise->id }}', '{{ $user->id }}', '{{ route('app_delete_management_entreprise') }}', '{{ csrf_token() }}');">
+                                                                    <i class="fa-solid fa-trash-can"></i>
+                                                                </button>
+                                                            </div>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addEntrepriseToUser">
+                                                    <i class="fa-solid fa-circle-plus"></i>
+                                                    {{ __('auth.add') }}
+                                                </button>
+                                            </div>
+                                        </div>
+                
+                                    </div>
+                                </div>
+                
+                            </div>
+                        </div>
                         
                         <div class="d-grid gap-2">
                             <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $user->id }}', '{{ route('app_delete_user') }}', '{{ csrf_token() }}');">
@@ -97,5 +149,64 @@
         @include('menu.footer-global')
     </div>
 </div>
+
+{{-- Modal new phone--}}
+<div class="modal fade" id="addEntrepriseToUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="new-number-phone-modal"> {{ __('main.assign_a_company_to_the_user') }} </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-body-tertiary  p-4">
+                @php
+                    $entreprises = DB::table('entreprises')->where('id_user', Auth::user()->id)->get();
+                @endphp
+
+                <table class="table table-striped table-hover border bootstrap-datatable">
+                    <thead>
+                        <th>N°</th>
+                        <th>{{ __('main.company_name') }}</th>
+                        <th class="text-end">Action</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($entreprises as $entreprise)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td><a href="{{ route('app_entreprise', ['id' => $entreprise->id]) }}">{{ $entreprise->name }}</a></td>
+                                <td class="text-end">
+                                    @php
+                                        $manage = DB::table('manages')->where([
+                                            'id_user' => $user->id,
+                                            'id_entreprise' => $entreprise->id,
+                                        ])->first();
+                                    @endphp
+                                    @if ($manage)
+                                        <button class="btn btn-success" type="button" disabled>
+                                            <i class="fa-solid fa-circle-check"></i>
+                                        </button>
+                                    @else
+                                        <button class="btn btn-primary" onclick="loadingBtnEntreManagement('{{ $entreprise->id }}', '{{ $user->id }}', '{{ csrf_token() }}', '{{ route('app_assign_entreprise_to_user') }}')" id="btn-{{ $entreprise->id }}"  type="button" title="{{ __('auth.add') }}">
+                                            <i class="fa-solid fa-circle-plus"></i>
+                                        </button>
+                                        <button class="btn btn-primary btn-loading d-none" id="loading-{{ $entreprise->id }}" type="button" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        </button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                {{-- button de fermeture modale --}}
+                @include('button.close-button')
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @endsection

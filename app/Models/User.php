@@ -94,4 +94,11 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Models\Country', 'id_country');
     }
+
+    /** Un user gère */
+    public function manage()
+    {
+        return $this->hasMany('App\Models\Manage');
+    }
+    
 }

@@ -36,6 +36,8 @@ Route::controller(HomeController::class)->group(function(){
             Route::get('/user_management', 'userManagement')->name('app_user_management');
             Route::get('/user_management_info/{id:int}', 'userManagementInfo')->name('app_user_management_info');
             Route::post('/delete_user', 'deleteUser')->name('app_delete_user');
+            Route::post('/assign_entreprise_to_user', 'assignEntreUser')->name('app_assign_entreprise_to_user');
+            Route::post('/delete_management_entreprise', 'deleteManagementEntr')->name('app_delete_management_entreprise');
         });
         Route::get('/main', 'main')->name('app_main');
         Route::get('/login_history', 'loginHistory')->name('app_login_history');
@@ -67,9 +69,11 @@ Route::controller(EntrepriseController::class)->group(function(){
             Route::get('/create_functional_unit/{id:int}', 'createFunctionalUnit')->name('app_create_functional_unit');
             Route::get('/update_entreprise/{id:int}', 'updateEntreprise')->name('app_update_entreprise');
         });
-        Route::get('/entreprise/{id:int}', 'entreprise')->name('app_entreprise');
-        Route::get('/entreprise_info_page/{id:int}', 'entrepriseInfo')->name('app_entreprise_info_page');
-
+        Route::middleware('entreprise')->group(function(){
+            Route::get('/entreprise/{id:int}', 'entreprise')->name('app_entreprise');
+            Route::get('/entreprise_info_page/{id:int}', 'entrepriseInfo')->name('app_entreprise_info_page');
+        });
+        
         Route::post('/save_entreprise', 'saveEntreprise')->name('app_save_entreprise');
         Route::post('/delete_entreprise', 'deleteEntreprise')->name('app_delete_entreprise');
 

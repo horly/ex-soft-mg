@@ -66,4 +66,10 @@ class Entreprise extends Model
     {
         return $this->hasMany('App\Models\FunctionalUnit');
     }
+
+    /** Un user gère */
+    public function manage()
+    {
+        return $this->hasMany('App\Models\Manage');
+    }
 }

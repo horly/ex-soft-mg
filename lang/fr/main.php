@@ -72,4 +72,14 @@
 
         'user_information' => "Informations de l'utilisateur",
         'user_deleted_successfully' => "Utilisateur supprimé avec succès",
+
+        'company' => "Entreprise",
+        'companies' => "Entreprises",
+        'all_your_companies' => "Toutes vos entreprises",
+
+        'companies_managed' => "Entreprises gérées",
+        'assign_a_company_to_the_user' => "Attribuer une entreprise à l'utilisateur",
+
+        'the_company_has_been_successfully_assigned_to_the_user' => "L'entreprise a été attribuée avec succès à l'utilisateur",
+        'company_assignment_was_successfully_deleted' => "L'affectation de l'entreprise a été supprimée avec succès",
 ];

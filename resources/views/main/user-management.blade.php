@@ -43,12 +43,12 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>
-                                <a href="{{ route('app_user_management_info', ['id' => $user->id ]) }}">{{ $user->name }}</a>
+                                <a href="{{ Auth::user()->id == $user->id ? route('app_profile') : route('app_user_management_info', ['id' => $user->id ]) }}">{{ $user->name }}</a>
                             </td>
                             <td>{{ $user->matricule }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $grade->name }}</td>
-                            <td><a href="{{ route('app_user_management_info', ['id' => $user->id ]) }}">{{ __('main.show') }}</a></td>
+                            <td><a href="{{ Auth::user()->id == $user->id ? route('app_profile') : route('app_user_management_info', ['id' => $user->id ]) }}">{{ __('main.show') }}</a></td>
                         </tr>     
                     @endforeach
                 </tbody>

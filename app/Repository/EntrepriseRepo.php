@@ -22,6 +22,14 @@ class EntrepriseRepo
                             ->get();
     }
 
+    public function getEntrepriseByManagement($user)
+    {
+        return DB::table('manages')
+                ->join('entreprises', 'manages.id_entreprise', '=', 'entreprises.id')
+                ->where('manages.id_user', $user->id)
+                ->get();
+    }
+
     public function add($name, $rccm, $idnat, $address, $nif, $website, $slogan)
     {
         /*return Entreprise::create([

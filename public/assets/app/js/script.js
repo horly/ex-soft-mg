@@ -8,6 +8,19 @@ $('#change-email-request-save').click(function(){
   $('#change-email-request-loading').removeClass('d-none');
 }); 
 
+function loadingBtnEntreManagement(id_entreprise, id_user, token, url){
+  $('#btn-' + id_entreprise).addClass('d-none');
+  $('#loading-' + id_entreprise).removeClass('d-none');
+
+  var inputs = '';
+  inputs += '<input type="hidden" name="id_entreprise" value="' + id_entreprise + '" />' 
+            + '<input type="hidden" name="id_user" value="' + id_user + '" />'
+            + '<input type="hidden" name="_token" value="' + token + '" />';
+  
+  $("body").append('<form action="' + url + '" method="POST" id="poster">' + inputs + '</form>');
+  $("#poster").submit();
+}
+
 
 function deleteElement(id, url, token){
     swal({
@@ -37,6 +50,37 @@ function deleteElement(id, url, token){
           $("#poster").submit();
         });
     });
+}
+
+function deleteElementTwoVal(id1, id2, url, token){
+  swal({
+      title: $('#are_you_sure_to_delete').val(),
+      text: $('#this_action_is_irreversible').val(),
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: $('#yes_delete_it').val(),
+      closeOnConfirm: false
+  },
+  function(){
+      swal({
+        title : $('#deleted').val(), 
+        text : $('#the_item_was_successfully_deleted').val(), 
+        type : "success",
+      }, function(){
+        //$('#form_phone_delete').submit();
+        //console.log(id);
+        //console.log(url);
+        //console.log(token);
+        var inputs = '';
+        inputs += '<input type="hidden" name="id_element1" value="' + id1 + '" />' 
+                  + '<input type="hidden" name="id_element2" value="' + id2 + '" />'
+                  + '<input type="hidden" name="_token" value="' + token + '" />';
+        
+        $("body").append('<form action="' + url + '" method="POST" id="poster">' + inputs + '</form>');
+        $("#poster").submit();
+      });
+  });
 }
 
 $('.country-select').change(function(){

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Grade;
+use App\Models\Manage;
 use App\Repository\ConnectionHistoryRepo;
 use App\Repository\EntrepriseRepo;
 use Illuminate\Foundation\Auth\User;
@@ -26,11 +27,16 @@ class HomeController extends Controller
 
     public function main()
     {
-        $entreprises = $this->entrepriseRepo->getEntrepriseBySub();
+        $entreprises = null;
+        $user = Auth::user();
 
-        return view('main.main', [
-            'entreprises' => $entreprises
-        ]);
+        $user->role->name == 'admin' 
+                ? $entreprises = $this->entrepriseRepo->getEntrepriseBySub() 
+                : $entreprises = $this->entrepriseRepo->getEntrepriseByManagement($user);
+        
+        //dd($entreprises);
+        
+        return view('main.main', compact('entreprises'));
     }
 
     public function infosOnlineUser($matricule)
@@ -70,6 +76,7 @@ class HomeController extends Controller
     {
         $user = User::where('id', $id)->first();
         
+        
         return view('main.user-management-info', compact('user'));
     }
 
@@ -82,5 +89,32 @@ class HomeController extends Controller
                     ->delete();
 
         return redirect()->route('app_user_management')->with('success', __('main.user_deleted_successfully'));
+    }
+
+    public function assignEntreUser()
+    {
+        $id_entreprise = $this->request->input('id_entreprise');
+        $id_user = $this->request->input('id_user');
+
+        Manage::create([
+            'id_user' => $id_user,
+            'id_entreprise' => $id_entreprise,
+        ]);
+
+        return redirect()->back()->with('success', __('main.the_company_has_been_successfully_assigned_to_the_user'));
+    }
+
+    public function deleteManagementEntr()
+    {
+        $id_entreprise = $this->request->input('id_element1');
+        $id_user = $this->request->input('id_element2');
+
+        DB::table('manages')
+                    ->where([
+                        'id_user' => $id_user,
+                        'id_entreprise' => $id_entreprise,
+                    ])->delete();
+
+        return redirect()->back()->with('success', __('main.company_assignment_was_successfully_deleted'));
     }
 }

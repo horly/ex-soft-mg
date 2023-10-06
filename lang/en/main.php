@@ -75,4 +75,14 @@
 
         'user_information' => "User information",
         'user_deleted_successfully' => "User deleted successfully",
-];
+
+        'company' => "Company",
+        'companies' => "Companies",
+        'all_your_companies' => "All your companies",
+
+        'companies_managed' => "Companies managed",
+        'assign_a_company_to_the_user' => "Assign a company to the user",
+
+        'the_company_has_been_successfully_assigned_to_the_user' => "The company has been successfully assigned to the user",
+        'company_assignment_was_successfully_deleted' => "Company assignment was successfully deleted",
+    ];
