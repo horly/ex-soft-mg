@@ -9,6 +9,8 @@ use App\Models\BusinessContact;
 use App\Models\BusinessEmail;
 use App\Models\Entreprise;
 use App\Models\FunctionalUnit;
+use App\Models\FunctionalunitEmail;
+use App\Models\FunctionalUnitPhone;
 use App\Repository\EntrepriseRepo;
 use DateTimeImmutable;
 use GuzzleHttp\Promise\Create;
@@ -30,8 +32,16 @@ class EntrepriseController extends Controller
 
     public function entreprise($id)
     {
+        $functionalUnits = null;
+        $user = Auth::user();
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
-        $functionalUnits = DB::table('functional_units')->where('id_entreprise', $entreprise->id)->get();
+
+        $user->role->name == 'admin'
+            ? $functionalUnits = DB::table('functional_units')->where('id_entreprise', $entreprise->id)->get() 
+            : $functionalUnits = DB::table('manage_f_u_s')
+                                    ->join('functional_units', 'manage_f_u_s.id_fu', '=', 'functional_units.id')
+                                    ->where('functional_units.sub_id', $user->sub_id)
+                                    ->get();
 
         return view('entreprise.entreprise', compact('entreprise', 'functionalUnits'));
     }
@@ -140,21 +150,6 @@ class EntrepriseController extends Controller
         $entreprise = DB::table('entreprises')->where('id', $id)->first(); 
 
         return view('entreprise.create-functional-unit', compact('entreprise'));
-    }
-
-    public function saveFunctionalUnit(FunctionalUnitForm $requestionF)
-    {
-        $name = $requestionF->input('unit_name');
-        $address = $requestionF->input('unit_address');
-        $id_entreprise = $requestionF->input('id_entreprise');
-
-        FunctionalUnit::create([
-            'name' => $name,
-            'address' => $address, 
-            'id_entreprise' => $id_entreprise,
-        ]);
-
-        return redirect()->route('app_entreprise', ['id' => $id_entreprise])->with('success', __('entreprise.functional_unit_saved_successfully'));
     }
 
     public function updateEntreprise($id)

@@ -33,6 +33,29 @@
             </div>
         </div>
 
+        @php
+            $country = DB::table('countries')->where('id', $entreprise->id_country)->first();
+        @endphp
+
+        <div class="mb-4 row">
+          <label for="unit_phone" class="col-sm-4 col-form-label">{{ __('main.phone_number') }}*</label>
+          <div class="col-sm-8">
+              <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">+{{ $country->telephone_code }}</span>
+                <input type="number" class="form-control @error('unit_phone') is-invalid @enderror" id="unit_phone" name="unit_phone" placeholder="{{ __('entreprise.enter_your_functional_unit_phone_number') }}" value="{{ old('unit_name') }}">
+              </div>
+              <small class="text-danger">@error('unit_phone') {{ $message }} @enderror</small>
+          </div>
+        </div>
+
+        <div class="mb-4 row">
+          <label for="unit_email" class="col-sm-4 col-form-label">{{ __('main.email_address') }}*</label>
+          <div class="col-sm-8">
+              <input type="email" class="form-control @error('unit_email') is-invalid @enderror" id="unit_email" name="unit_email" placeholder="{{ __('entreprise.enter_your_functional_unit_email_address') }}" value="{{ old('unit_name') }}">
+              <small class="text-danger">@error('unit_email') {{ $message }} @enderror</small>
+          </div>
+        </div>
+
         {{-- button de sauvegarde --}}
         @include('button.save-button')
 

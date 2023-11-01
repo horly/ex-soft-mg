@@ -18,9 +18,13 @@
             @foreach ($functionalUnits as $functionalUnit)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $functionalUnit->name }}</td>
+                    <td>
+                        <a href="{{ route('app_modules', ['id' => $functionalUnit->id_entreprise, 'id2' => $functionalUnit->id ]) }}">
+                            {{ $functionalUnit->name }}
+                        </a>
+                    </td>
                     <td>{{ $functionalUnit->address }}</td>
-                    <td><a href="#">{{ __('main.show') }}</a></td>
+                    <td><a href="{{ route('app_modules', ['id' => $functionalUnit->id_entreprise, 'id2' => $functionalUnit->id ]) }}">{{ __('main.show') }}</a></td>
                 </tr>
             @endforeach
         </tbody>

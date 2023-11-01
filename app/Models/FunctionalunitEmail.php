@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FunctionalunitEmail extends Model
 {
     use HasFactory;
-    protected $table = "business_emails";
+    protected $table = "functionalunit_emails";
 
     protected $fillable = [
         'email',

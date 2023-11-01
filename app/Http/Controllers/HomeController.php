@@ -117,4 +117,14 @@ class HomeController extends Controller
 
         return redirect()->back()->with('success', __('main.company_assignment_was_successfully_deleted'));
     }
+
+    public function assignFunctUser($id, $idUser)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $user = DB::table('users')->where('id', $idUser)->first();
+
+        $functionalUnits = DB::table('functional_units')->where('id_entreprise', $entreprise->id)->get();
+
+        return view('main.assign_functional_unit_to_user', compact('entreprise', 'user', 'functionalUnits'));
+    }
 }

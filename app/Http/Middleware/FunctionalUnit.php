@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
-class Entreprise
+class FunctionalUnit
 {
     /**
      * Handle an incoming request.
@@ -17,25 +17,22 @@ class Entreprise
      */
     public function handle(Request $request, Closure $next): Response
     {
-        /**
-         * get route parametre 
-         * I can also use this : $id_entreprise = $request->route('id'); 
-         */
-
+        $id_functionalU = $request->route()->parameter('id2');
         $id_entreprise = $request->route()->parameter('id');
         $user = Auth::user();
 
-        $manage = DB::table('manages')->where([
+        $manage = DB::table('manage_f_u_s')->where([
             'id_user' => $user->id,
             'id_entreprise' => $id_entreprise,
+            'id_fu' => $id_functionalU,
         ])->first();
 
         $entreprise = DB::table('entreprises')
                     ->where([
                         'id' => $id_entreprise,
                         'sub_id' => $user->sub_id
-                    ])->first();
-
+        ])->first();
+        
         if($user->role->name == "admin")
         {
             if($entreprise)

@@ -106,9 +106,9 @@
                                                                 <span>{{ $entreprise->name }}</span>
                                                             </div>
                                                             <div>
-                                                                <button class="btn btn-success" type="button">
+                                                                <a class="btn btn-success" role="button" href="{{ route('app_assign_functional_unit_to_user', ['id' => $entreprise->id, 'idUser' => $user->id ]) }}">
                                                                     <i class="fa-solid fa-gear"></i>
-                                                                </button>
+                                                                </a>
                                                                 <button class="btn btn-danger" type="button" onclick="deleteElementTwoVal('{{ $entreprise->id }}', '{{ $user->id }}', '{{ route('app_delete_management_entreprise') }}', '{{ csrf_token() }}');">
                                                                     <i class="fa-solid fa-trash-can"></i>
                                                                 </button>
@@ -207,6 +207,5 @@
         </div>
     </div>
 </div>
-
 
 @endsection

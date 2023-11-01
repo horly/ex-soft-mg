@@ -25,6 +25,8 @@ class FunctionalUnitForm extends FormRequest
             //
             'unit_name' => 'required',
             'unit_address' => 'required',
+            'unit_phone' => 'required|numeric',
+            'unit_email' => 'required|email',
         ];
     }
 
@@ -34,6 +36,12 @@ class FunctionalUnitForm extends FormRequest
             //
             'unit_name.required' => __('entreprise.enter_your_functional_unit_name_please'),
             'unit_address.required' => __('entreprise.enter_your_functional_unit_address_please'),
+
+            'unit_phone.required' => __('entreprise.enter_your_functional_unit_phone_number_please'),
+            'unit_phone.numeric' => __('main.enter_a_valid_phone_number_please'),
+
+            'unit_email.required' => __('entreprise.enter_your_functional_unit_phone_number_please'),
+            'unit_email.email' => __('auth.enter_a_valid_email_please'),
         ];
     }
 }

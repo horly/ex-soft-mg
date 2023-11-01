@@ -34,4 +34,10 @@ class FunctionalUnit extends Model
     {
         return $this->hasMany('App\Models\FunctionalunitEmail');
     }
+
+    /** Un user gère une FU*/
+    public function manageFU()
+    {
+        return $this->hasMany('App\Models\ManageFU');
+    }
 }

@@ -100,5 +100,11 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Manage');
     }
+
+    /** Un user gère une FU*/
+    public function manageFU()
+    {
+        return $this->hasMany('App\Models\ManageFU');
+    }
     
 }

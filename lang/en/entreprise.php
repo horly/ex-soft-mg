@@ -73,4 +73,18 @@ return [
     'edit_photo' => "Edit photo",
     'import' => "Import",
     'photo_saved_successfully' => "Photo saved successfully!",
+
+    'enter_your_functional_unit_phone_number' => "Enter your functional unit phone number",
+    'enter_your_functional_unit_phone_number_please' => "Enter your functional unit phone number please!",
+
+    'enter_your_functional_unit_email_address' => "Enter your functional unit email address",
+    'enter_your_functional_unit_email_address_please' => "Enter your functional unit email address please!",
+    'enter_a_valid_email_address_please' => "Enter a valid email address please!",
+
+    'assign' => "Assign",
+    'in' => "in", 
+    'assign_a_functional_unit_to_user' => "Assign a functional unit to a user",
+
+    'functional_has_been_successfully_assigned_to_the_user' => "Functional unit has been successfully assigned to the user",
+    'functional_unit_assignment_was_successfully_deleted' => "Functional unit assignment was successfully deleted!",
 ];

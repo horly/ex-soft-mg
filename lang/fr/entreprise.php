@@ -73,4 +73,18 @@ return [
     'edit_photo' => "Modifier la photo",
     'import' => "Importer",
     'photo_saved_successfully' => "Photo enregistrée avec succès!",
+
+    'enter_your_functional_unit_phone_number' => "Saisissez le numéro de téléphone de votre unité fonctionnelle",
+    'enter_your_functional_unit_phone_number_please' => "Saisissez le numéro de téléphone de votre unité fonctionnelle S.V.P!",
+
+    'enter_your_functional_unit_email_address' => "Saisissez l'émail adresse de votre unité fonctionnelle",
+    'enter_your_functional_unit_email_address_please' => "Saisissez l'émail adresse de votre unité fonctionnelle S.V.P!",
+    'enter_a_valid_email_address_please' => "Saisissez une adresse émail valide S.V.P!",
+
+    'assign' => "Assigner",
+    'in' => "dans", 
+    'assign_a_functional_unit_to_user' => "Attribuer une unité fonctionnelle à un utilisateur",
+
+    'functional_has_been_successfully_assigned_to_the_user' => "L'unité fonctionnelle a été affectée avec succès à l'utilisateur",
+    'functional_unit_assignment_was_successfully_deleted' => "L'affectation de l'unité fonctionnelle a été supprimée avec succès!",
 ];
