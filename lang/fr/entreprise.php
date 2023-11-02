@@ -87,4 +87,17 @@ return [
 
     'functional_has_been_successfully_assigned_to_the_user' => "L'unité fonctionnelle a été affectée avec succès à l'utilisateur",
     'functional_unit_assignment_was_successfully_deleted' => "L'affectation de l'unité fonctionnelle a été supprimée avec succès!",
+
+    'assign_user_to_entreprise_fu' => "Assigner :name dans les unités fonctionnelles de :entreprise",
+    'functional_unit_information' => "Informations sur l'unité fonctionnelle",
+
+    'accounting' => "Comptabilité",
+    'invoicing' => "Facturation",
+    'human_resources' => "Ressources humaines",
+    'archive_management' => "Gestion des archives",
+
+    'functional_unit_name' => "Nom de l'unité fonctionnelle",
+    'update_functional_unit' => "Mettre à jour l'unité fonctionnelle",
+
+    'functional_unit_updated_successfully' => "Unité fonctionnelle mise à jour avec succès!",
 ];

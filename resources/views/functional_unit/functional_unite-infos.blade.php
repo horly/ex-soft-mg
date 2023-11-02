@@ -1,5 +1,5 @@
 @extends('base')
-@section('title', $entreprise->name . ' / ' . $functionalUnit->name)
+@section('title', $functionalUnit->name . " informations")
 @section('content')
 
 @include('menu.login-nav')
@@ -18,7 +18,7 @@
 
         <div class="p-4" id="myTabContent">
                
-            @include('functional_unit.modules-content')
+            @include('functional_unit.functional_unit-infos-page')
                 
         </div>
 

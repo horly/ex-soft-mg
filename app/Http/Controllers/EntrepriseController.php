@@ -130,7 +130,7 @@ class EntrepriseController extends Controller
                     'updated_at' => new \DateTimeImmutable,
                 ]);
             
-            return redirect()->route('app_entreprise', ['id' => $id_entreprise])->with('success', __('entreprise.company_updated_successfully'));
+            return redirect()->route('app_entreprise_info_page', ['id' => $id_entreprise])->with('success', __('entreprise.company_updated_successfully'));
         }
     }
 
@@ -194,84 +194,6 @@ class EntrepriseController extends Controller
                             'bankAccounts',
                             'devises',
         ));
-    }
-
-    public function addNewPhoneNumber()
-    {
-        $phone = $this->request->input('new_phone_number');
-        $id_entreprise = $this->request->input('id_entreprise');
-        $modalRequest = $this->request->input('modalRequest');
-        $id_phone = $this->request->input('id_phone');
-
-        if($modalRequest != "edit")
-        {
-            BusinessContact::create([
-                'phone_number' => $phone,
-                'id_entreprise' => $id_entreprise
-            ]);
-
-            return redirect()->back()->with('success', __('entreprise.phone_number_added_successfully'));
-        }else{
-            DB::table('business_contacts')
-                    ->where('id', $id_phone)
-                    ->update([
-                        'phone_number' => $phone,
-                        'updated_at' => new \DateTimeImmutable,
-                    ]);
-
-            return redirect()->back()->with('success', __('entreprise.phone_number_updated_successfully'));
-        }
-    }
-
-    public function deletePhoneNumberEntr()
-    {
-        $id_phone = $this->request->input('id_element');
-
-        DB::table('business_contacts')
-                    ->where('id', $id_phone)
-                    ->delete();
-
-        return redirect()->back()->with('success', __('entreprise.phone_number_deleted_successfully'));
-    }
-
-    public function addNewEmail()
-    {
-        $email = $this->request->input('new_email_address');
-        $id_entreprise = $this->request->input('id_entreprise');
-        $modalRequest = $this->request->input('modalRequest');
-        $id_email = $this->request->input('id_email');
-
-        if($modalRequest != "edit")
-        {
-            BusinessEmail::create([
-                'email' => $email,
-                'id_entreprise' => $id_entreprise
-            ]);
-    
-            return redirect()->back()->with('success', __('entreprise.email_address_added_successfully'));
-        }
-        else
-        {
-            DB::table('business_emails')
-                    ->where('id', $id_email)
-                    ->update([
-                        'email' => $email,
-                        'updated_at' => new \DateTimeImmutable,
-                    ]);
-
-            return redirect()->back()->with('success', __('entreprise.email_updated_successfully'));
-        }
-    }
-
-    public function deleteEmailAddress()
-    {
-        $id_email = $this->request->input('id_element');
-
-        DB::table('business_emails')
-                    ->where('id', $id_email)
-                    ->delete();
-
-        return redirect()->back()->with('success', __('entreprise.email_address_deleted_successfully'));
     }
 
     public function addNewBankAccount()

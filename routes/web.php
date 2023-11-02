@@ -81,12 +81,6 @@ Route::controller(EntrepriseController::class)->group(function(){
             Route::post('/save_entreprise', 'saveEntreprise')->name('app_save_entreprise');
             Route::post('/delete_entreprise', 'deleteEntreprise')->name('app_delete_entreprise');
 
-            Route::post('/add_new_phone_number_entreprise', 'addNewPhoneNumber')->name('app_add_new_phone_number_entreprise');
-            Route::post('/delete_phone_number_entreprise', 'deletePhoneNumberEntr')->name('app_delete_phone_number_entreprise');
-
-            Route::post('/add_new_email_entreprise', 'addNewEmail')->name('app_add_new_email_entreprise');
-            Route::post('/delete_email_entreprise', 'deleteEmailAddress')->name('app_delete_email_entreprise');
-
             Route::post('/add_new_bank_account_entreprise', 'addNewBankAccount')->name('app_add_new_bank_account_entreprise');
             Route::post('/delete_bank_account', 'deleteBankAccount')->name('app_delete_bank_account');
 
@@ -119,13 +113,26 @@ Route::controller(FunctionalUnitController::class)->group(function(){
             Route::middleware('entreprise')->group(function(){
                 Route::middleware('funcUnit')->group(function(){
                     Route::get('/modules/{id:int}/{id2:int}', 'modules')->name('app_modules');
+                    Route::get('/infos/{id:int}/{id2:int}', 'fuInfos')->name('app_fu_infos');
+
+                    Route::middleware('admin')->group(function(){
+                        Route::get('/update_page/{id:int}/{id2:int}', 'upDatePageFu')->name('app_update_page_fu');
+                    });
                 });
             });
 
             Route::middleware('admin')->group(function(){
                 Route::post('/save_functional_unit', 'saveFunctionalUnit')->name('app_save_functional_unit');
+                Route::post('/delete_functional_unit', 'deleteFunctionalUnit')->name('app_delete_functional_unit');
+
                 Route::post('/assign_fu_to_user', 'assignFUtoUSer')->name('app_assign_fu_to_user');
                 Route::post('/delete_management_fu', 'deleteManagementFU')->name('app_delete_management_fu');
+
+                Route::post('/add_new_phone_number_entreprise', 'addNewPhoneNumber')->name('app_add_new_phone_number_entreprise');
+                Route::post('/add_new_email_entreprise', 'addNewEmail')->name('app_add_new_email_entreprise');
+                
+                Route::post('/delete_phone_number_entreprise', 'deletePhoneNumberEntr')->name('app_delete_phone_number_entreprise');
+                Route::post('/delete_email_entreprise', 'deleteEmailAddress')->name('app_delete_email_entreprise');
             });
         });
     });

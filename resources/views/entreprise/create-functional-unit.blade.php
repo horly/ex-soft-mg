@@ -16,9 +16,11 @@
         @csrf
 
         <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
+        <input type="hidden" name="id_fu" value="0">
+        <input type="hidden" name="fuRequest" id="fuRequest" value="add"> {{-- Default is add but can be edit also --}}
 
         <div class="mb-4 row">
-            <label for="unit_name" class="col-sm-4 col-form-label">{{ __('entreprise.unit_name') }}*</label>
+            <label for="unit_name" class="col-sm-4 col-form-label">{{ __('entreprise.functional_unit_name') }}*</label>
             <div class="col-sm-8">
               <input type="text" class="form-control @error('unit_name') is-invalid @enderror" id="unit_name" name="unit_name" placeholder="{{ __('entreprise.enter_your_functional_unit_name') }}" value="{{ old('unit_name') }}">
               <small class="text-danger">@error('unit_name') {{ $message }} @enderror</small>

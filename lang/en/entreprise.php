@@ -87,4 +87,17 @@ return [
 
     'functional_has_been_successfully_assigned_to_the_user' => "Functional unit has been successfully assigned to the user",
     'functional_unit_assignment_was_successfully_deleted' => "Functional unit assignment was successfully deleted!",
+
+    'assign_user_to_entreprise_fu' => "Assign :name in :entreprise functional units",
+    'functional_unit_information' => "Functional unit information",
+
+    'accounting' => "Accounting",
+    'invoicing' => "Invoicing",
+    'human_resources' => "Human resources",
+    'archive_management' => "Archive management",
+
+    'functional_unit_name' => "Functional unit name",
+    'update_functional_unit' => "Update functional unit",
+
+    'functional_unit_updated_successfully' => "Functional unit updated successfully!",
 ];

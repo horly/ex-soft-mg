@@ -8,7 +8,7 @@
     <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{{ route('app_user_management_info', ['id' => $user->id ]) }}">{{ __('main.user_information') }}</a></li>
-          <li class="breadcrumb-item active" aria-current="page"> {{ __('entreprise.assign') }} {{ $user->name }} {{ __('entreprise.in') }} {{ $entreprise->name }}</li>
+          <li class="breadcrumb-item active" aria-current="page"> {{ __('entreprise.assign_user_to_entreprise_fu', ['name' => $user->name, 'entreprise' => $entreprise->name]) }}</li>
         </ol>
     </nav>
 
@@ -17,6 +17,14 @@
     @include('message.flash-message')
 
     <div class="p-4 border">
+        @if(Auth::user()->role->name == "admin")
+            <div class="border-bottom p-3 mb-3">
+                <a href="{{ route('app_create_functional_unit', ['id' => $entreprise->id]) }}" class="btn btn-primary" role="button"><i class="fa-solid fa-building-circle-arrow-right"></i> 
+                    &nbsp;{{ __('entreprise.create_a_functional_unit') }}
+                </a>
+            </div>
+        @endif
+
         <table class="table table-striped table-hover border bootstrap-datatable">
             <thead>
                 <th>N°</th>

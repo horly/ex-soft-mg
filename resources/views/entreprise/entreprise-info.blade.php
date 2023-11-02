@@ -116,7 +116,7 @@
 
             @if (Auth::user()->role->name == "admin")
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-6 mb-3">
                         <div class="d-grid gap-2">
                             <a class="btn btn-success" role="button" href="{{ route('app_update_entreprise', ['id' => $entreprise->id]) }}">
                                 <i class="fa-solid fa-pen-to-square"></i>
@@ -124,7 +124,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 mb-3">
                         <div class="d-grid gap-2">
                             <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $entreprise->id }}', '{{ route('app_delete_entreprise') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
                                 <i class="fa-solid fa-trash-can"></i>
