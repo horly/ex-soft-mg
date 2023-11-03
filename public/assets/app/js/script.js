@@ -138,3 +138,16 @@ $('.country-select').change(function(){
     $('.country-code-label').text(iscodeselected);
   }
 });
+
+/**
+ * read notification
+ */
+
+function readNotification(id, url, token){
+    var inputs = '';
+    inputs += '<input type="hidden" name="id_element" value="' + id + '" />' 
+              + '<input type="hidden" name="_token" value="' + token + '" />';
+    
+    $("body").append('<form action="' + url + '" method="POST" id="posterNotif">' + inputs + '</form>');
+    $("#posterNotif").submit();
+}

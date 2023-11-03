@@ -44,6 +44,7 @@ Route::controller(HomeController::class)->group(function(){
         });
         Route::get('/main', 'main')->name('app_main');
         Route::get('/login_history', 'loginHistory')->name('app_login_history');
+        Route::post('/read_notification', 'readNotif')->name('app_read_notification');
     });
 });
 

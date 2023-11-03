@@ -127,4 +127,24 @@ class HomeController extends Controller
 
         return view('main.assign_functional_unit_to_user', compact('entreprise', 'user', 'functionalUnits'));
     }
+
+    public function readNotif()
+    {
+        $id = $this->request->input('id_element');
+
+        $notification = DB::table('notifications')->where('id', $id)->first();
+        $hostwithHttp = request()->getSchemeAndHttpHost();
+
+        $route = $hostwithHttp . $notification->link;
+
+
+        DB::table('notifications')
+            ->where('id', $id)
+            ->update([
+                'read' => 1,
+                'updated_at' => new \DateTimeImmutable,
+        ]);
+
+        return redirect($route);
+    }
 }

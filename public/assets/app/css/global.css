@@ -15,11 +15,11 @@
     margin-top: 100px;
 }
 
-#nav-login-dropdown{
+.nav-login-dropdown{
     width: 300px !important;
 }
 
-#nav-login-dropdown i {
+.nav-login-dropdown .dropdown-item i {
     width: 30px;
 }
 

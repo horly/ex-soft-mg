@@ -100,4 +100,10 @@ return [
     'update_functional_unit' => "Mettre à jour l'unité fonctionnelle",
 
     'functional_unit_updated_successfully' => "Unité fonctionnelle mise à jour avec succès!",
+
+    'has_just_modified_the_information_of_the_company' => "vient de modifier les informations de la société",
+
+    'view_all' => "Afficher tous",
+
+    'modified_the_company_logo' => "Horly a modifié le logo de l'entreprise",
 ];

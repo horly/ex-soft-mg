@@ -78,7 +78,7 @@ class User extends Authenticatable
     }
 
     /** Une user appartient à un abonnement */
-    function user()
+    function subscription()
     {
         return $this->belongsTo('App\Models\Subscription', 'sub_id');
     }
@@ -105,6 +105,12 @@ class User extends Authenticatable
     public function manageFU()
     {
         return $this->hasMany('App\Models\ManageFU');
+    }
+
+    /** Un user possède plusieurs notifications */
+    public function notifications()
+    {
+        return $this->hasMany('App\Models\Notification');
     }
     
 }

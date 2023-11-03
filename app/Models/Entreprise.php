@@ -78,4 +78,10 @@ class Entreprise extends Model
     {
         return $this->hasMany('App\Models\ManageFU');
     }
+
+    /** Une entreprise possède plusieurs notifications */
+    public function notifications()
+    {
+        return $this->hasMany('App\Models\Notification');
+    }
 }

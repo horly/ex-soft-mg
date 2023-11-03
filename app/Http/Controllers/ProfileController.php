@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChangeEmailAddressForm;
 use App\Http\Requests\changePasswordForm;
 use App\Http\Requests\UpdateProfileInfoForm;
+use App\Models\Notification;
 use App\Services\Email\Email;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -58,6 +59,19 @@ class ProfileController extends Controller
                 ->update([
                 'url_logo' => $image_hash,
                 'updated_at' => new \DateTimeImmutable
+            ]);
+
+            $url = route('app_entreprise_info_page', ['id' => $id_entreprise]);
+
+            //on récupère juste le chemin sans le domaine
+            $route = parse_url($url, PHP_URL_PATH);
+
+            Notification::create([
+                'description' => "entreprise.modified_the_company_logo",
+                'link' => $route,
+                'sub_id' => Auth::user()->sub_id,
+                'id_user' => Auth::user()->id,
+                'id_entreprise' => $id_entreprise,
             ]);
 
             return redirect()->back()->with('success', __('entreprise.photo_saved_successfully'));

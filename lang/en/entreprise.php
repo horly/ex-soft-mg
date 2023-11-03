@@ -100,4 +100,10 @@ return [
     'update_functional_unit' => "Update functional unit",
 
     'functional_unit_updated_successfully' => "Functional unit updated successfully!",
+    
+    'has_just_modified_the_information_of_the_company' => "has just modified the information of the company",
+
+    'view_all' => "View all",
+
+    'modified_the_company_logo' => "modified the company logo",
 ];

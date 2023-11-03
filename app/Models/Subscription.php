@@ -24,9 +24,15 @@ class Subscription extends Model
         return $this->hasMany('App\Models\User');
     }
 
-     /** Un abonnement contient entreprises users */
+    /** Un abonnement contient entreprises users */
      public function entreprises()
-     {
-         return $this->hasMany('App\Models\Entreprise');
-     }
+    {
+        return $this->hasMany('App\Models\Entreprise');
+    }
+
+    /** Un abonnement contient plusieurs notifications */
+    public function notifications()
+    {
+        return $this->hasMany('App\Models\Notification');
+    }
 }

@@ -11,6 +11,7 @@ use App\Models\Entreprise;
 use App\Models\FunctionalUnit;
 use App\Models\FunctionalunitEmail;
 use App\Models\FunctionalUnitPhone;
+use App\Models\Notification;
 use App\Repository\EntrepriseRepo;
 use DateTimeImmutable;
 use GuzzleHttp\Promise\Create;
@@ -128,6 +129,20 @@ class EntrepriseController extends Controller
                     'id_country' => $id_country,
                     'website' => $website_entreprise,
                     'updated_at' => new \DateTimeImmutable,
+                ]);
+
+                $url = route('app_entreprise_info_page', ['id' => $id_entreprise]);
+
+                //on récupère juste le chemin sans le domaine
+                $route = parse_url($url, PHP_URL_PATH);
+
+
+                Notification::create([
+                    'description' => "entreprise.has_just_modified_the_information_of_the_company",
+                    'link' => $route,
+                    'sub_id' => Auth::user()->sub_id,
+                    'id_user' => Auth::user()->id,
+                    'id_entreprise' => $id_entreprise,
                 ]);
             
             return redirect()->route('app_entreprise_info_page', ['id' => $id_entreprise])->with('success', __('entreprise.company_updated_successfully'));
