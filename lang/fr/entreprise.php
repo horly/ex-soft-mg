@@ -101,9 +101,30 @@ return [
 
     'functional_unit_updated_successfully' => "Unité fonctionnelle mise à jour avec succès!",
 
-    'has_just_modified_the_information_of_the_company' => "vient de modifier les informations de la société",
+    'has_just_modified_the_information_of_the_company' => "a modifier les informations de la société",
 
     'view_all' => "Afficher tous",
 
-    'modified_the_company_logo' => "Horly a modifié le logo de l'entreprise",
+    'modified_the_company_logo' => "a modifié le logo de l'entreprise",
+
+    'created_a_company' => "a créé une entreprise",
+
+    'has_modified_FU' => "a modifié les informations de l'unité fonctionnelle",
+    'created_a_functional_unit' => "a créé une unité fonctionnelle",
+    'deleted_a_functional_unit' => "a supprimé une unité fonctionnelle",
+    'added_a_bank_account_number' => "a ajouté un numéro de compte bancaire de l'entreprise", 
+    'changed_the_account_number' => "a modifié le numéro de compte de l'entreprise",
+    'deleted_the_account_number' => "a supprimé le numéro de compte de l'entreprise",
+
+    'added_a_functional_unit_phone_number' => "a ajouté un numéro de téléphone de l'unité fonctionnelle",
+    'changed_the_functional_unit_phone_number' => "a modifié le numéro de téléphone de l'unité fonctionnelle",
+    'deteled_the_functional_unit_phone_number' => "a supprimé le numéro de téléphone de l'unité fonctionnelle",
+
+    'added_a_functional_unit_email_address' => "a ajouté une adresse émail de l'unité fonctionnelle",
+    'changed_the_functional_unit_email_address' => "a modifié l'adresse émail de l'unité fonctionnelle",
+    'deteled_the_functional_unit_email_address' => "a supprimé l'adresse émail de l'unité fonctionnelle",
+
+    'added_you_in_the_company' => "vous a ajouté dans l'entreprise",
+    'added_you_in_the_fu' => "vous a ajouté dans l'unité fonctionnelle",
+    'removed_you_from_the_company' => "vous a supprimé dans l'entreprise",
 ];

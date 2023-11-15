@@ -106,4 +106,24 @@ return [
     'view_all' => "View all",
 
     'modified_the_company_logo' => "modified the company logo",
+    'created_a_company' => "Created a company",
+
+    'has_modified_FU' => "has modified the information of the functional unit",
+    'created_a_functional_unit' => "created a functional unit",
+    'deleted_a_functional_unit' => "deleted a functional unit",
+    'added_a_bank_account_number' => "added a company bank account number", 
+    'changed_the_account_number' => "changed the company account number",
+    'deleted_the_account_number' => "deleted the company account number",
+
+    'added_a_functional_unit_phone_number' => "added a functional unit phone number",
+    'changed_the_functional_unit_phone_number' => "changed the functional unit phone number",
+    'deteled_the_functional_unit_phone_number' => "deteled the functional unit phone number",
+
+    'added_a_functional_unit_email_address' => "added a functional unit email address",
+    'changed_the_functional_unit_email_address' => "changed the functional unit email address",
+    'deteled_the_functional_unit_email_address' => "deteled the functional unit email address",
+
+    'added_you_in_the_company' => "added you in the company",
+    'added_you_in_the_fu' => "added you in the functional unit",
+    'removed_you_from_the_company' => "removed you from the company",
 ];

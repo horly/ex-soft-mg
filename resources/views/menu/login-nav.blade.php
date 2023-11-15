@@ -12,36 +12,80 @@
                 @include('button.language-dropdown')
 
                 @php
-                    $notifs = DB::table('notifications')
-                                ->where('sub_id', Auth::user()->sub_id)
-                                ->orderBy('id', 'desc')
+                    $notifs = null;
+                    
+                    $notifCount = null;
+
+                    if(Auth::user()->role->name == "admin")
+                    {
+                        $notifs = DB::table('notifications')
+                                    ->join('read_notifs', 'read_notifs.id_notif', '=', 'notifications.id')
+                                    ->where('read_notifs.id_user', Auth::user()->id)
+                                    ->take(5)
+                                    ->orderBy('read_notifs.id', 'desc')
+                                    ->get();
+                        $notifCount = DB::table('notifications')
+                                    ->join('read_notifs', 'read_notifs.id_notif', '=', 'notifications.id')
+                                    ->where([
+                                        'read_notifs.id_user' => Auth::user()->id,
+                                        'read_notifs.read' => 0,
+                                    ])
+                                    ->count();
+                    }
+                    else
+                    {
+                        $notifs = DB::table('notifications')
+                                ->join('manages', 'manages.id_entreprise', '=', 'notifications.id_entreprise')
+                                ->join('read_notifs', 'read_notifs.id_notif', '=', 'notifications.id')
+                                ->where('read_notifs.id_user', Auth::user()->id)
+                                ->orderBy('read_notifs.id', 'desc')
                                 ->take(5)
                                 ->get();
+
+                        $notifCount = DB::table('notifications')
+                                    ->join('manages', 'manages.id_entreprise', '=', 'notifications.id_entreprise')
+                                    ->join('read_notifs', 'read_notifs.id_notif', '=', 'notifications.id')
+                                    ->where([
+                                        'read_notifs.id_user' => Auth::user()->id,
+                                        'read_notifs.read' => 0,
+                                    ])
+                                    ->count();
+                    }
                     
-                    $notifCount = DB::table('notifications')->where('read', 0)->count();
+                                        //dd($notifs);
+                        //$notifCount = $notifs->count();
 
                 @endphp
 
                 <li class="nav-item dropdown me-3 ms-1">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-regular fa-bell"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {{ $notifCount }}
-                            <span class="visually-hidden">unread messages</span>
-                        </span> 
+
+                        @if ($notifCount != 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                @if ($notifCount <= 99)
+                                    {{ $notifCount }}
+                                @else
+                                    99+
+                                @endif
+                                <span class="visually-hidden">unread messages</span>
+                            </span> 
+                        @endif
+                       
                     </button>
                     <ul class="dropdown-menu nav-login-dropdown">
                         @foreach ($notifs as $notif)
                             <li>
                                 <a href="#" class="d-flex flex-row 
-                                        @if($notif->read != 1) 
+
+                                        @if($notif->read == 0) 
                                             bg-body-secondary 
                                         @endif 
                                         link-secondary link-offset-2 link-underline link-underline-opacity-0 p-3" 
                                         onclick="readNotification('{{ $notif->id }}', '{{ route('app_read_notification') }}', '{{ csrf_token() }}');">
                                     
                                     @php
-                                        $user = DB::table('users')->where('id', $notif->id_user)->first();
+                                        $user = DB::table('users')->where('id', $notif->id_sender)->first();
                                         $entreprise = DB::table('entreprises')->where('id', $notif->id_entreprise)->first();
                                     @endphp
                                     

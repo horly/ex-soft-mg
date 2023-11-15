@@ -14,7 +14,6 @@ class Notification extends Model
     protected $fillable = [
         'description',
         'link',
-        'read',
         'sub_id',
         'id_user',
         'id_entreprise',
@@ -38,5 +37,10 @@ class Notification extends Model
     function entreprise()
     {
         return $this->belongsTo('App\Models\Entreprise', 'id_entreprise');
+    }
+
+    public function read()
+    {
+        return $this->hasMany('App\Models\ReadNotif');
     }
 }

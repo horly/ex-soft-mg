@@ -3,18 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateEntrepriseForm;
-use App\Http\Requests\FunctionalUnitForm;
 use App\Models\BankAccount;
-use App\Models\BusinessContact;
-use App\Models\BusinessEmail;
 use App\Models\Entreprise;
-use App\Models\FunctionalUnit;
-use App\Models\FunctionalunitEmail;
-use App\Models\FunctionalUnitPhone;
-use App\Models\Notification;
 use App\Repository\EntrepriseRepo;
-use DateTimeImmutable;
-use GuzzleHttp\Promise\Create;
+use App\Repository\NotificationRepo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -24,11 +16,13 @@ class EntrepriseController extends Controller
     //
     protected $request;
     protected $entrepriseRepo;
+    protected $notificationRepo;
 
-    function __construct(Request $request, EntrepriseRepo $entrepriseRepo)
+    function __construct(Request $request, EntrepriseRepo $entrepriseRepo, NotificationRepo $notificationRepo)
     {
         $this->request = $request;
         $this->entrepriseRepo = $entrepriseRepo;
+        $this->notificationRepo = $notificationRepo;
     }
 
     public function entreprise($id)
@@ -41,7 +35,7 @@ class EntrepriseController extends Controller
             ? $functionalUnits = DB::table('functional_units')->where('id_entreprise', $entreprise->id)->get() 
             : $functionalUnits = DB::table('manage_f_u_s')
                                     ->join('functional_units', 'manage_f_u_s.id_fu', '=', 'functional_units.id')
-                                    ->where('functional_units.sub_id', $user->sub_id)
+                                    ->where('functional_units.id_entreprise', $entreprise->id)
                                     ->get();
 
         return view('entreprise.entreprise', compact('entreprise', 'functionalUnits'));
@@ -113,6 +107,10 @@ class EntrepriseController extends Controller
                 'id_entreprise' => $entreprise->id,
             ]);*/
 
+            $url = route('app_entreprise_info_page', ['id' => $entreprise->id]);
+            $description = "entreprise.created_a_company";
+            $this->notificationRepo->setNotification($entreprise->id, $description, $url);
+
             return redirect()->route('app_main')->with('success', __('main.company_added_successfully'));
         }
         else
@@ -132,18 +130,8 @@ class EntrepriseController extends Controller
                 ]);
 
                 $url = route('app_entreprise_info_page', ['id' => $id_entreprise]);
-
-                //on récupère juste le chemin sans le domaine
-                $route = parse_url($url, PHP_URL_PATH);
-
-
-                Notification::create([
-                    'description' => "entreprise.has_just_modified_the_information_of_the_company",
-                    'link' => $route,
-                    'sub_id' => Auth::user()->sub_id,
-                    'id_user' => Auth::user()->id,
-                    'id_entreprise' => $id_entreprise,
-                ]);
+                $description = "entreprise.has_just_modified_the_information_of_the_company";
+                $this->notificationRepo->setNotification($id_entreprise, $description, $url);
             
             return redirect()->route('app_entreprise_info_page', ['id' => $id_entreprise])->with('success', __('entreprise.company_updated_successfully'));
         }
@@ -231,6 +219,11 @@ class EntrepriseController extends Controller
                 'id_entreprise' => $id_entreprise,
                 'id_devise' => $account_currency_save,
             ]);
+
+            //Notification
+            $url = route('app_entreprise_info_page', ['id' => $id_entreprise]);
+            $description = "entreprise.added_a_bank_account_number";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
     
             return redirect()->back()->with('success', __('entreprise.bank_account_added_successfully'));
         }
@@ -247,6 +240,11 @@ class EntrepriseController extends Controller
                         'updated_at' => new \DateTimeImmutable,
                     ]);
 
+            //Notification
+            $url = route('app_entreprise_info_page', ['id' => $id_entreprise]);
+            $description = "entreprise.changed_the_account_number";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
             return redirect()->back()->with('success', __('entreprise.bank_account_updated_successfully'));
         }
     }
@@ -254,10 +252,16 @@ class EntrepriseController extends Controller
     public function deleteBankAccount()
     {
         $id_bank = $this->request->input('id_element');
+        $bankAccounts = DB::table('bank_accounts')->where('id', $id_bank)->first();
 
         DB::table('bank_accounts')
                     ->where('id', $id_bank)
                     ->delete();
+
+        //Notification
+        $url = route('app_entreprise_info_page', ['id' => $bankAccounts->id_entreprise]);
+        $description = "entreprise.deleted_the_account_number";
+        $this->notificationRepo->setNotification($bankAccounts->id_entreprise, $description, $url);
 
         return redirect()->back()->with('success', __('entreprise.bank_account_deleted_successfully'));
     }

@@ -8,6 +8,7 @@ use App\Models\FunctionalunitEmail;
 use App\Models\FunctionalUnitPhone;
 use App\Models\ManageFU;
 use App\Repository\EntrepriseRepo;
+use App\Repository\NotificationRepo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,14 +16,15 @@ use Illuminate\Support\Facades\DB;
 class FunctionalUnitController extends Controller
 {
     //
-    //
     protected $request;
     protected $entrepriseRepo;
+    protected $notificationRepo;
 
-    function __construct(Request $request, EntrepriseRepo $entrepriseRepo)
+    function __construct(Request $request, EntrepriseRepo $entrepriseRepo, NotificationRepo $notificationRepo)
     {
         $this->request = $request;
         $this->entrepriseRepo = $entrepriseRepo;
+        $this->notificationRepo = $notificationRepo;
     }
 
     public function saveFunctionalUnit(FunctionalUnitForm $requestionF)
@@ -56,6 +58,11 @@ class FunctionalUnitController extends Controller
                 'id_func_unit' => $functUnit->id
             ]);
 
+            //Notification
+            $url = route('app_fu_infos', ['id' => $id_entreprise, 'id2' => $functUnit->id]);
+            $description = "entreprise.created_a_functional_unit";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
             return redirect()->route('app_entreprise', ['id' => $id_entreprise])->with('success', __('entreprise.functional_unit_saved_successfully'));
         }
         else
@@ -67,6 +74,11 @@ class FunctionalUnitController extends Controller
                     'address' => $address, 
                     'updated_at' => new \DateTimeImmutable,
             ]);
+
+            //Notification
+            $url = route('app_fu_infos', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $description = "entreprise.has_modified_FU";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
             return redirect()->route('app_fu_infos', ['id' => $id_entreprise, 'id2' => $id_fu])->with('success', __('entreprise.functional_unit_updated_successfully'));
         }  
@@ -91,6 +103,11 @@ class FunctionalUnitController extends Controller
             'id_entreprise' => $id_entreprise,
             'id_fu' => $id_functionalUnit,
         ]);
+
+        //Notification
+        $url = route('app_entreprise', ['id' => $id_entreprise]);
+        $description = "entreprise.added_you_in_the_fu";
+        $this->notificationRepo->setNotificationSpecificUsr($id_entreprise, $description, $url, $id_user);
 
         return redirect()->back()->with('success', __('entreprise.functional_has_been_successfully_assigned_to_the_user'));
     }
@@ -138,12 +155,19 @@ class FunctionalUnitController extends Controller
         $modalRequest = $this->request->input('modalRequest');
         $id_phone = $this->request->input('id_phone');
 
+        $fu = DB::table('functional_units')->where('id', $id_fu)->first();
+
         if($modalRequest != "edit")
         {
             FunctionalUnitPhone::create([
                 'phone_number' => $phone,
                 'id_func_unit' => $id_fu
             ]);
+
+            //Notification
+            $url = route('app_fu_infos', ['id' => $fu->id_entreprise, 'id2' => $id_fu]);
+            $description = "entreprise.added_a_functional_unit_phone_number";
+            $this->notificationRepo->setNotification($fu->id_entreprise, $description, $url);
 
             return redirect()->back()->with('success', __('entreprise.phone_number_added_successfully'));
         }else{
@@ -153,6 +177,11 @@ class FunctionalUnitController extends Controller
                         'phone_number' => $phone,
                         'updated_at' => new \DateTimeImmutable,
                     ]);
+            
+            //Notification
+            $url = route('app_fu_infos', ['id' => $fu->id_entreprise, 'id2' => $id_fu]);
+            $description = "entreprise.changed_the_functional_unit_phone_number";
+            $this->notificationRepo->setNotification($fu->id_entreprise, $description, $url);
 
             return redirect()->back()->with('success', __('entreprise.phone_number_updated_successfully'));
         }
@@ -162,9 +191,17 @@ class FunctionalUnitController extends Controller
     {
         $id_phone = $this->request->input('id_element');
 
+        $phone = DB::table('functional_unit_phones')->where('id', $id_phone)->first();
+        $fu = DB::table('functional_units')->where('id', $phone->id_func_unit)->first();
+
         DB::table('functional_unit_phones')
                     ->where('id', $id_phone)
                     ->delete();
+        
+        //Notification
+        $url = route('app_fu_infos', ['id' => $fu->id_entreprise, 'id2' => $fu->id]);
+        $description = "entreprise.deteled_the_functional_unit_phone_number";
+        $this->notificationRepo->setNotification($fu->id_entreprise, $description, $url);
 
         return redirect()->back()->with('success', __('entreprise.phone_number_deleted_successfully'));
     }
@@ -176,12 +213,19 @@ class FunctionalUnitController extends Controller
         $modalRequest = $this->request->input('modalRequest');
         $id_email = $this->request->input('id_email');
 
+        $fu = DB::table('functional_units')->where('id', $id_fu)->first();
+
         if($modalRequest != "edit")
         {
             FunctionalunitEmail::create([
                 'email' => $email,
                 'id_func_unit' => $id_fu
             ]);
+
+            //Notification
+            $url = route('app_fu_infos', ['id' => $fu->id_entreprise, 'id2' => $id_fu]);
+            $description = "entreprise.added_a_functional_unit_email_address";
+            $this->notificationRepo->setNotification($fu->id_entreprise, $description, $url);
     
             return redirect()->back()->with('success', __('entreprise.email_address_added_successfully'));
         }
@@ -194,6 +238,11 @@ class FunctionalUnitController extends Controller
                         'updated_at' => new \DateTimeImmutable,
                     ]);
 
+            //Notification
+            $url = route('app_fu_infos', ['id' => $fu->id_entreprise, 'id2' => $id_fu]);
+            $description = "entreprise.changed_the_functional_unit_email_address";
+            $this->notificationRepo->setNotification($fu->id_entreprise, $description, $url);
+
             return redirect()->back()->with('success', __('entreprise.email_updated_successfully'));
         }
     }
@@ -202,9 +251,17 @@ class FunctionalUnitController extends Controller
     {
         $id_email = $this->request->input('id_element');
 
+        $email = DB::table('functionalunit_emails')->where('id', $id_email)->first();
+        $fu = DB::table('functional_units')->where('id', $email->id_func_unit)->first();
+
         DB::table('functionalunit_emails')
                     ->where('id', $id_email)
                     ->delete();
+        
+        //Notification
+        $url = route('app_fu_infos', ['id' => $fu->id_entreprise, 'id2' => $fu->id]);
+        $description = "entreprise.deteled_the_functional_unit_email_address";
+        $this->notificationRepo->setNotification($fu->id_entreprise, $description, $url);
 
         return redirect()->back()->with('success', __('entreprise.email_address_deleted_successfully'));
     }
@@ -217,6 +274,11 @@ class FunctionalUnitController extends Controller
         DB::table('functional_units')
                     ->where('id', $id_fu)
                     ->delete();
+
+        //Notification
+        $url = route('app_entreprise', ['id' => $fu->id_entreprise]);
+        $description = "entreprise.deleted_a_functional_unit";
+        $this->notificationRepo->setNotification($fu->id_entreprise, $description, $url);
 
         return redirect()->route('app_entreprise', ['id' => $fu->id_entreprise])->with('success', __('entreprise.email_address_deleted_successfully'));
     }

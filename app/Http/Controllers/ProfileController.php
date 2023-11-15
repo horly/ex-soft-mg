@@ -6,6 +6,8 @@ use App\Http\Requests\ChangeEmailAddressForm;
 use App\Http\Requests\changePasswordForm;
 use App\Http\Requests\UpdateProfileInfoForm;
 use App\Models\Notification;
+use App\Models\ReadNotif;
+use App\Repository\NotificationRepo;
 use App\Services\Email\Email;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,11 +19,13 @@ class ProfileController extends Controller
     //
     protected $request;
     protected $email;
+    protected $notificationRepo;
 
-    function __construct(Request $request, Email $email)
+    function __construct(Request $request, Email $email, NotificationRepo $notificationRepo)
     {
         $this->request = $request;
         $this->email = $email;
+        $this->notificationRepo = $notificationRepo;
     }
 
     public function profile()
@@ -62,17 +66,8 @@ class ProfileController extends Controller
             ]);
 
             $url = route('app_entreprise_info_page', ['id' => $id_entreprise]);
-
-            //on récupère juste le chemin sans le domaine
-            $route = parse_url($url, PHP_URL_PATH);
-
-            Notification::create([
-                'description' => "entreprise.modified_the_company_logo",
-                'link' => $route,
-                'sub_id' => Auth::user()->sub_id,
-                'id_user' => Auth::user()->id,
-                'id_entreprise' => $id_entreprise,
-            ]);
+            $description = "entreprise.modified_the_company_logo";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
             return redirect()->back()->with('success', __('entreprise.photo_saved_successfully'));
         }

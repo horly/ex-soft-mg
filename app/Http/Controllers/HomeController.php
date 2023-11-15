@@ -6,6 +6,7 @@ use App\Models\Grade;
 use App\Models\Manage;
 use App\Repository\ConnectionHistoryRepo;
 use App\Repository\EntrepriseRepo;
+use App\Repository\NotificationRepo;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,12 +18,14 @@ class HomeController extends Controller
     protected $request;
     protected $entrepriseRepo;
     protected $connectHistory;
+    protected $notificationRepo;
 
-    function __construct(Request $request, EntrepriseRepo $entrepriseRepo, ConnectionHistoryRepo $connectHistory)
+    function __construct(Request $request, EntrepriseRepo $entrepriseRepo, ConnectionHistoryRepo $connectHistory, NotificationRepo $notificationRepo)
     {
         $this->request = $request;
         $this->entrepriseRepo = $entrepriseRepo;
         $this->connectHistory = $connectHistory;
+        $this->notificationRepo = $notificationRepo;
     }
 
     public function main()
@@ -101,6 +104,11 @@ class HomeController extends Controller
             'id_entreprise' => $id_entreprise,
         ]);
 
+        //Notification
+        $url = route('app_entreprise', ['id' => $id_entreprise]);
+        $description = "entreprise.added_you_in_the_company";
+        $this->notificationRepo->setNotificationSpecificUsr($id_entreprise, $description, $url, $id_user);
+
         return redirect()->back()->with('success', __('main.the_company_has_been_successfully_assigned_to_the_user'));
     }
 
@@ -131,19 +139,25 @@ class HomeController extends Controller
     public function readNotif()
     {
         $id = $this->request->input('id_element');
+        $user = Auth::user();
 
-        $notification = DB::table('notifications')->where('id', $id)->first();
+        $readNotif = DB::table('read_notifs')->where('id', $id)->first();
+        $notification = DB::table('notifications')->where('id', $readNotif->id_notif)->first();
         $hostwithHttp = request()->getSchemeAndHttpHost();
 
         $route = $hostwithHttp . $notification->link;
 
-
-        DB::table('notifications')
-            ->where('id', $id)
-            ->update([
-                'read' => 1,
-                'updated_at' => new \DateTimeImmutable,
-        ]);
+        $read = DB::table('read_notifs')
+                    ->where([
+                        'id_user' => $user->id,
+                        'id_notif' => $id,
+                    ])->first();
+        
+        DB::table('read_notifs')
+                ->where('id', $id)
+                ->update([
+                    'read' => 1
+                ]);
 
         return redirect($route);
     }
