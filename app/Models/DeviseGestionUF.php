@@ -12,12 +12,20 @@ class DeviseGestionUF extends Model
 
     protected $fillable = [
         'taux',
+        'default_cur_manage',
         'id_devise',
+        'id_fu',
     ];
 
     /** Une devise de gestion appartient à une devise */
     function devise()
     {
         return $this->belongsTo('App\Models\Devise', 'id_devise');
+    }
+
+
+    function functionalUnit()
+    {
+        return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');
     }
 }

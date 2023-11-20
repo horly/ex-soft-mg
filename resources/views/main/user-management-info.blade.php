@@ -4,7 +4,7 @@
 
 @include('menu.login-nav')
 
-<div class="container container-margin-top">
+<div class="container mt-5">
     <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{{ route('app_user_management') }}">{{ __('main.user_management') }}</a></li>
@@ -15,9 +15,9 @@
     {{-- On inlut les messages flash--}}
     @include('message.flash-message')
 
-    <div class="border">
+    <div class="card">
 
-        <div class="p-4" id="myTabContent">
+        <div class="card-body">
               
             <div class="row">
                 <div class="col-md-4">
@@ -83,49 +83,38 @@
                         <div class="row mb-4">
                             <div class="col-md-4"><i class="fa-solid fa-building-circle-check"></i>&nbsp;&nbsp;&nbsp;{{ __('main.company') }}</div>
                             <div class="col-sm-8">
-                                <div class="accordion">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button mini-accordion-button-header" type="button" data-bs-toggle="collapse" data-bs-target="#banks" aria-expanded="true" aria-controls="phones">
-                                                  {{ __('main.companies_managed') }}
-                                            </button>
-                                        </h2>
-                                        <div id="banks" class="accordion-collapse collapse show">
-                                            <div class="accordion-body">
-                                                <ul class="list-group list-group-flush border mb-3">
-                                                    @php
-                                                        $entreprises = DB::table('manages')
-                                                                        ->join('entreprises', 'manages.id_entreprise', '=', 'entreprises.id')
-                                                                        ->where('manages.id_user', $user->id)
-                                                                        ->get();
-                                                    @endphp
-                                                    @foreach ($entreprises as $entreprise)
-                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                            <div>
-                                                                <span><i class="fa-solid fa-building-columns"></i></span>&nbsp;&nbsp;
-                                                                <span>{{ $entreprise->name }}</span>
-                                                            </div>
-                                                            <div>
-                                                                <a class="btn btn-success" role="button" href="{{ route('app_assign_functional_unit_to_user', ['id' => $entreprise->id, 'idUser' => $user->id ]) }}">
-                                                                    <i class="fa-solid fa-gear"></i>
-                                                                </a>
-                                                                <button class="btn btn-danger" type="button" onclick="deleteElementTwoVal('{{ $entreprise->id }}', '{{ $user->id }}', '{{ route('app_delete_management_entreprise') }}', '{{ csrf_token() }}');">
-                                                                    <i class="fa-solid fa-trash-can"></i>
-                                                                </button>
-                                                            </div>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addEntrepriseToUser">
-                                                    <i class="fa-solid fa-circle-plus"></i>
-                                                    {{ __('auth.add') }}
+                                <ul class="list-group list-group-flush border mb-3">
+                                    @php
+                                        $entreprises = DB::table('manages')
+                                                        ->join('entreprises', 'manages.id_entreprise', '=', 'entreprises.id')
+                                                        ->where('manages.id_user', $user->id)
+                                                        ->get();
+                                    @endphp
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {{ __('main.companies_managed') }}
+                                        </li>
+                                    @foreach ($entreprises as $entreprise)
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <span><i class="fa-solid fa-building-columns"></i></span>&nbsp;&nbsp;
+                                                <span>{{ $entreprise->name }}</span>
+                                            </div>
+                                            <div>
+                                                <a class="btn btn-success" role="button" href="{{ route('app_assign_functional_unit_to_user', ['id' => $entreprise->id, 'idUser' => $user->id ]) }}">
+                                                    <i class="fa-solid fa-gear"></i>
+                                                </a>
+                                                <button class="btn btn-danger" type="button" onclick="deleteElementTwoVal('{{ $entreprise->id }}', '{{ $user->id }}', '{{ route('app_delete_management_entreprise') }}', '{{ csrf_token() }}');">
+                                                    <i class="fa-solid fa-trash-can"></i>
                                                 </button>
                                             </div>
-                                        </div>
-                
-                                    </div>
-                                </div>
-                
+                                        </li>
+                                    @endforeach
+                                </ul>
+                                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addEntrepriseToUser">
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                    {{ __('auth.add') }}
+                                </button>
+                                
                             </div>
                         </div>
                         

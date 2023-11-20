@@ -54,4 +54,72 @@
 .profile:hover .middle {
     opacity: 1;
   }
+
+.bg-light-theme {
+    background-color: #c7cfec;
+}
+
+  /**
+   * Personnal dropdown
+   **/
+
+  .dropbtn {
+    background-color: #435ebe;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .dropbtn.user {
+    background-color: #5f76c8;
+  }
   
+  .dropdown-personal-menu {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-content a:hover {background-color: #f1f1f1;}
+  
+  .dropdown-personal-menu:hover .dropdown-content {
+    display: block;
+  }
+
+  .modules:hover {
+    background-color: #566ec4!important;
+  }
+  
+  /*.dropdown:hover .dropbtn {
+    background-color: #697ecb;
+  }*/
+
+
+/*
+ * logo exad nav
+ **/
+
+
+@media only screen and (max-width: 1200px) {
+    #logo-nav-zone {
+        display: none!important;
+    }
+}

@@ -82,4 +82,8 @@
 
         'the_company_has_been_successfully_assigned_to_the_user' => "L'entreprise a été attribuée avec succès à l'utilisateur",
         'company_assignment_was_successfully_deleted' => "L'affectation de l'entreprise a été supprimée avec succès",
+
+        'all_notification' => "Toutes les notifications",
+        'display' => "Afficher",
+        'unviewed_notifications' => "Les notifications non consultées",
 ];

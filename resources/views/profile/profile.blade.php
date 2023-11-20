@@ -4,7 +4,7 @@
 
 @include('menu.login-nav')
 
-<div class="container container-margin-top">
+<div class="container mt-5">
 
      {{-- On inlut les messages flash--}}
      @include('message.flash-message')
@@ -16,18 +16,21 @@
         </ol>
     </nav>
 
-   <div class="border">
-        {{--
-            <div class="border-bottom p-4">
-                @include('profile.profile-tab')
-            </div>
-        --}}
+   <div class="card">
+        <div class="card-body">
+            {{--
+                <div class="border-bottom p-4">
+                    @include('profile.profile-tab')
+                </div>
+            --}}
 
-       <div class="p-4" id="myTabContent">
-              
-            @include('profile.profile-info')
-               
-       </div>
+            <div class="p-4" id="myTabContent">
+                    
+                @include('profile.profile-info')
+                
+            </div>
+        </div>
+        
    </div>    
 
    <div class="m-5">

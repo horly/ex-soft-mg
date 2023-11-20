@@ -24,6 +24,7 @@ class FunctionalUnitForm extends FormRequest
         return [
             //
             'unit_name' => 'required',
+            'currency_fu' => 'required',
             'unit_address' => 'required',
             'unit_phone' => 'required|numeric',
             'unit_email' => 'required|email',
@@ -35,6 +36,9 @@ class FunctionalUnitForm extends FormRequest
         return [
             //
             'unit_name.required' => __('entreprise.enter_your_functional_unit_name_please'),
+            
+            'currency_fu.required' => __('entreprise.select_your_curreny_please'),
+
             'unit_address.required' => __('entreprise.enter_your_functional_unit_address_please'),
 
             'unit_phone.required' => __('entreprise.enter_your_functional_unit_phone_number_please'),

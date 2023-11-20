@@ -85,4 +85,8 @@
 
         'the_company_has_been_successfully_assigned_to_the_user' => "The company has been successfully assigned to the user",
         'company_assignment_was_successfully_deleted' => "Company assignment was successfully deleted",
+
+        'all_notification' => "All notification",
+        'display' => "Display",
+        'unviewed_notifications' => "Unviewed notifications",
     ];

@@ -1,7 +1,8 @@
 /**
-* lib include
-*/
-@import "../../lib/bootstrap/css/bootstrap.css";
+ * Lib include
+ */
+/* @import "../../lib/bootstrap/css/bootstrap.css"; */
+@import "../../lib/theme/css/bootstrap.css";
 @import "../../lib/flags-icon/css/flag-icon.css";
 @import "../../lib/fontawesome-free-6.4.0-web/css/all.css";
 @import "../../lib/sweet-alert/sweetalert.css";
@@ -9,8 +10,17 @@
 @import "../../lib/cropper/css/cropper.css";
 
 /**
-*   Les pages
-*/
+ * Thème
+ */
+@import "../../lib/theme/vendors/iconly/bold.css";
+@import "../../lib/theme/vendors/perfect-scrollbar/perfect-scrollbar.css";
+@import "../../lib/theme/vendors/bootstrap-icons/bootstrap-icons.css";
+@import "../../lib/theme/css/app.css";
+
+/**
+ * Les pages
+ */
 @import "./register.css";
 @import "./global.css";
 @import "./main.css";
+@import "./notification-icon.css";

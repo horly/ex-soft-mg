@@ -126,4 +126,6 @@ return [
     'added_you_in_the_company' => "added you in the company",
     'added_you_in_the_fu' => "added you in the functional unit",
     'removed_you_from_the_company' => "removed you from the company",
+
+    'default_currency' => "Default currency",
 ];

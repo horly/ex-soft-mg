@@ -101,7 +101,7 @@ return [
 
     'functional_unit_updated_successfully' => "Unité fonctionnelle mise à jour avec succès!",
 
-    'has_just_modified_the_information_of_the_company' => "a modifier les informations de la société",
+    'has_just_modified_the_information_of_the_company' => "a modifier les informations de l'entreprise",
 
     'view_all' => "Afficher tous",
 
@@ -127,4 +127,6 @@ return [
     'added_you_in_the_company' => "vous a ajouté dans l'entreprise",
     'added_you_in_the_fu' => "vous a ajouté dans l'unité fonctionnelle",
     'removed_you_from_the_company' => "vous a supprimé dans l'entreprise",
+
+    'default_currency' => "Devise par défaut",
 ];

@@ -1,5 +1,5 @@
 <div class="dropdown">
-    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <button class="btn btn-primary border dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="fa-solid fa-language"></i> Lang
         @if (Config::get('app.locale') == 'en')
             <i class="flag-icon flag-icon-gb rounded"></i>

@@ -40,4 +40,10 @@ class FunctionalUnit extends Model
     {
         return $this->hasMany('App\Models\ManageFU');
     }
+
+    public function deviseGestionFU()
+    {
+        return $this->hasMany('App\Models\DeviseGestionUF');
+    }
 }
+

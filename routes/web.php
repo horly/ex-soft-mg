@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\FunctionalUnitController;
 use App\Http\Controllers\HomeController;
@@ -44,6 +46,8 @@ Route::controller(HomeController::class)->group(function(){
         });
         Route::get('/main', 'main')->name('app_main');
         Route::get('/login_history', 'loginHistory')->name('app_login_history');
+        Route::get('/all_notification', 'allNotif')->name('app_all_notification');
+        Route::get('/unviewed_notifications', 'unviewedNotif')->name('app_unviewed_notifications');
         Route::post('/read_notification', 'readNotif')->name('app_read_notification');
     });
 });
@@ -136,5 +140,30 @@ Route::controller(FunctionalUnitController::class)->group(function(){
                 Route::post('/delete_email_entreprise', 'deleteEmailAddress')->name('app_delete_email_entreprise');
             });
         });
+    });
+});
+
+
+Route::controller(DashboardController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                Route::get('/dashboard/{id:int}/{id2:int}', 'dashboard')->name('app_dashboard');
+            });
+        });
+    });
+});
+
+Route::controller(CurrencyController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                Route::get('/currency/{id:int}/{id2:int}', 'currency')->name('app_currency');
+                Route::get('/create_currency/{id:int}/{id2:int}', 'createCurrency')->name('app_create_currency');
+            });
+        });
+
+        Route::post('/save_currency', 'saveCurrency')->name('app_save_currency');
+
     });
 });

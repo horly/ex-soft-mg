@@ -161,4 +161,58 @@ class HomeController extends Controller
 
         return redirect($route);
     }
+
+    public function allNotif()
+    {
+        $notifsAll = null;
+
+        if(Auth::user()->role->name == "admin")
+        {
+            $notifsAll = DB::table('notifications')
+                        ->join('read_notifs', 'read_notifs.id_notif', '=', 'notifications.id')
+                        ->where('read_notifs.id_user', Auth::user()->id)
+                        ->orderBy('read_notifs.id', 'desc')
+                        ->paginate(5);
+        }
+        else
+        {
+            $notifsAll = DB::table('notifications')
+                    ->join('manages', 'manages.id_entreprise', '=', 'notifications.id_entreprise')
+                    ->join('read_notifs', 'read_notifs.id_notif', '=', 'notifications.id')
+                    ->where('read_notifs.id_user', Auth::user()->id)
+                    ->orderBy('read_notifs.id', 'desc')
+                    ->paginate(5);
+        }
+        return view('main.all-notification', compact('notifsAll'));
+    }
+
+    public function unviewedNotif()
+    {
+        $notifsAll = null;
+
+        if(Auth::user()->role->name == "admin")
+        {
+            $notifsAll = DB::table('notifications')
+                        ->join('read_notifs', 'read_notifs.id_notif', '=', 'notifications.id')
+                        ->where([
+                            'read_notifs.id_user' => Auth::user()->id,
+                            'read_notifs.read'=> 0,
+                        ])
+                        ->orderBy('read_notifs.id', 'desc')
+                        ->paginate(5);
+        }
+        else
+        {
+            $notifsAll = DB::table('notifications')
+                    ->join('manages', 'manages.id_entreprise', '=', 'notifications.id_entreprise')
+                    ->join('read_notifs', 'read_notifs.id_notif', '=', 'notifications.id')
+                    ->where([
+                        'read_notifs.id_user' => Auth::user()->id,
+                        'read_notifs.read' => 0,
+                    ])
+                    ->orderBy('read_notifs.id', 'desc')
+                    ->paginate(5);
+        }
+        return view('main.unviewed-notifications', compact('notifsAll'));
+    }
 }

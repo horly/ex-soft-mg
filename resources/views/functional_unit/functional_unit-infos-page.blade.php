@@ -12,6 +12,11 @@
     </div>
 
     <div class="row mb-4">
+        <div class="col-md-4"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;&nbsp;{{ __('entreprise.default_currency') }}</div>
+        <div class="col-md-8 text-primary fw-bold">{{ $deviseDefault->iso_code }}</div>
+    </div>
+
+    <div class="row mb-4">
         <div class="col-md-4"><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;&nbsp;{{ __('main.address') }}</div>
         <div class="col-md-8 text-primary fw-bold">{{ $functionalUnit->address }}</div>
     </div>

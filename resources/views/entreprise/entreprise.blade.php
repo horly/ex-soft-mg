@@ -4,14 +4,14 @@
 
 @include('menu.login-nav')
 
-<div class="container container-margin-top">
+<div class="container mt-5">
     
     @include('entreprise.nav-entreprise')
 
     {{-- On inlut les messages flash--}}
     @include('message.flash-message')
 
-    <div class="border">
+    <div class="card">
         <div class="border-bottom p-4">
             @include('entreprise.entreprise-tab')
         </div>

@@ -151,3 +151,16 @@ function readNotification(id, url, token){
     $("body").append('<form action="' + url + '" method="POST" id="posterNotif">' + inputs + '</form>');
     $("#posterNotif").submit();
 }
+
+
+function displayNotifications()
+{
+  $url = $('#display-notif').val();
+  //console.log($url);
+  window.location.replace($url);
+}
+
+$('#currency_name_dev').change(function(){
+    var devise = $('option:selected', this).attr('devise');
+    $('#currency_selected_dev').text(devise);
+});

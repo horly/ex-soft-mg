@@ -151,8 +151,11 @@ class EntrepriseController extends Controller
     public function createFunctionalUnit($id)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first(); 
+        $devises = DB::table('devises')
+                        ->orderBy('iso_code')
+                        ->get();
 
-        return view('entreprise.create-functional-unit', compact('entreprise'));
+        return view('entreprise.create-functional-unit', compact('entreprise', 'devises'));
     }
 
     public function updateEntreprise($id)

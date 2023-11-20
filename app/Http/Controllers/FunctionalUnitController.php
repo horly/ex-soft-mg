@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FunctionalUnitForm;
+use App\Models\DeviseGestionUF;
 use App\Models\FunctionalUnit;
 use App\Models\FunctionalunitEmail;
 use App\Models\FunctionalUnitPhone;
@@ -32,6 +33,7 @@ class FunctionalUnitController extends Controller
         $user = Auth::user();
 
         $name = $requestionF->input('unit_name');
+        $currency_fu = $requestionF->input('currency_fu');
         $address = $requestionF->input('unit_address');
         $unit_phone = $requestionF->input('unit_phone');
         $unit_email = $requestionF->input('unit_email');
@@ -58,6 +60,13 @@ class FunctionalUnitController extends Controller
                 'id_func_unit' => $functUnit->id
             ]);
 
+            DeviseGestionUF::create([
+                'taux' => 1,
+                'default_cur_manage' => 1,
+                'id_devise' => $currency_fu,
+                'id_fu' =>  $functUnit->id,
+            ]);
+
             //Notification
             $url = route('app_fu_infos', ['id' => $id_entreprise, 'id2' => $functUnit->id]);
             $description = "entreprise.created_a_functional_unit";
@@ -73,6 +82,14 @@ class FunctionalUnitController extends Controller
                     'name' => $name,
                     'address' => $address, 
                     'updated_at' => new \DateTimeImmutable,
+            ]);
+
+            DB::table('devise_gestion_ufs')
+                ->where([
+                    'id_fu' => $id_fu,
+                    'default_cur_manage' => 1])
+                ->update([
+                    'id_devise' => $currency_fu
             ]);
 
             //Notification
@@ -133,7 +150,14 @@ class FunctionalUnitController extends Controller
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
 
-        return view('functional_unit.functional_unite-infos', compact('entreprise', 'functionalUnit'));
+        $deviseGest = DB::table('devise_gestion_ufs')->where([
+            'id_fu' => $functionalUnit->id,
+            'default_cur_manage' => 1,
+        ])->first();
+
+        $deviseDefault = DB::table('devises')->where('id', $deviseGest->id_devise)->first();
+
+        return view('functional_unit.functional_unite-infos', compact('entreprise', 'functionalUnit', 'deviseDefault'));
     }
 
     public function upDatePageFu($id, $id2)
@@ -144,8 +168,24 @@ class FunctionalUnitController extends Controller
         $phones = DB::table('functional_unit_phones')->where('id_func_unit', $id2)->get();
         $emails = DB::table('functionalunit_emails')->where('id_func_unit', $id2)->get();
         $country = DB::table('countries')->where('id', $entreprise->id_country)->first();
+        $devises = DB::table('devises')->orderBy('iso_code')->get();
 
-        return view('functional_unit.update-functional-unit', compact('entreprise', 'functionalUnit', 'phones', 'emails', 'country'));
+        $deviseGest = DB::table('devise_gestion_ufs')->where([
+            'id_fu' => $functionalUnit->id,
+            'default_cur_manage' => 1,
+        ])->first();
+        
+        $deviseDefault = DB::table('devises')->where('id', $deviseGest->id_devise)->first();
+
+        return view('functional_unit.update-functional-unit', compact(
+            'entreprise', 
+            'functionalUnit', 
+            'phones', 
+            'emails', 
+            'country', 
+            'devises',
+            'deviseDefault',
+        ));
     }
 
     public function addNewPhoneNumber()

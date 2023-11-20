@@ -7,6 +7,7 @@
 
         <title>{{ config('app.name') }} - @yield('title')</title>
 
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('assets/app/css/style.css') }}">
     </head>
     <body>
@@ -30,6 +31,20 @@
         @if (Request::route()->getName() == "app_entreprise_info_page" || Request::route()->getName() == "app_profile")
             <script src="{{ asset('assets/lib/cropper/js/cropper.js') }}"></script>
             <script src="{{ asset('assets/lib/cropper/js/cropper-init.js') }}"></script>
+        @endif
+
+        {{-- Thèmes --}}
+        <script src="{{ asset('assets/lib/theme/vendors/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+        {{--<script src="{{ asset('assets/lib/theme/js/bootstrap.bundle.min.js') }}"></script>--}}
+        @if (Request::route()->getName() == "app_dashboard")
+            <script src="{{ asset('assets/lib/theme/vendors/apexcharts/apexcharts.js') }}"></script>
+            <script src="{{ asset('assets/lib/theme/js/pages/dashboard.js') }}"></script>
+            <script src="{{ asset('assets/lib/theme/js/main.js') }}"></script>
+        @endif
+
+        @if (Request::route()->getName() == "app_currency" || 
+             Request::route()->getName() == "app_create_currency")
+        <script src="{{ asset('assets/lib/theme/js/main.js') }}"></script>
         @endif
 
         {{-- Les pages --}}
