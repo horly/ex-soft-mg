@@ -25,7 +25,7 @@
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav class="float-start float-lg-end" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                              <li class="breadcrumb-item"><a href="{{ route('app_dashboard', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.dashboard') }}</a></li>
+                              <li class="breadcrumb-item"><a href="{{ route('app_dashboard', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ $functionalUnit->name }}</a></li>
                               <li class="breadcrumb-item active" aria-current="page">{{ __('dashboard.currencies') }}</li>
                             </ol>
                         </nav>
@@ -44,7 +44,11 @@
                             &nbsp;{{ __('dashboard.add_currency') }}
                         </a>
 
-                        <form class="row mb-3" action="#" method="POST">
+                        <form class="row mb-3" action="{{ route('app_change_default_currency') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
+                            <input type="hidden" name="id_fu" value="{{ $functionalUnit->id }}">
+
                             <label for="main_currency" class="col-sm-3 col-form-label">{{ __('dashboard.main_currency') }}*</label> 
                             <div class="col-sm-6 mb-3">
                                 <select name="main_currency" id="main_currency" class="form-select @error('main_currency') is-invalid @enderror">
@@ -76,7 +80,7 @@
                             <thead>
                                 <th>N°</th>
                                 <th>{{ __('main.name') }}</th>
-                                <th>{{ __('rate') }}</th>
+                                <th>{{ __('rate') }} {{ $deviseDefault->taux }} {{ $deviseDefault->iso_code }}</th>
                                 <th>Action</th>
                             </thead>
                             <tbody>
@@ -85,16 +89,25 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
                                             @if (Config::get('app.locale') == 'en')
-                                                <a href="#">
+                                                <a href="{{ route('app_info_currency', [
+                                                    'id' => $entreprise->id, 
+                                                    'id2' => $functionalUnit->id,
+                                                    'id3' => $devise->id]) }}">
                                                     {{ $devise->iso_code }} - {{ $devise->motto_en }}
                                                 </a>
                                             @else
-                                                <a href="#">{{ $devise->iso_code }} - {{ $devise->motto }}</a>
+                                                <a href="{{ route('app_info_currency', [
+                                                    'id' => $entreprise->id, 
+                                                    'id2' => $functionalUnit->id,
+                                                    'id3' => $devise->id]) }}">{{ $devise->iso_code }} - {{ $devise->motto }}</a>
                                             @endif
                                         </td>
-                                        <td>{{ $devise->taux }}</td>
+                                        <td>{{ $devise->taux }} {{ $devise->iso_code }}</td>
                                         <td>
-                                            <a href="#">
+                                            <a href="{{ route('app_info_currency', [
+                                                'id' => $entreprise->id, 
+                                                'id2' => $functionalUnit->id,
+                                                'id3' => $devise->id]) }}">
                                                 {{ __('main.show') }}
                                             </a>
                                         </td>

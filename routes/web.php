@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EntrepriseController;
@@ -160,10 +161,26 @@ Route::controller(CurrencyController::class)->group(function(){
             Route::middleware('funcUnit')->group(function(){
                 Route::get('/currency/{id:int}/{id2:int}', 'currency')->name('app_currency');
                 Route::get('/create_currency/{id:int}/{id2:int}', 'createCurrency')->name('app_create_currency');
+                Route::get('/info_currency/{id:int}/{id2:int}/{id3:int}', 'infoCurrency')->name('app_info_currency');
+                Route::get('/update_currency/{id:int}/{id2:int}/{id3:int}', 'upDatecurrency')->name('app_update_currency');
             });
         });
 
         Route::post('/save_currency', 'saveCurrency')->name('app_save_currency');
+        Route::post('/change_default_currency', 'changeDefaultcurrency')->name('app_change_default_currency');
+        Route::post('/delete_currency', 'deleteCurrency')->name('app_delete_currency');
 
+    });
+});
+
+Route::controller(ContactController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                Route::get('/customer/{id:int}/{id2:int}', 'customer')->name('app_customer');
+            });
+        });
+
+        //
     });
 });

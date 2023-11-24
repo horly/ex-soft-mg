@@ -26,6 +26,29 @@ class DashboardController extends Controller
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
 
-        return view('dashboard.dashboard', compact('entreprise', 'functionalUnit'));
+        $deviseGest = DB::table('devises')
+            ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+            ->where([
+                'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                'devise_gestion_ufs.default_cur_manage' => 1,
+        ])->first();
+
+        $deviseGestAll = DB::table('devises')
+            ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+            ->where([
+                'devise_gestion_ufs.id_fu' => $functionalUnit->id
+        ])->get();
+
+        $first_day_this_month = date('01-m-Y'); // hard-coded '01' for first day
+        $last_day_this_month  = date('t-m-Y');
+
+        return view('dashboard.dashboard', compact(
+            'entreprise', 
+            'functionalUnit', 
+            'first_day_this_month', 
+            'last_day_this_month',
+            'deviseGest',
+            'deviseGestAll'
+        ));
     }
 }

@@ -1,4 +1,4 @@
-var optionsProfileVisit = {
+/*var optionsProfileVisit = {
 	annotations: {
 		position: 'back'
 	},
@@ -22,95 +22,58 @@ var optionsProfileVisit = {
 	xaxis: {
 		categories: ["Jan","Feb","Mar","Apr","May","Jun","Jul", "Aug","Sep","Oct","Nov","Dec"],
 	},
-}
-let optionsVisitorsProfile  = {
-	series: [70, 30],
-	labels: ['Male', 'Female'],
-	colors: ['#435ebe','#55c6e8'],
+}*/
+
+var optionsProfileVisit = {
+	series: [{
+			name: 'sales',
+          	data: [44, 55, 41, 64, 22, 43, 21, 52, 13, 44, 32, 41]
+        }, {
+			name: 'expenses',
+          	data: [53, 32, 33, 52, 13, 44, 32, 41, 64, 22, 43, 21]
+    	}, {
+			name: 'results',
+          	data: [53, 32, 33, 52, 13, 44, 32, 41, 64, 22, 43, 21]
+    	}
+	],
+	colors : [
+		'#26d4a8', '#ff5959', '#435ebe' 
+	],
 	chart: {
-		type: 'donut',
-		width: '100%',
-		height:'350px'
-	},
-	legend: {
-		position: 'bottom'
+	type: 'bar',
+	height: 430
 	},
 	plotOptions: {
-		pie: {
-			donut: {
-				size: '30%'
-			}
-		}
-	}
-}
-
-var optionsEurope = {
-	series: [{
-		name: 'series1',
-		data: [310, 800, 600, 430, 540, 340, 605, 805,430, 540, 340, 605]
-	}],
-	chart: {
-		height: 80,
-		type: 'area',
-		toolbar: {
-			show:false,
+		bar: {
+		horizontal: false,
+		dataLabels: {
+			position: 'back',
 		},
-	},
-	colors: ['#5350e9'],
-	stroke: {
-		width: 2,
-	},
-	grid: {
-		show:false,
+		}
 	},
 	dataLabels: {
-		enabled: false
-	},
-	xaxis: {
-		type: 'datetime',
-		categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z","2018-09-19T07:30:00.000Z","2018-09-19T08:30:00.000Z","2018-09-19T09:30:00.000Z","2018-09-19T10:30:00.000Z","2018-09-19T11:30:00.000Z"],
-		axisBorder: {
-			show:false
-		},
-		axisTicks: {
-			show:false
-		},
-		labels: {
-			show:false,
+		enabled: true,
+		offsetX: -6,
+		style: {
+		fontSize: '12px',
+		colors: ['#fff']
 		}
 	},
-	show:false,
-	yaxis: {
-		labels: {
-			show:false,
-		},
+	stroke: {
+		show: true,
+		width: 1,
+		colors: ['#fff']
 	},
 	tooltip: {
-		x: {
-			format: 'dd/MM/yy HH:mm'
-		},
+		shared: true,
+		intersect: false
 	},
-};
-
-let optionsAmerica = {
-	...optionsEurope,
-	colors: ['#008b75'],
-}
-let optionsIndonesia = {
-	...optionsEurope,
-	colors: ['#dc3545'],
+	xaxis: {
+		categories: ["Jan","Feb","Mar","Apr","May","Jun","Jul", "Aug","Sep","Oct","Nov","Dec"],
+	},
 }
 
 
 
-var chartProfileVisit = new ApexCharts(document.querySelector("#chart-profile-visit"), optionsProfileVisit);
-var chartVisitorsProfile = new ApexCharts(document.getElementById('chart-visitors-profile'), optionsVisitorsProfile)
-var chartEurope = new ApexCharts(document.querySelector("#chart-europe"), optionsEurope);
-var chartAmerica = new ApexCharts(document.querySelector("#chart-america"), optionsAmerica);
-var chartIndonesia = new ApexCharts(document.querySelector("#chart-indonesia"), optionsIndonesia);
-
-chartIndonesia.render();
-chartAmerica.render();
-chartEurope.render();
+var chartProfileVisit = new ApexCharts(document.querySelector("#chart-evolution-income"), optionsProfileVisit);
 chartProfileVisit.render();
-chartVisitorsProfile.render()

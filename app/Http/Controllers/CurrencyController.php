@@ -35,7 +35,11 @@ class CurrencyController extends Controller
             'default_cur_manage' => 1,
         ])->first();
         
-        $deviseDefault = DB::table('devises')->where('id', $deviseGest->id_devise)->first();
+        $deviseDefault = DB::table('devise_gestion_ufs')
+            ->join('devises', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+            ->where('devises.id', $deviseGest->id_devise)
+            ->first();
+
         $deviseFU = DB::table('devise_gestion_ufs')
             ->join('devises', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
             ->where([
@@ -75,19 +79,32 @@ class CurrencyController extends Controller
 
         if($fuRequest != "edit")
         {
-            DeviseGestionUF::create([
-                'taux' => $rate_currency_dev,
-                'id_devise' => $currency_name_dev,
-                'id_fu' => $id_fu
-            ]);
+            $existDevise = DB::table('devise_gestion_ufs') 
+                            ->where([
+                                'id_devise' => $currency_name_dev,
+                                'id_fu' => $id_fu,
+            ])->first();
 
-            //Notification
-            $url = route('app_currency', ['id' => $id_entreprise, 'id2' => $id_fu]);
-            $description = "dashboard.added_a_new_currency_in_the_functional_unit";
-            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
-
-            return redirect()->route('app_currency', ['id' => $id_entreprise, 'id2' => $id_fu])
-                        ->with('success', __('dashboard.currency_added_successfully'));
+            if(!$existDevise)
+            {
+                DeviseGestionUF::create([
+                    'taux' => $rate_currency_dev,
+                    'id_devise' => $currency_name_dev,
+                    'id_fu' => $id_fu
+                ]);
+    
+                //Notification
+                $url = route('app_currency', ['id' => $id_entreprise, 'id2' => $id_fu]);
+                $description = "dashboard.added_a_new_currency_in_the_functional_unit";
+                $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+    
+                return redirect()->route('app_currency', ['id' => $id_entreprise, 'id2' => $id_fu])
+                            ->with('success', __('dashboard.currency_added_successfully'));   
+            }
+            else
+            {
+                return redirect()->back()->with('danger', __('dashboard.this_currency_has_already_been_added'));
+            }
         }
         else
         {
@@ -106,5 +123,109 @@ class CurrencyController extends Controller
             return redirect()->route('app_currency', ['id' => $id_entreprise, 'id2' => $id_fu])
                     ->with('success', __('dashboard.currency_updated_successfully'));
         }
+    }
+
+    public function changeDefaultcurrency()
+    {
+        $main_currency = $this->request->input('main_currency');
+        $id_entreprise = $this->request->input('id_entreprise');
+        $id_fu = $this->request->input('id_fu');
+
+        if($main_currency != "")
+        {
+            DB::table('devise_gestion_ufs')
+                    ->where('id_fu', $id_fu)
+                    ->update([
+                        'default_cur_manage' => 0
+            ]);
+
+            DB::table('devise_gestion_ufs')
+                    ->where('id_devise', $main_currency)
+                    ->update([
+                        'default_cur_manage' => 1,
+                        'taux' => 1,
+            ]);
+
+            //Notification
+            $url = route('app_currency', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $description = "dashboard.changed_the_default_currency";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+            return redirect()->back()->with('success', __('dashboard.default_currency_updated_successfully'));
+        }
+        else
+        {
+            return redirect()->back();
+        }
+    }
+
+    public function infoCurrency($id, $id2, $id3)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        $deviseGest = DB::table('devise_gestion_ufs')->where([
+            'id_fu' => $functionalUnit->id,
+            'default_cur_manage' => 1,
+        ])->first();
+        
+        $deviseDefault = DB::table('devise_gestion_ufs')
+            ->join('devises', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+            ->where('devises.id', $deviseGest->id_devise)
+            ->first();
+
+        $devise = DB::table('devise_gestion_ufs')
+            ->join('devises', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+            ->where('devises.id', $id3)->first();
+
+        return view('currency.info_currency', compact('entreprise', 'functionalUnit', 'devise', 'deviseDefault'));
+    }
+
+    public function deleteCurrency()
+    {
+        $id_currency = $this->request->input('id_element1');
+        $id_entreprise = $this->request->input('id_element2');
+        $id_fu = $this->request->input('id_element3');
+
+        DB::table('devise_gestion_ufs')
+                    ->where([
+                        'id_devise' => $id_currency,
+                        'id_fu' => $id_fu
+        ])->delete();
+
+        //Notification
+        $url = route('app_currency', ['id' => $id_entreprise, 'id2' => $id_fu]);
+        $description = "dashboard.removed_a_currency_from_the_functional_unit";
+        $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+        return redirect()->route('app_currency', [
+            'id' => $id_entreprise, 
+            'id2' => $id_fu ])->with('success', __('dashboard.currency_deleted_successfully'));
+    }
+
+    public function upDatecurrency($id, $id2, $id3)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+        $devises = DB::table('devises')->orderBy('iso_code')->get();
+
+        $deviseSel = DB::table('devise_gestion_ufs')
+            ->join('devises', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+            ->where('devises.id', $id3)->first();
+        
+        $deviseGestionUfs = DB::table('devise_gestion_ufs')
+            ->where([
+                'id_devise' => $id3,
+                'id_fu' => $functionalUnit->id
+        ])->first();
+        
+        $deviseGest = DB::table('devise_gestion_ufs')
+            ->join('devises', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+            ->where([
+                'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                'devise_gestion_ufs.default_cur_manage' => 1,
+        ])->first();
+        
+        return view('currency.updated_currency', compact('entreprise', 'functionalUnit', 'deviseSel', 'devises', 'deviseGest', 'deviseGestionUfs'));
     }
 }

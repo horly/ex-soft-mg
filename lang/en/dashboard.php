@@ -33,6 +33,7 @@
 
         'delivery_note' => "Delivery note",
         'currencies' => "Currencies",
+        'currency' => "Currency",
         'currencies_list' => "Currencies list",
         'add_currency' => "Add currency",
         'main_currency' => "Main currency",
@@ -45,4 +46,32 @@
         'updated_a_currency_in_the_functional_unit' => "updated a currency in the functional unit.",
         'currency_added_successfully' => "Currency added successfully!",
         'currency_updated_successfully' => "Currency updated successfully!",
+
+        'currency_information' => "Currency information",
+        'default_currency_updated_successfully' => "Default currency updated successfully!",
+        'changed_the_default_currency' => "changed the default currency",
+
+        'this_currency_has_already_been_added' => "This currency has already been added",
+        'currency_deleted_successfully' => "Currency deleted successfully!",
+        'removed_a_currency_from_the_functional_unit' => "removed a currency from the functional unit",
+        'you_cannot_delete_the_default_currency' => "You cannot delete the default currency",
+        'default_currency' => "Default currency",
+        'update_currency' => "Update currency",
+        
+        'period' => "Period",
+        'from' => "From",
+        'to' => "To",
+
+        'articles' => "Articles",
+        'recipes' => "Recipes",
+        'evolution_of_income_and_expenses_over_the_last_12_months' => "Evolution of income and expenses over the last 12 months",
+
+        'timeline' => "Timeline",
+        'designation' => "Designation",
+        'number' => "Number",
+        'amount' => "Amount",
+        'my_customers_owe_me' => "My customers owe me",
+        'i_owe_my_suppliers' => "I owe my suppliers",
+        'customers_to_follow_up' => "Customers to follow up",
+        'supplier_invoices_due' => "Supplier invoices due",
 ];

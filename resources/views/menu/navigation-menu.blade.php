@@ -23,14 +23,14 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item @if(Request::route()->getName() == "app_customer") active @endif has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-circle-user"></i>
                         <span>{{ __('dashboard.my_contacts') }}</span>
                     </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="#">{{ __('dashboard.customer') }}</a>
+                    <ul class="submenu @if(Request::route()->getName() == "app_customer") active @endif">
+                        <li class="submenu-item @if(Request::route()->getName() == "app_customer") active @endif">
+                            <a href="{{ route('app_customer', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.customer') }}</a>
                         </li>
                         <li class="submenu-item ">
                             <a href="#">{{ __('dashboard.supplier') }}</a>
@@ -138,7 +138,9 @@
                 </li>
 
                 <li class="sidebar-item @if (Request::route()->getName() == "app_currency" ||
-                                             Request::route()->getName() == "app_create_currency") active @endif">
+                                             Request::route()->getName() == "app_create_currency" ||
+                                             Request::route()->getName() == "app_info_currency" ||
+                                             Request::route()->getName() == "app_update_currency") active @endif">
                     <a href="{{ route('app_currency', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}" class='sidebar-link'>
                         <i class="fa-solid fa-money-bill-trend-up"></i>
                         <span>{{ __('dashboard.currencies') }}</span>
