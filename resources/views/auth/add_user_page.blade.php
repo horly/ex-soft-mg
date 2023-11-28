@@ -14,10 +14,10 @@
             </ol>
         </nav>
 
-        <form id="form-register" class="p-5 border bg-body-tertiary" action="{{ route('app_add_user') }}" method="post" token={{ csrf_token() }}>
+        <form id="form-register" class="card bg-body-tertiary" action="{{ route('app_add_user') }}" method="post" token={{ csrf_token() }}>
             @csrf
 
-            <div class="row">
+            <div class="card-body">
 
                 <div class="mb-4 row">
                     <label for="firstName" class="col-sm-4 col-form-label">{{ __('auth.first_name')}} *</label>

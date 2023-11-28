@@ -39,13 +39,11 @@
         @if (Request::route()->getName() == "app_dashboard")
             <script src="{{ asset('assets/lib/theme/vendors/apexcharts/apexcharts.js') }}"></script>
             <script src="{{ asset('assets/lib/theme/js/pages/dashboard.js') }}"></script>
-            <script src="{{ asset('assets/lib/theme/js/main.js') }}"></script>
         @endif
 
-        @if (Request::route()->getName() == "app_currency" || 
-             Request::route()->getName() == "app_create_currency")
         <script src="{{ asset('assets/lib/theme/js/main.js') }}"></script>
-        @endif
+
+    
 
         {{-- Les pages --}}
         <script src="{{ asset('assets/app/js/script.js') }}"></script>
@@ -53,5 +51,6 @@
         <script src="{{ asset('assets/app/js/main.js') }}"></script>
         <script src="{{ asset('assets/app/js/dataTables-init.js') }}"></script>
         <script src="{{ asset('assets/app/js/entreprise.js') }}"></script>
+        <script src="{{ asset('assets/app/js/client.js') }}"></script>
     </body>
 </html>

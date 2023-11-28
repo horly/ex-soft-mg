@@ -33,6 +33,58 @@
                 </div>
             </div>
 
+            {{-- On inlut les messages flash--}}
+            @include('message.flash-message')
+
+            <section class="section">
+                <div class="card">
+                    <div class="card-body">
+                        <a href="{{ route('app_add_new_client', ['id' => $entreprise->id, 'id2' => $functionalUnit->id ]) }}" class="btn btn-primary mb-3" role="button">
+                            <i class="fa-solid fa-clipboard-user"></i> 
+                            &nbsp;{{ __('client.add_a_new_customer') }}
+                        </a>
+                        
+                        <table class="table table-striped table-hover border bootstrap-datatable">
+                            <thead>
+                                <th>N°</th>
+                                <th>{{ __('client.customer_type') }}</th>
+                                <th>{{ __('main.company_name') }}</th>
+                                <th>{{ __('client.contact_name') }}</th>
+                                <th>{{ __('main.email_address') }}</th>
+                                <th>{{ __('main.phone_number') }}</th>
+                                <th>Action</th>
+                            </thead>
+                            <tbody>
+                                @foreach ($clients as $client)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ __('client.' .$client->type) }}</td>
+                                        <td>{{ $client->entreprise_name_cl }}</td>
+                                        <td>{{ $client->contact_name_cl }}</td>
+                                        <td>{{ $client->email_adress_cl }}</td>
+                                        <td>{{ $client->phone_number_cl }}</td>
+                                        <td>
+                                            <a href="{{ route('app_info_customer', [
+                                                'id' => $entreprise->id,
+                                                'id2' => $functionalUnit->id,
+                                                'id3' => $client->id,
+                                            ]) }}">
+                                                {{ __('main.show') }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </section>
+
+            <div class="m-5">
+                @include('menu.footer-global')
+            </div>
+
         </div>
     </div>
 </div>

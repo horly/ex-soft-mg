@@ -23,12 +23,22 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item @if(Request::route()->getName() == "app_customer") active @endif has-sub">
+                <li class="sidebar-item @if(Request::route()->getName() == "app_customer" ||
+                                            Request::route()->getName() == "app_add_new_client" ||
+                                            Request::route()->getName() == "app_info_customer" ||
+                                            Request::route()->getName() == "app_update_customer") 
+                                            active 
+                                        @endif has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-circle-user"></i>
                         <span>{{ __('dashboard.my_contacts') }}</span>
                     </a>
-                    <ul class="submenu @if(Request::route()->getName() == "app_customer") active @endif">
+                    <ul class="submenu @if(Request::route()->getName() == "app_customer" ||
+                                            Request::route()->getName() == "app_add_new_client" ||
+                                            Request::route()->getName() == "app_info_customer" ||
+                                            Request::route()->getName() == "app_update_customer")
+                                            active 
+                                        @endif">
                         <li class="submenu-item @if(Request::route()->getName() == "app_customer") active @endif">
                             <a href="{{ route('app_customer', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.customer') }}</a>
                         </li>

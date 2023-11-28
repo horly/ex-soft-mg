@@ -178,9 +178,14 @@ Route::controller(ContactController::class)->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
                 Route::get('/customer/{id:int}/{id2:int}', 'customer')->name('app_customer');
+                Route::get('/add_new_client/{id:int}/{id2:int}', 'addNewClient')->name('app_add_new_client');
+                Route::get('/info_customer/{id:int}/{id2:int}/{id3:int}', 'infoCustomer')->name('app_info_customer');
+                Route::get('/update_customer/{id:int}/{id2:int}/{id3:int}', 'updateCustomer')->name('app_update_customer');
             });
         });
 
         //
+        Route::post('/create_client', 'createClient')->name('app_create_client');
+        Route::post('/delete_client', 'deleteClient')->name('app_delete_client');
     });
 });

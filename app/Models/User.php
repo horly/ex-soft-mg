@@ -122,4 +122,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\ReadNotif');
     }
+
+    public function client()
+    {
+        return $this->hasMany('App\Models\Client');
+    }
 }
