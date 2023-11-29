@@ -46,9 +46,14 @@ class FunctionalUnit extends Model
         return $this->hasMany('App\Models\DeviseGestionUF');
     }
 
-    public function client()
+    public function clients()
     {
         return $this->hasMany('App\Models\Client');
+    }
+
+    public function suplliers()
+    {
+        return $this->hasMany('App\Models\Supplier');
     }
 }
 

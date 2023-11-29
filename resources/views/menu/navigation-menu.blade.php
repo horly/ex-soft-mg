@@ -26,7 +26,12 @@
                 <li class="sidebar-item @if(Request::route()->getName() == "app_customer" ||
                                             Request::route()->getName() == "app_add_new_client" ||
                                             Request::route()->getName() == "app_info_customer" ||
-                                            Request::route()->getName() == "app_update_customer") 
+                                            Request::route()->getName() == "app_update_customer" ||
+
+                                            Request::route()->getName() == "app_supplier" ||
+                                            Request::route()->getName() == "app_add_new_supplier" ||
+                                            Request::route()->getName() == "app_info_supplier" ||
+                                            Request::route()->getName() == "app_update_supplier") 
                                             active 
                                         @endif has-sub">
                     <a href="#" class='sidebar-link'>
@@ -36,14 +41,19 @@
                     <ul class="submenu @if(Request::route()->getName() == "app_customer" ||
                                             Request::route()->getName() == "app_add_new_client" ||
                                             Request::route()->getName() == "app_info_customer" ||
-                                            Request::route()->getName() == "app_update_customer")
+                                            Request::route()->getName() == "app_update_customer" ||
+                                            
+                                            Request::route()->getName() == "app_supplier" ||
+                                            Request::route()->getName() == "app_add_new_supplier" ||
+                                            Request::route()->getName() == "app_info_supplier" ||
+                                            Request::route()->getName() == "app_update_supplier")
                                             active 
                                         @endif">
                         <li class="submenu-item @if(Request::route()->getName() == "app_customer") active @endif">
                             <a href="{{ route('app_customer', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.customer') }}</a>
                         </li>
-                        <li class="submenu-item ">
-                            <a href="#">{{ __('dashboard.supplier') }}</a>
+                        <li class="submenu-item @if(Request::route()->getName() == "app_supplier") active @endif">
+                            <a href="{{ route('app_supplier', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.supplier') }}</a>
                         </li>
                         <li class="submenu-item ">
                             <a href="#">{{ __('dashboard.other_third_parties') }}</a>

@@ -123,8 +123,13 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\ReadNotif');
     }
 
-    public function client()
+    public function clients()
     {
         return $this->hasMany('App\Models\Client');
+    }
+
+    public function suplliers()
+    {
+        return $this->hasMany('App\Models\Supplier');
     }
 }

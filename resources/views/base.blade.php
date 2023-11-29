@@ -52,5 +52,6 @@
         <script src="{{ asset('assets/app/js/dataTables-init.js') }}"></script>
         <script src="{{ asset('assets/app/js/entreprise.js') }}"></script>
         <script src="{{ asset('assets/app/js/client.js') }}"></script>
+        <script src="{{ asset('assets/app/js/fournisseur.js') }}"></script>
     </body>
 </html>

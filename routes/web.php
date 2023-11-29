@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EntrepriseController;
@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SupplierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -173,7 +174,7 @@ Route::controller(CurrencyController::class)->group(function(){
     });
 });
 
-Route::controller(ContactController::class)->group(function(){
+Route::controller(CustomerController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
@@ -187,5 +188,22 @@ Route::controller(ContactController::class)->group(function(){
         //
         Route::post('/create_client', 'createClient')->name('app_create_client');
         Route::post('/delete_client', 'deleteClient')->name('app_delete_client');
+    });
+});
+
+Route::controller(SupplierController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                Route::get('/supplier/{id:int}/{id2:int}', 'supplier')->name('app_supplier');
+                Route::get('/add_new_supplier/{id:int}/{id2:int}', 'addNewSupplier')->name('app_add_new_supplier');
+                Route::get('/info_supplier/{id:int}/{id2:int}/{id3:int}', 'infoSupplier')->name('app_info_supplier');
+                Route::get('/update_supplier/{id:int}/{id2:int}/{id3:int}', 'updateSupplier')->name('app_update_supplier');
+            });
+        });
+
+        //
+        Route::post('/create_supplier', 'createSupplier')->name('app_create_supplier');
+        Route::post('/delete_supplier', 'deleteSupplier')->name('app_delete_supplier');
     });
 });
