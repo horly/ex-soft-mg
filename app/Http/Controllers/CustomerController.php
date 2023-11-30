@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateClientForm;
 use App\Models\Client;
 use App\Repository\EntrepriseRepo;
+use App\Repository\GenerateRefenceNumber;
 use App\Repository\NotificationRepo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,12 +17,17 @@ class CustomerController extends Controller
     protected $request;
     protected $entrepriseRepo;
     protected $notificationRepo;
+    protected $generateReferenceNumber;
 
-    function __construct(Request $request, EntrepriseRepo $entrepriseRepo, NotificationRepo $notificationRepo)
+    function __construct(Request $request, 
+                            EntrepriseRepo $entrepriseRepo, 
+                            NotificationRepo $notificationRepo, 
+                            GenerateRefenceNumber $generateReferenceNumber)
     {
         $this->request = $request;
         $this->entrepriseRepo = $entrepriseRepo;
         $this->notificationRepo = $notificationRepo;
+        $this->generateReferenceNumber = $generateReferenceNumber;
     }
 
     public function customer($id, $id2)
@@ -33,7 +39,7 @@ class CustomerController extends Controller
                     ->where('id_fu', $functionalUnit->id)
                     ->orderByDesc('id')
                     ->get();
-
+        
         return view('client.client', compact('entreprise', 'functionalUnit', 'clients'));
     }
 
@@ -66,10 +72,15 @@ class CustomerController extends Controller
 
         if($customerRequest != "edit")
         {
+            $refNum = $this->generateReferenceNumber->getReferenceNumber("clients", $id_fu);
+            $ref = $this->generateReferenceNumber->generate("CL", $refNum);
+
             if($customer_type_cl == "company")
             {
                 Client::create([
                     'type' => $customer_type_cl,
+                    'reference_cl' => $ref,
+                    'reference_number' => $refNum,
                     'entreprise_name_cl' => $company_name_cl,
                     'rccm_cl' => $company_rccm_cl,
                     'id_nat_cl' => $company_id_nat_cl,
@@ -88,6 +99,8 @@ class CustomerController extends Controller
             {
                 Client::create([
                     'type' => $customer_type_cl,
+                    'reference_cl' => $ref,
+                    'reference_number' => $refNum,
                     'contact_name_cl' => $full_name_cl,
                     'fonction_contact_cl' => $grade_cl,
                     'phone_number_cl' => $phone_number_cl,

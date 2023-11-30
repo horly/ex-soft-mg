@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CreditorController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DashboardController;
@@ -205,5 +206,23 @@ Route::controller(SupplierController::class)->group(function(){
         //
         Route::post('/create_supplier', 'createSupplier')->name('app_create_supplier');
         Route::post('/delete_supplier', 'deleteSupplier')->name('app_delete_supplier');
+    });
+});
+
+
+Route::controller(CreditorController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                Route::get('/creditor/{id:int}/{id2:int}', 'creditor')->name('app_creditor');
+                Route::get('/add_new_creditor/{id:int}/{id2:int}', 'addNewCreditor')->name('app_add_new_creditor');
+                Route::get('/info_creditor/{id:int}/{id2:int}/{id3:int}', 'infoCreditor')->name('app_info_creditor');
+                Route::get('/update_creditor/{id:int}/{id2:int}/{id3:int}', 'updateCreditor')->name('app_update_creditor');
+            });
+        });
+
+        //
+        Route::post('/create_creditor', 'createCreditor')->name('app_create_creditor');
+        Route::post('/delete_creditor', 'deleteCreditor')->name('app_delete_creditor');
     });
 });

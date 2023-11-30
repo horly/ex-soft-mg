@@ -13,6 +13,8 @@ class Supplier extends Model
 
     protected $fillable = [
         'type_sup',
+        'reference_sup',
+        'reference_number',
         'entreprise_name_sup',
         'rccm_sup',
         'id_nat_sup',
@@ -28,14 +30,14 @@ class Supplier extends Model
         'id_fu',
     ];
 
-     //Un fournisseur est géré par un utilisateur
-     function user()
-     {
-         return $this->belongsTo('App\Models\User', 'id_user');
-     }
+    //Un fournisseur est géré par un utilisateur
+    function user()
+    {
+        return $this->belongsTo('App\Models\User', 'id_user');
+    }
  
-     function functionalUit()
-     {
-         return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');
-     }
+    function functionalUit()
+    {
+        return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');
+    }
 }

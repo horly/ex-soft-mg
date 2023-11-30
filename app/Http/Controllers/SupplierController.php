@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateSupplierForm;
 use App\Models\Supplier;
 use App\Repository\EntrepriseRepo;
+use App\Repository\GenerateRefenceNumber;
 use App\Repository\NotificationRepo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,12 +17,17 @@ class SupplierController extends Controller
     protected $request;
     protected $entrepriseRepo;
     protected $notificationRepo;
+    protected $generateReferenceNumber;
 
-    function __construct(Request $request, EntrepriseRepo $entrepriseRepo, NotificationRepo $notificationRepo)
+    function __construct(Request $request, 
+                            EntrepriseRepo $entrepriseRepo, 
+                            NotificationRepo $notificationRepo, 
+                            GenerateRefenceNumber $generateReferenceNumber)
     {
         $this->request = $request;
         $this->entrepriseRepo = $entrepriseRepo;
         $this->notificationRepo = $notificationRepo;
+        $this->generateReferenceNumber = $generateReferenceNumber;
     }
 
     public function supplier($id, $id2)
@@ -66,10 +72,15 @@ class SupplierController extends Controller
 
         if($customerRequest != "edit")
         {
+            $refNum = $this->generateReferenceNumber->getReferenceNumber("suppliers", $id_fu);
+            $ref = $this->generateReferenceNumber->generate("SU", $refNum);
+
             if($customer_type_sup == "company")
             {
                 Supplier::create([
                     'type_sup' => $customer_type_sup,
+                    'reference_sup' => $ref,
+                    'reference_number' => $refNum,
                     'entreprise_name_sup' => $company_name_sup,
                     'rccm_sup' => $company_rccm_sup,
                     'id_nat_sup' => $company_id_nat_sup,
@@ -88,6 +99,8 @@ class SupplierController extends Controller
             {
                 Supplier::create([
                     'type_sup' => $customer_type_sup,
+                    'reference_sup' => $ref,
+                    'reference_number' => $refNum,
                     'contact_name_sup' => $full_name_sup,
                     'fonction_contact_sup' => $grade_sup,
                     'phone_number_sup' => $phone_number_sup,

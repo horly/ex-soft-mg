@@ -74,4 +74,7 @@
         'i_owe_my_suppliers' => "I owe my suppliers",
         'customers_to_follow_up' => "Customers to follow up",
         'supplier_invoices_due' => "Supplier invoices due",
+
+        'creditors' => "Creditors",
+        'debtors' => "Debtors",
 ];

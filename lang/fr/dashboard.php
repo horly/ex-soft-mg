@@ -74,4 +74,7 @@
         'i_owe_my_suppliers' => "Je dois à mes fournisseurs",
         'customers_to_follow_up' => "Clients à relancer",
         'supplier_invoices_due' => "Factures fournisseurs à échéance",
+
+        'creditors' => "Créanciers",
+        'debtors' => "Débiteurs",
 ];

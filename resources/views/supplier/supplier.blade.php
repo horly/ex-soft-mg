@@ -47,6 +47,7 @@
                         <table class="table table-striped table-hover border bootstrap-datatable">
                             <thead>
                                 <th>N°</th>
+                                <th>{{ __('client.reference') }}</th>
                                 <th>{{ __('supplier.supplier_type') }}</th>
                                 <th>{{ __('main.company_name') }}</th>
                                 <th>{{ __('client.contact_name') }}</th>
@@ -58,6 +59,15 @@
                                 @foreach ($suppliers as $supplier)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+                                        <td>
+                                            <a href="{{ route('app_info_supplier', [
+                                                'id' => $entreprise->id,
+                                                'id2' => $functionalUnit->id,
+                                                'id3' => $supplier->id,
+                                            ]) }}">
+                                                {{ $supplier->reference_sup }}
+                                            </a>
+                                        </td>
                                         <td>{{ __('client.' .$supplier->type_sup) }}</td>
                                         <td>{{ $supplier->entreprise_name_sup }}</td>
                                         <td>{{ $supplier->contact_name_sup }}</td>

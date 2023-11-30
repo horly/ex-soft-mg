@@ -49,7 +49,7 @@
                             <div class="mb-4 row">
                                 <label for="customer_type_cl" class="col-sm-4 col-form-label">{{ __('client.customer_type') }}*</label> 
                                 <div class="col-sm-8">
-                                  <select name="customer_type_cl" id="customer_type_cl" class="form-select @error('customer_type_cl') is-invalid @enderror">
+                                  <select name="customer_type_cl" id="customer_type_cl" class="form-select type_contact @error('customer_type_cl') is-invalid @enderror">
                                       <option value="" selected>{{ __('client.select_customer_type') }}</option>
                                       <option value="particular">{{ __('client.particular') }}</option>
                                       <option value="company">{{ __('client.company') }}</option>
@@ -58,11 +58,11 @@
                                 </div>
                             </div>
 
-                            <div class="border-bottom mb-4 fw-bold d-none company_info_cl">
+                            <div class="border-bottom mb-4 fw-bold d-none company_info_contact">
                                 {{ __('client.customer_company_information') }}
                             </div>
 
-                            <div class="mb-4 row d-none company_info_cl">
+                            <div class="mb-4 row d-none company_info_contact">
                                 <label for="company_name_cl" class="col-sm-4 col-form-label">{{ __('main.company_name') }}*</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control @error('company_name_cl') is-invalid @enderror" id="company_name_cl" name="company_name_cl" placeholder="{{ __('client.enter_the_company_name') }}" value="{{ old('company_name_cl') }}">
@@ -70,35 +70,35 @@
                                 </div>
                             </div>
 
-                            <div class="mb-4 row d-none company_info_cl">
+                            <div class="mb-4 row d-none company_info_contact">
                                 <label for="company_rccm_cl" class="col-sm-4 col-form-label">RCCM</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" id="company_rccm_cl" name="company_rccm_cl" placeholder="{{ __('client.enter_the_company_rccm') }}" value="{{ old('company_rccm_cl') }}">
                                 </div>
                             </div>
 
-                            <div class="mb-4 row d-none company_info_cl">
+                            <div class="mb-4 row d-none company_info_contact">
                                 <label for="company_id_nat_cl" class="col-sm-4 col-form-label">ID NAT</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" id="company_id_nat_cl" name="company_id_nat_cl" placeholder="{{ __('client.enter_the_company_id_nat') }}" value="{{ old('company_id_nat_cl') }}">
                                 </div>
                             </div>
 
-                            <div class="mb-4 row d-none company_info_cl">
+                            <div class="mb-4 row d-none company_info_contact">
                                 <label for="company_nif_cl" class="col-sm-4 col-form-label">NIF</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" id="company_nif_cl" name="company_nif_cl" placeholder="{{ __('client.enter_the_companys_tax_number') }}" value="{{ old('company_nif_cl') }}">
                                 </div>
                             </div>
 
-                            <div class="mb-4 row d-none company_info_cl">
+                            <div class="mb-4 row d-none company_info_contact">
                                 <label for="company_account_number_cl" class="col-sm-4 col-form-label">{{ __('entreprise.account_number') }}</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" id="company_account_number_cl" name="company_account_number_cl" placeholder="{{ __('client.enter_the_account_number') }}" value="{{ old('company_account_number_cl') }}">
                                 </div>
                             </div>
 
-                            <div class="mb-4 row d-none company_info_cl">
+                            <div class="mb-4 row d-none company_info_contact">
                                 <label for="company_website_cl" class="col-sm-4 col-form-label">{{ __('main.website') }}</label>
                                 <div class="col-sm-8">
                                     <div class="input-group">

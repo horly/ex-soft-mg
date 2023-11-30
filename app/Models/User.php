@@ -132,4 +132,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Supplier');
     }
+
+    public function creditors()
+    {
+        return $this->hasMany('App\Models\Creditor');
+    }
 }

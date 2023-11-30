@@ -66,4 +66,6 @@ return [
     'removed_a_customer_from_the_functional_unit' => "removed a customer from the functional unit",
     'customer_deleted_successfully' => "Customer deleted successfully!",
     'update_customer' => "Update customer",
+
+    'reference' => "Reference",
 ];

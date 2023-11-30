@@ -49,6 +49,15 @@
                             </div>
                         </div>
 
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                {{ __('client.reference') }}
+                            </div>
+                            <div class="col-md-8 text-primary fw-bold">
+                                {{ $supplier->reference_sup }}
+                            </div>
+                        </div>
+
                         <div class="border-bottom mb-4 fw-bold">
                             {{ __('supplier.supplier_company_information') }}
                         </div>

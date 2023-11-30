@@ -67,4 +67,6 @@ return [
     'removed_a_customer_from_the_functional_unit' => "a supprimé un client de l'unité fonctionnelle",
     'customer_deleted_successfully' => "Client supprimé avec succès!",
     'update_customer' => "Mettre à jour le client",
+
+    'reference' => "Référence",
 ];
