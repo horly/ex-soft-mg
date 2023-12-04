@@ -60,5 +60,10 @@ class FunctionalUnit extends Model
     {
         return $this->hasMany('App\Models\Creditor');
     }
+
+    public function debtors()
+    {
+        return $this->hasMany('App\Models\Debtor');
+    }
 }
 

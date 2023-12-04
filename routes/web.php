@@ -4,6 +4,7 @@ use App\Http\Controllers\CreditorController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DebtorController;
 use App\Http\Controllers\EntrepriseController;
 use App\Http\Controllers\FunctionalUnitController;
 use App\Http\Controllers\HomeController;
@@ -224,5 +225,22 @@ Route::controller(CreditorController::class)->group(function(){
         //
         Route::post('/create_creditor', 'createCreditor')->name('app_create_creditor');
         Route::post('/delete_creditor', 'deleteCreditor')->name('app_delete_creditor');
+    });
+});
+
+Route::controller(DebtorController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                Route::get('/debtor/{id:int}/{id2:int}', 'debtor')->name('app_debtor');
+                Route::get('/add_new_debtor/{id:int}/{id2:int}', 'addNewDebtor')->name('app_add_new_debtor');
+                Route::get('/info_debtor/{id:int}/{id2:int}/{id3:int}', 'infoDebtor')->name('app_info_debtor');
+                Route::get('/update_debtor/{id:int}/{id2:int}/{id3:int}', 'updateDebtor')->name('app_update_debtor');
+            });
+        });
+
+        //
+        Route::post('/create_debtor', 'createDebtor')->name('app_create_debtor');
+        Route::post('/delete_debtor', 'deleteDebtor')->name('app_delete_debtor');
     });
 });

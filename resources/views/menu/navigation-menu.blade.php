@@ -36,7 +36,12 @@
                                             Request::route()->getName() == "app_creditor" ||
                                             Request::route()->getName() == "app_add_new_creditor" ||
                                             Request::route()->getName() == "app_info_creditor" ||
-                                            Request::route()->getName() == "app_update_creditor") 
+                                            Request::route()->getName() == "app_update_creditor" ||
+                                            
+                                            Request::route()->getName() == "app_debtor" ||
+                                            Request::route()->getName() == "app_add_new_debtor" ||
+                                            Request::route()->getName() == "app_info_debtor" ||
+                                            Request::route()->getName() == "app_update_debtor") 
                                             active 
                                         @endif has-sub">
                     <a href="#" class='sidebar-link'>
@@ -56,7 +61,12 @@
                                             Request::route()->getName() == "app_creditor" ||
                                             Request::route()->getName() == "app_add_new_creditor" ||
                                             Request::route()->getName() == "app_info_creditor" ||
-                                            Request::route()->getName() == "app_update_creditor")
+                                            Request::route()->getName() == "app_update_creditor" ||
+                                            
+                                            Request::route()->getName() == "app_debtor" || 
+                                            Request::route()->getName() == "app_add_new_debtor" ||
+                                            Request::route()->getName() == "app_info_debtor" ||
+                                            Request::route()->getName() == "app_update_debtor")
                                             active 
                                         @endif">
                         <li class="submenu-item @if(Request::route()->getName() == "app_customer") active @endif">
@@ -68,8 +78,8 @@
                         <li class="submenu-item @if(Request::route()->getName() == "app_creditor") active @endif">
                             <a href="{{ route('app_creditor', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.creditors') }}</a>
                         </li>
-                        <li class="submenu-item ">
-                            <a href="#">{{ __('dashboard.debtors') }}</a>
+                        <li class="submenu-item @if(Request::route()->getName() == "app_debtor") active @endif">
+                            <a href="{{ route('app_debtor', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.debtors') }}</a>
                         </li>
                         <li class="submenu-item ">
                             <a href="#">{{ __('dashboard.vat_administration') }}</a>
