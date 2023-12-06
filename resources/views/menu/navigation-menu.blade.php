@@ -81,23 +81,39 @@
                         <li class="submenu-item @if(Request::route()->getName() == "app_debtor") active @endif">
                             <a href="{{ route('app_debtor', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.debtors') }}</a>
                         </li>
+                        {{--
                         <li class="submenu-item ">
                             <a href="#">{{ __('dashboard.vat_administration') }}</a>
                         </li>
+                        --}}
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item @if(Request::route()->getName() == "app_category_article" ||
+                                            Request::route()->getName() == "app_add_new_category_article" ||
+                                            Request::route()->getName() == "app_info_article_category" ||
+                                            Request::route()->getName() == "app_update_article_category") 
+                                                active 
+                                        @endif 
+                    has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-box-archive"></i>
                         <span>{{ __('dashboard.stock') }}</span>
                     </a>
-                    <ul class="submenu ">
+                    <ul class="submenu @if(Request::route()->getName() == "app_category_article" ||
+                                            Request::route()->getName() == "app_add_new_category_article" ||
+                                            Request::route()->getName() == "app_info_article_category" ||
+                                            Request::route()->getName() == "app_update_article_category") 
+                                                active 
+                        @endif">
                         <li class="submenu-item ">
                             <a href="#">{{ __('dashboard.articles') }}</a>
                         </li>
                         <li class="submenu-item ">
-                            <a href="#">{{ __('dashboard.article_categories') }}</a>
+                            <a href="#">{{ __('article.article_subcategory') }}</a>
+                        </li>
+                        <li class="submenu-item @if(Request::route()->getName() == "app_category_article") active @endif">
+                            <a href="{{ route('app_category_article', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('article.article_category') }}</a>
                         </li>
                     </ul>
                 </li>

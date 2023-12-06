@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CreditorController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CurrencyController;
@@ -242,5 +243,22 @@ Route::controller(DebtorController::class)->group(function(){
         //
         Route::post('/create_debtor', 'createDebtor')->name('app_create_debtor');
         Route::post('/delete_debtor', 'deleteDebtor')->name('app_delete_debtor');
+    });
+});
+
+Route::controller(ArticleController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                Route::get('/category_article/{id:int}/{id2:int}', 'categoryArticle')->name('app_category_article');
+                Route::get('/add_new_category_article/{id:int}/{id2:int}', 'addNewCategoryArticle')->name('app_add_new_category_article');
+                Route::get('/info_article_category/{id:int}/{id2:int}/{id3:int}', 'infoArticleCategory')->name('app_info_article_category');
+                Route::get('/update_article_category/{id:int}/{id2:int}/{id3:int}', 'updateArticleCategory')->name('app_update_article_category');
+            });
+        });
+
+        //
+        Route::post('/create_category_article', 'createCategoryArticle')->name('app_create_category_article');
+        Route::post('/delete_category_article', 'deleteCategoryArticle')->name('app_delete_category_article');
     });
 });
