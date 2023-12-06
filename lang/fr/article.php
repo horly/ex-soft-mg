@@ -1,6 +1,10 @@
 <?php
 
 return [
+
+    /**
+     * Article category
+     */
     'article_category' => "Catégorie d'articles",
     'article_subcategory' => "Sous-catégorie d'articles",
     'category_list' => "Liste des catégories",
@@ -16,4 +20,24 @@ return [
     'deleted_an_article_category_in_the_functional_unit' => "a supprimé une catégorie d'article dans l'unité fonctionnelle",
     'article_category_successfully_deleted' => "Catégorie d'article supprimée avec succès",
     'update_an_article_category' => "Mettre à jour une catégorie d'article",
+    'select_a_category' => "Choisir une catégorie",
+    'select_a_category_please' => "Sélectionnez une catégorie s'il vous plaît!",
+
+    /**
+     * Article subcategory
+     */
+
+    'subcategory_list' => "Liste des sous-catégories",
+    'subcategory_name' => "Nom de la sous-catégorie",
+    'add_a_new_sub_category' => "Ajouter une nouvelle sous-catégorie",
+    'enter_the_subcategory_name' => "Entrez le nom de la sous-catégorie",
+    'enter_the_subcategory_name_please' => "Entrez le nom de la sous-catégorie s'il vous plaît!",
+    'article_subcategory_added_successfully' => "Sous-catégorie d'article ajoutée avec succès!",
+    'added_a_new_article_subcategory_in_the_functional_unit' => "a ajouté une nouvelle sous-catégorie d'articles dans l'unité fonctionnelle",
+    'item_subcategory_updated_successfully' => "Sous-catégorie d'article mise à jour avec succès!",
+    'updated_an_article_subcategory' => "a mis à jour une sous-catégorie d'article dans l'unité fonctionnelle",
+    'article_subcategory_details' => "Détails de la sous-catégorie d'article",
+    'deleted_an_article_subcategory_in_the_functional_unit' => "a supprimé une sous-catégorie d'article dans l'unité fonctionnelle",
+    'article_subcategory_successfully_deleted' => "Sous-catégorie d'article supprimée avec succès!",
+    'update_an_article_subcategory' => "Mettre à jour une sous-catégorie d'article",
 ];

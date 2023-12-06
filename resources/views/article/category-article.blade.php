@@ -49,9 +49,9 @@
                                 <th>N°</th>
                                 <th>{{ __('client.reference') }}</th>
                                 <th>{{ __('article.category_name') }}</th>
-                                <th>{{ __('article.article_subcategory') }}</th>
-                                <th>{{ __('dashboard.articles') }}</th>
-                                <th>Action</th>
+                                <th class="text-end">{{ __('article.article_subcategory') }}</th>
+                                <th class="text-end">{{ __('dashboard.articles') }}</th>
+                                <th class="text-center">Action</th>
                             </thead>
                             <tbody>
                                 @foreach ($category_articles as $category_article)
@@ -67,9 +67,16 @@
                                             </a>
                                         </td>
                                         <td>{{ $category_article->name_cat_art }}</td>
-                                        <td>#</td>
-                                        <td>#</td>
-                                        <td>
+                                        <td class="text-end">
+                                            @php
+                                                $nbSubcat = DB::table('subcategory_articles')
+                                                            ->where('id_cat', $category_article->id)
+                                                            ->count();
+                                            @endphp
+                                            {{ $nbSubcat }}
+                                        </td>
+                                        <td class="text-end">#</td>
+                                        <td class="text-center">
                                             <a href="{{ route('app_info_article_category', [
                                                 'id' => $entreprise->id,
                                                 'id2' => $functionalUnit->id,

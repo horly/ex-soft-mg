@@ -254,11 +254,19 @@ Route::controller(ArticleController::class)->group(function(){
                 Route::get('/add_new_category_article/{id:int}/{id2:int}', 'addNewCategoryArticle')->name('app_add_new_category_article');
                 Route::get('/info_article_category/{id:int}/{id2:int}/{id3:int}', 'infoArticleCategory')->name('app_info_article_category');
                 Route::get('/update_article_category/{id:int}/{id2:int}/{id3:int}', 'updateArticleCategory')->name('app_update_article_category');
+            
+                Route::get('/subcategory_article/{id:int}/{id2:int}', 'subCategoryArticle')->name('app_subcategory_article');
+                Route::get('/add_new_subcategory_article/{id:int}/{id2:int}', 'addNewSubCategoryArticle')->name('app_add_new_subcategory_article');
+                Route::get('/info_article_subcategory/{id:int}/{id2:int}/{id3:int}', 'infoArticleSubCategory')->name('app_info_article_subcategory');
+                Route::get('/update_article_subcategory/{id:int}/{id2:int}/{id3:int}', 'updateArticleSubCategory')->name('app_update_article_subcategory');
             });
         });
 
         //
         Route::post('/create_category_article', 'createCategoryArticle')->name('app_create_category_article');
         Route::post('/delete_category_article', 'deleteCategoryArticle')->name('app_delete_category_article');
+
+        Route::post('/create_subcategory_article', 'createSubCategoryArticle')->name('app_create_subcategory_article');
+        Route::post('/delete_subcategory_article', 'deleteSubCategoryArticle')->name('app_delete_subcategory_article');
     });
 });

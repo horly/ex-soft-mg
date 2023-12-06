@@ -18,4 +18,9 @@ class CategoryArticle extends Model
         'id_user',
         'id_fu',
     ];
+
+    public function subCategory()
+    {
+        return $this->hasMany('App\Models\SubcategoryArticle');
+    }
 }

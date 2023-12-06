@@ -92,7 +92,11 @@
                 <li class="sidebar-item @if(Request::route()->getName() == "app_category_article" ||
                                             Request::route()->getName() == "app_add_new_category_article" ||
                                             Request::route()->getName() == "app_info_article_category" ||
-                                            Request::route()->getName() == "app_update_article_category") 
+                                            Request::route()->getName() == "app_update_article_category" ||
+
+                                            Request::route()->getName() == "app_subcategory_article" ||
+                                            Request::route()->getName() == "app_add_new_subcategory_article" ||
+                                            Request::route()->getName() == "app_info_article_subcategory") 
                                                 active 
                                         @endif 
                     has-sub">
@@ -103,14 +107,18 @@
                     <ul class="submenu @if(Request::route()->getName() == "app_category_article" ||
                                             Request::route()->getName() == "app_add_new_category_article" ||
                                             Request::route()->getName() == "app_info_article_category" ||
-                                            Request::route()->getName() == "app_update_article_category") 
+                                            Request::route()->getName() == "app_update_article_category" ||
+
+                                            Request::route()->getName() == "app_subcategory_article" ||
+                                            Request::route()->getName() == "app_add_new_subcategory_article" ||
+                                            Request::route()->getName() == "app_info_article_subcategory") 
                                                 active 
                         @endif">
                         <li class="submenu-item ">
                             <a href="#">{{ __('dashboard.articles') }}</a>
                         </li>
-                        <li class="submenu-item ">
-                            <a href="#">{{ __('article.article_subcategory') }}</a>
+                        <li class="submenu-item @if(Request::route()->getName() == "app_subcategory_article") active @endif">
+                            <a href="{{ route('app_subcategory_article', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('article.article_subcategory') }}</a>
                         </li>
                         <li class="submenu-item @if(Request::route()->getName() == "app_category_article") active @endif">
                             <a href="{{ route('app_category_article', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('article.article_category') }}</a>
