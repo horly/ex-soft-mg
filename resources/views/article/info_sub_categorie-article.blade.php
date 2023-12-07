@@ -71,12 +71,17 @@
                             </div>
                         </div>
 
+                        @php
+                            $nbSubcat = DB::table('articles')
+                                        ->where('id_sub_cat', $subcategory_article->id)
+                                        ->count();
+                        @endphp
                         <div class="row mb-4">
                             <div class="col-md-4">
                                 {{ __('dashboard.articles') }}
                             </div>
                             <div class="col-md-8 text-primary fw-bold">
-                                #
+                                {{ $nbSubcat }}
                             </div>
                         </div>
 

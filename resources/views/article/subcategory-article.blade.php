@@ -67,7 +67,14 @@
                                             </a>
                                         </td>
                                         <td>{{ $subcategory_article->name_subcat_art }}</td>
-                                        <td class="text-end">#</td>
+                                        <td class="text-end">
+                                            @php
+                                                $nbSubcat = DB::table('articles')
+                                                            ->where('id_sub_cat', $subcategory_article->id)
+                                                            ->count();
+                                            @endphp
+                                            {{ $nbSubcat }}
+                                        </td>
                                         <td>{{ $subcategory_article->name_cat_art }}</td>
                                         <td class="text-center">
                                             <a href="{{ route('app_info_article_subcategory', [

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateArticleForm;
 use App\Http\Requests\CreateCategoryForm;
 use App\Http\Requests\CreateSubCategoryForm;
+use App\Models\Article;
 use App\Models\CategoryArticle;
 use App\Models\SubcategoryArticle;
 use App\Repository\EntrepriseRepo;
@@ -269,6 +271,181 @@ class ArticleController extends Controller
                         'category_articles',
                         'subcategory_article', 
                         'cat_art_get'
+        ));
+    }
+
+    /**
+     * Article
+     */
+    public function article($id, $id2)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        $articles = DB::table('users')
+                    ->join('articles', 'articles.id_user', '=', 'users.id')
+                    ->where('articles.id_fu', $functionalUnit->id)
+                    ->orderByDesc('articles.id')
+                    ->get();
+
+        $deviseGest = DB::table('devises')
+                    ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                    ->where([
+                        'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                        'devise_gestion_ufs.default_cur_manage' => 1,
+                    ])->first();
+        
+        return view('article.article', compact('entreprise', 'functionalUnit', 'articles', 'deviseGest'));
+    }
+
+    public function addNewArticle($id, $id2)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        $subcategory_articles = DB::table('subcategory_articles')
+                ->where('id_fu', $functionalUnit->id)
+                ->orderByDesc('id')
+                ->get();
+
+        $deviseGest = DB::table('devises')
+                ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                ->where([
+                    'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                    'devise_gestion_ufs.default_cur_manage' => 1,
+            ])->first();
+
+        return view('article.add_new_article', compact('entreprise', 'functionalUnit', 'subcategory_articles', 'deviseGest'));
+    }
+
+    public function createArticle(CreateArticleForm $requestF)
+    {
+        $id_entreprise = $requestF->input('id_entreprise');
+        $id_fu = $requestF->input('id_fu');
+        $id_art = $requestF->input('id_art');
+        $description_art = $requestF->input('description_art');
+        $subcat_art = $requestF->input('subcat_art');
+        $unit_price_art = $requestF->input('unit_price_art');
+        $number_in_stock_art = $requestF->input('number_in_stock_art');
+        $customerRequest = $requestF->input('customerRequest');
+
+
+        if($customerRequest != "edit")
+        {
+            $refNum = $this->generateReferenceNumber->getReferenceNumber("articles", $id_fu);
+            $ref = $this->generateReferenceNumber->generate("ART", $refNum);
+
+            Article::create([
+                'reference_art' => $ref,
+                'reference_number' => $refNum,
+                'description_art' => $description_art,
+                'unit_price' => $unit_price_art,
+                'number_in_stock' => $number_in_stock_art,
+                'id_sub_cat' => $subcat_art,
+                'id_fu' => $id_fu,
+                'id_user' => Auth::user()->id,
+            ]);
+
+            //Notification
+            $url = route('app_article', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $description = "article.added_a_new_article_in_the_functional_unit";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+            return redirect()->route('app_article', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                    ->with('success', __('article.article_added_successfully'));
+        }
+        else
+        {
+            DB::table('articles')
+                ->where('id', $id_art)
+                ->update([
+                    'description_art' => $description_art,
+                    'unit_price' => $unit_price_art,
+                    'number_in_stock' => $number_in_stock_art,
+                    'id_sub_cat' => $subcat_art,
+                    'updated_at' => new \DateTimeImmutable,
+            ]);
+
+            //Notification
+            $url = route('app_article', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $description = "article.updated_an_article";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+            return redirect()->route('app_article', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                    ->with('success', __('article.article_updated_successfully'));
+        }
+    }
+
+    public function infoArticle($id, $id2, $id3)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        $article = DB::table('users')
+                    ->join('articles', 'articles.id_user', '=', 'users.id')
+                    ->where('articles.id', $id3)->first();
+        
+        $deviseGest = DB::table('devises')
+                    ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                    ->where([
+                        'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                        'devise_gestion_ufs.default_cur_manage' => 1,
+                    ])->first();
+
+        return view('article.info_article', compact('entreprise', 'functionalUnit', 'article', 'deviseGest'));
+    }
+
+    public function deleteArticle()
+    {
+        $id_art = $this->request->input('id_element1');
+        $id_entreprise = $this->request->input('id_element2');
+        $id_fu = $this->request->input('id_element3');
+
+        DB::table('articles')->where('id', $id_art)->delete();
+
+        //Notification
+        $url = route('app_article', ['id' => $id_entreprise, 'id2' => $id_fu]);
+        $description = "article.deleted_an_article_in_the_functional_unit";
+        $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+        return redirect()->route('app_article', [
+            'id' => $id_entreprise, 
+            'id2' => $id_fu ])->with('success', __('article.article_successfully_deleted'));   
+    }
+
+    public function updateArticle($id, $id2, $id3)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        $article = DB::table('users')
+                    ->join('articles', 'articles.id_user', '=', 'users.id')
+                    ->where('articles.id', $id3)->first();
+        
+        $subcategory_articles = DB::table('subcategory_articles')
+                    ->where('id_fu', $functionalUnit->id)
+                    ->orderByDesc('id')
+                    ->get();
+
+        $subcategory_art = DB::table('subcategory_articles')
+                    ->where('id', $article->id_sub_cat)
+                    ->orderByDesc('id')
+                    ->first();
+        
+        $deviseGest = DB::table('devises')
+                    ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                    ->where([
+                        'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                        'devise_gestion_ufs.default_cur_manage' => 1,
+                    ])->first();
+
+        return view('article.update_article', compact(
+            'entreprise', 
+            'functionalUnit', 
+            'article', 
+            'deviseGest', 
+            'subcategory_articles',
+            'subcategory_art'
         ));
     }
 }

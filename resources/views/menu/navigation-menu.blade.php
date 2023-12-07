@@ -70,16 +70,24 @@
                                             active 
                                         @endif">
                         <li class="submenu-item @if(Request::route()->getName() == "app_customer") active @endif">
-                            <a href="{{ route('app_customer', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.customer') }}</a>
+                            <a href="{{ route('app_customer', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('dashboard.customer') }}
+                            </a>
                         </li>
                         <li class="submenu-item @if(Request::route()->getName() == "app_supplier") active @endif">
-                            <a href="{{ route('app_supplier', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.supplier') }}</a>
+                            <a href="{{ route('app_supplier', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('dashboard.supplier') }}
+                            </a>
                         </li>
                         <li class="submenu-item @if(Request::route()->getName() == "app_creditor") active @endif">
-                            <a href="{{ route('app_creditor', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.creditors') }}</a>
+                            <a href="{{ route('app_creditor', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('dashboard.creditors') }}
+                            </a>
                         </li>
                         <li class="submenu-item @if(Request::route()->getName() == "app_debtor") active @endif">
-                            <a href="{{ route('app_debtor', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.debtors') }}</a>
+                            <a href="{{ route('app_debtor', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('dashboard.debtors') }}
+                            </a>
                         </li>
                         {{--
                         <li class="submenu-item ">
@@ -96,7 +104,13 @@
 
                                             Request::route()->getName() == "app_subcategory_article" ||
                                             Request::route()->getName() == "app_add_new_subcategory_article" ||
-                                            Request::route()->getName() == "app_info_article_subcategory") 
+                                            Request::route()->getName() == "app_info_article_subcategory" ||
+                                            Request::route()->getName() == "app_update_article_subcategory" ||
+                                            
+                                            Request::route()->getName() == "app_article" ||
+                                            Request::route()->getName() == "app_add_new_article" ||
+                                            Request::route()->getName() == "app_info_article" ||
+                                            Request::route()->getName() == "app_update_article") 
                                                 active 
                                         @endif 
                     has-sub">
@@ -111,17 +125,29 @@
 
                                             Request::route()->getName() == "app_subcategory_article" ||
                                             Request::route()->getName() == "app_add_new_subcategory_article" ||
-                                            Request::route()->getName() == "app_info_article_subcategory") 
+                                            Request::route()->getName() == "app_info_article_subcategory" ||
+                                            Request::route()->getName() == "app_update_article_subcategory" ||
+                                            
+                                            Request::route()->getName() == "app_article" ||
+                                            Request::route()->getName() == "app_add_new_article" ||
+                                            Request::route()->getName() == "app_info_article" ||
+                                            Request::route()->getName() == "app_update_article") 
                                                 active 
                         @endif">
-                        <li class="submenu-item ">
-                            <a href="#">{{ __('dashboard.articles') }}</a>
+                        <li class="submenu-item @if(Request::route()->getName() == "app_article") active @endif">
+                            <a href="{{ route('app_article', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('dashboard.articles') }}
+                            </a>
                         </li>
                         <li class="submenu-item @if(Request::route()->getName() == "app_subcategory_article") active @endif">
-                            <a href="{{ route('app_subcategory_article', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('article.article_subcategory') }}</a>
+                            <a href="{{ route('app_subcategory_article', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('article.article_subcategory') }}
+                            </a>
                         </li>
                         <li class="submenu-item @if(Request::route()->getName() == "app_category_article") active @endif">
-                            <a href="{{ route('app_category_article', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('article.article_category') }}</a>
+                            <a href="{{ route('app_category_article', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('article.article_category') }}
+                            </a>
                         </li>
                     </ul>
                 </li>

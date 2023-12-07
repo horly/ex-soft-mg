@@ -23,4 +23,14 @@ class CategoryArticle extends Model
     {
         return $this->hasMany('App\Models\SubcategoryArticle');
     }
+
+    function user()
+    {
+        return $this->belongsTo('App\Models\User', 'id_user');
+    }
+ 
+    function functionalUit()
+    {
+        return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');
+    }
 }

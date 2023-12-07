@@ -5,24 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SubcategoryArticle extends Model
+class Article extends Model
 {
     use HasFactory;
 
-    protected $table = "subcategory_articles";
+    protected $table = "articles";
 
     protected $fillable = [
-        'name_subcat_art',
+        'reference_art',
         'reference_number',
-        'reference_subcat_art',
-        'id_cat',
+        'description_art',
+        'unit_price',
+        'number_in_stock',
+        'id_sub_cat',
         'id_user',
         'id_fu',
     ];
 
-    public function categoryArticle()
+    public function subcatArticle()
     {
-        return $this->belongsTo('App\Models\CategoryArticle', 'id_cat');
+        return $this->belongsTo('App\Models\SubcategoryArticle', 'id_sub_cat');
     }
 
     function user()
@@ -33,10 +35,5 @@ class SubcategoryArticle extends Model
     function functionalUit()
     {
         return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');
-    }
-
-    public function article()
-    {
-        return $this->hasMany('App\Models\Article');
     }
 }

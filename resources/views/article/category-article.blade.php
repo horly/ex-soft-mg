@@ -75,7 +75,15 @@
                                             @endphp
                                             {{ $nbSubcat }}
                                         </td>
-                                        <td class="text-end">#</td>
+                                        <td class="text-end">
+                                            @php
+                                                $nbArt = DB::table('subcategory_articles')
+                                                            ->join('articles', 'articles.id_sub_cat', '=', 'subcategory_articles.id')
+                                                            ->where('subcategory_articles.id_cat', $category_article->id)
+                                                            ->count();
+                                            @endphp
+                                            {{ $nbArt }}
+                                        </td>
                                         <td class="text-center">
                                             <a href="{{ route('app_info_article_category', [
                                                 'id' => $entreprise->id,
