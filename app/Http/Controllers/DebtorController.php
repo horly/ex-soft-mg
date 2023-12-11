@@ -77,7 +77,7 @@ class DebtorController extends Controller
 
             if($customer_type_deb == "company")
             {
-                Debtor::create([
+                $debtor_saved = Debtor::create([
                     'type_deb' => $customer_type_deb,
                     'reference_deb' => $ref,
                     'reference_number' => $refNum,
@@ -97,7 +97,7 @@ class DebtorController extends Controller
                 ]);
             }else
             {
-                Debtor::create([
+                $debtor_saved = Debtor::create([
                     'type_deb' => $customer_type_deb,
                     'reference_deb' => $ref,
                     'reference_number' => $refNum,
@@ -112,7 +112,7 @@ class DebtorController extends Controller
             }
 
             //Notification
-            $url = route('app_debtor', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_debtor', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $debtor_saved->id]);
             $description = "debtor.added_a_new_debtor";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -163,7 +163,7 @@ class DebtorController extends Controller
             }
 
             //Notification
-            $url = route('app_debtor', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_debtor', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_creditor]);
             $description = "debtor.updated_a_debtor_from_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 

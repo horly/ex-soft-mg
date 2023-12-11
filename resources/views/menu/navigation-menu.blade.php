@@ -152,17 +152,42 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item @if(Request::route()->getName() == "app_category_service" ||
+                                            Request::route()->getName() == "app_add_new_category_service" ||
+                                            Request::route()->getName() == "app_info_service_category" ||
+                                            Request::route()->getName() == "app_update_service_category" ||
+
+                                            Request::route()->getName() == "app_service" ||
+                                            Request::route()->getName() == "app_add_new_service" ||
+                                            Request::route()->getName() == "app_info_service" ||
+                                            Request::route()->getName() == "app_update_service") 
+                                                active 
+                                        @endif  
+                    has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-toolbox"></i>
                         <span>{{ __('dashboard.services') }}</span>
                     </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="#">{{ __('dashboard.price_list') }}</a>
+                    <ul class="submenu @if(Request::route()->getName() == "app_category_service" ||
+                                            Request::route()->getName() == "app_add_new_category_service" ||
+                                            Request::route()->getName() == "app_info_service_category" ||
+                                            Request::route()->getName() == "app_update_service_category" ||
+
+                                            Request::route()->getName() == "app_service" ||
+                                            Request::route()->getName() == "app_add_new_service" ||
+                                            Request::route()->getName() == "app_info_service" ||
+                                            Request::route()->getName() == "app_update_service") 
+                                                active 
+                                        @endif">
+                        <li class="submenu-item @if(Request::route()->getName() == "app_service") active @endif">
+                            <a href="{{ route('app_service', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('dashboard.price_list') }}
+                            </a>
                         </li>
-                        <li class="submenu-item ">
-                            <a href="#">{{ __('dashboard.service_category') }}</a>
+                        <li class="submenu-item @if(Request::route()->getName() == "app_category_service") active @endif">
+                            <a href="{{ route('app_category_service', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('dashboard.service_category') }}
+                            </a>
                         </li>
                     </ul>
                 </li>

@@ -77,7 +77,7 @@ class CreditorController extends Controller
 
             if($customer_type_cr == "company")
             {
-                Creditor::create([
+                $creditor_saved = Creditor::create([
                     'type_cr' => $customer_type_cr,
                     'reference_cr' => $ref,
                     'reference_number' => $refNum,
@@ -97,7 +97,7 @@ class CreditorController extends Controller
                 ]);
             }else
             {
-                Creditor::create([
+                $creditor_saved = Creditor::create([
                     'type_cr' => $customer_type_cr,
                     'reference_cr' => $ref,
                     'reference_number' => $refNum,
@@ -112,7 +112,7 @@ class CreditorController extends Controller
             }
 
             //Notification
-            $url = route('app_creditor', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_creditor', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $creditor_saved->id]);
             $description = "creditor.added_a_new_creditor";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -163,7 +163,7 @@ class CreditorController extends Controller
             }
 
             //Notification
-            $url = route('app_creditor', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_creditor', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_creditor]);
             $description = "creditor.updated_a_creditor_from_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 

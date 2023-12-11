@@ -69,7 +69,7 @@ class ArticleController extends Controller
             $refNum = $this->generateReferenceNumber->getReferenceNumber("category_articles", $id_fu);
             $ref = $this->generateReferenceNumber->generate("CA", $refNum);
 
-            CategoryArticle::create([
+            $cat_art_saved = CategoryArticle::create([
                 'reference_cat_art' => $ref,
                 'reference_number' => $refNum,
                 'name_cat_art' => $name_cat,
@@ -78,7 +78,7 @@ class ArticleController extends Controller
             ]);
 
             //Notification
-            $url = route('app_category_article', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_article_category', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $cat_art_saved->id]);
             $description = "article.added_a_new_article_category_in_the_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -95,7 +95,7 @@ class ArticleController extends Controller
             ]);
 
             //Notification
-            $url = route('app_category_article', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_article_category', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_cat_art]);
             $description = "article.updated_an_article_category";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -189,7 +189,7 @@ class ArticleController extends Controller
             $refNum = $this->generateReferenceNumber->getReferenceNumber("subcategory_articles", $id_fu);
             $ref = $this->generateReferenceNumber->generate("SCA", $refNum);
 
-            SubcategoryArticle::create([
+            $sub_cat_art_saved = SubcategoryArticle::create([
                 'reference_subcat_art' => $ref,
                 'reference_number' => $refNum,
                 'name_subcat_art' => $name_subcat,
@@ -199,7 +199,7 @@ class ArticleController extends Controller
             ]);
 
             //Notification
-            $url = route('app_subcategory_article', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_article_subcategory', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $sub_cat_art_saved->id]);
             $description = "article.added_a_new_article_subcategory_in_the_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -217,7 +217,7 @@ class ArticleController extends Controller
             ]);
 
             //Notification
-            $url = route('app_subcategory_article', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_article_subcategory', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_subcat_art]);
             $description = "article.updated_an_article_subcategory";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -335,7 +335,7 @@ class ArticleController extends Controller
             $refNum = $this->generateReferenceNumber->getReferenceNumber("articles", $id_fu);
             $ref = $this->generateReferenceNumber->generate("ART", $refNum);
 
-            Article::create([
+            $article_saved = Article::create([
                 'reference_art' => $ref,
                 'reference_number' => $refNum,
                 'description_art' => $description_art,
@@ -347,7 +347,7 @@ class ArticleController extends Controller
             ]);
 
             //Notification
-            $url = route('app_article', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_article', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $article_saved->id]);
             $description = "article.added_a_new_article_in_the_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -367,7 +367,7 @@ class ArticleController extends Controller
             ]);
 
             //Notification
-            $url = route('app_article', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_article', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_art]);
             $description = "article.updated_an_article";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 

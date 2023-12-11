@@ -77,7 +77,7 @@ class CustomerController extends Controller
 
             if($customer_type_cl == "company")
             {
-                Client::create([
+                $client_saved = Client::create([
                     'type' => $customer_type_cl,
                     'reference_cl' => $ref,
                     'reference_number' => $refNum,
@@ -97,7 +97,7 @@ class CustomerController extends Controller
                 ]);
             }else
             {
-                Client::create([
+                $client_saved = Client::create([
                     'type' => $customer_type_cl,
                     'reference_cl' => $ref,
                     'reference_number' => $refNum,
@@ -112,7 +112,7 @@ class CustomerController extends Controller
             }
 
             //Notification
-            $url = route('app_customer', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_customer', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $client_saved->id]);
             $description = "client.added_a_new_customer";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -163,7 +163,7 @@ class CustomerController extends Controller
             }
 
             //Notification
-            $url = route('app_customer', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_customer', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_customer]);
             $description = "client.updated_a_customer_from_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 

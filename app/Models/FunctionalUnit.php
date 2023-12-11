@@ -80,5 +80,15 @@ class FunctionalUnit extends Model
     {
         return $this->hasMany('App\Models\Article');
     }
+
+    public function serviceSubCategory()
+    {
+        return $this->hasMany('App\Models\CategoryService');
+    }
+
+    public function service()
+    {
+        return $this->hasMany('App\Models\Service');
+    }
 }
 

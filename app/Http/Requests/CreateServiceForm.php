@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateCategoryForm extends FormRequest
+class CreateServiceForm extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,9 @@ class CreateCategoryForm extends FormRequest
     {
         return [
             //
-            'name_cat' => 'required',
+            'description_serv' => 'required',
+            'cat_serv' => 'required',
+            'unit_price_serv' => 'required|numeric',
         ];
     }
 
@@ -31,7 +33,10 @@ class CreateCategoryForm extends FormRequest
     {
         return [
             //
-            'name_cat.required' => __('article.enter_the_category_name_please'),
+            'description_serv.required' => __('service.enter_the_service_description_please'),
+            'cat_serv.required' => __('service.select_a_category_please'),
+            'unit_price_serv.required' => __('service.enter_the_service_unit_price_please'),
+            'unit_price_serv.numeric' => __('service.enter_a_valid_service_unit_price_please'),
         ];
     }
 }

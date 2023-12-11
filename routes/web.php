@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
 
 /*
@@ -289,5 +290,39 @@ Route::controller(ArticleController::class)->group(function(){
          */
         Route::post('/create_article', 'createArticle')->name('app_create_article');
         Route::post('/delete_article', 'deleteArticle')->name('app_delete_article');
+    });
+});
+
+Route::controller(ServiceController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                /**
+                 * Service Category
+                 */
+                Route::get('/category_service/{id:int}/{id2:int}', 'categoryService')->name('app_category_service');
+                Route::get('/add_new_category_service/{id:int}/{id2:int}', 'addNewCategoryService')->name('app_add_new_category_service');
+                Route::get('/info_service_category/{id:int}/{id2:int}/{id3:int}', 'infoServiceCategory')->name('app_info_service_category');
+                Route::get('/update_service_category/{id:int}/{id2:int}/{id3:int}', 'updateServiceCategory')->name('app_update_service_category');
+                /**
+                 * Service
+                 */
+                Route::get('/service/{id:int}/{id2:int}', 'service')->name('app_service');
+                Route::get('/add_new_service/{id:int}/{id2:int}', 'addNewService')->name('app_add_new_service');
+                Route::get('/info_service/{id:int}/{id2:int}/{id3:int}', 'infoService')->name('app_info_service');
+                Route::get('/update_service/{id:int}/{id2:int}/{id3:int}', 'updateService')->name('app_update_service');
+            });
+        });
+
+        /**
+         * Service Category
+         */
+        Route::post('/create_category_service', 'createCategoryService')->name('app_create_category_service');
+        Route::post('/delete_category_service', 'deleteCategoryService')->name('app_delete_category_service');
+        /**
+         * Service
+         */
+        Route::post('/create_service', 'createService')->name('app_create_service');
+        Route::post('/delete_service', 'deleteService')->name('app_delete_service');
     });
 });

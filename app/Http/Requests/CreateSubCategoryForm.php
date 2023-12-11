@@ -32,7 +32,7 @@ class CreateSubCategoryForm extends FormRequest
     {
         return [
             //
-            'name_subcat.required' => __('article.enter_the_category_name_please'),
+            'name_subcat.required' => __('article.enter_the_subcategory_name_please'),
             'cat_art_sub.required' => __('article.select_a_category_please'),
         ];
     }

@@ -77,7 +77,7 @@ class SupplierController extends Controller
 
             if($customer_type_sup == "company")
             {
-                Supplier::create([
+                $supplier_saved = Supplier::create([
                     'type_sup' => $customer_type_sup,
                     'reference_sup' => $ref,
                     'reference_number' => $refNum,
@@ -97,7 +97,7 @@ class SupplierController extends Controller
                 ]);
             }else
             {
-                Supplier::create([
+                $supplier_saved = Supplier::create([
                     'type_sup' => $customer_type_sup,
                     'reference_sup' => $ref,
                     'reference_number' => $refNum,
@@ -112,7 +112,7 @@ class SupplierController extends Controller
             }
 
             //Notification
-            $url = route('app_supplier', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_supplier', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $supplier_saved->id]);
             $description = "supplier.added_a_new_supplier";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -163,7 +163,7 @@ class SupplierController extends Controller
             }
 
             //Notification
-            $url = route('app_supplier', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_supplier', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_supplier]);
             $description = "supplier.updated_a_supplier_from_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 

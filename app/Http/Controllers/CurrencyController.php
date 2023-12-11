@@ -87,14 +87,14 @@ class CurrencyController extends Controller
 
             if(!$existDevise)
             {
-                DeviseGestionUF::create([
+                $currecy_saved = DeviseGestionUF::create([
                     'taux' => $rate_currency_dev,
                     'id_devise' => $currency_name_dev,
                     'id_fu' => $id_fu
                 ]);
     
                 //Notification
-                $url = route('app_currency', ['id' => $id_entreprise, 'id2' => $id_fu]);
+                $url = route('app_info_currency', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $currecy_saved->id]);
                 $description = "dashboard.added_a_new_currency_in_the_functional_unit";
                 $this->notificationRepo->setNotification($id_entreprise, $description, $url);
     
@@ -116,7 +116,7 @@ class CurrencyController extends Controller
             ]);
 
             //Notification
-            $url = route('app_currency', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_info_currency', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_currency_gest]);
             $description = "dashboard.updated_a_currency_in_the_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
