@@ -90,5 +90,10 @@ class FunctionalUnit extends Model
     {
         return $this->hasMany('App\Models\Service');
     }
+
+    public function paymentMethod()
+    {
+        return $this->hasMany('App\Models\PaymentMethod');
+    }
 }
 

@@ -69,8 +69,8 @@
                                 </div>
                                 <div class="col-sm-3 d-grid gap-2">
                                     <a href="{{ route('app_add_new_category_service', ['id' => $entreprise->id, 'id2' => $functionalUnit->id ]) }}" class="btn btn-primary mb-3" role="button">
-                                        <i class="fa-solid fa-toolbox"></i>
-                                        &nbsp;{{ __('service.add_a_new_category') }}
+                                        <i class="fa-solid fa-circle-plus"></i> 
+                                        &nbsp;{{ __('auth.add') }}
                                     </a>
                                 </div>
                             </div>

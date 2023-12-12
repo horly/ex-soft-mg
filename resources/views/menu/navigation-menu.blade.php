@@ -192,6 +192,26 @@
                     </ul>
                 </li>
 
+                <li class="sidebar-item @if (Request::route()->getName() == "app_currency" ||
+                                                Request::route()->getName() == "app_create_currency" ||
+                                                Request::route()->getName() == "app_info_currency" ||
+                                                Request::route()->getName() == "app_update_currency") active @endif">
+                    <a href="{{ route('app_currency', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}" class='sidebar-link'>
+                        <i class="fa-solid fa-money-bill-trend-up"></i>
+                        <span>{{ __('dashboard.currencies') }}</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item @if (Request::route()->getName() == "app_payment_methods" ||
+                                                Request::route()->getName() == "app_add_new_payment_methods" ||
+                                                Request::route()->getName() == "app_info_payment_methods" ||
+                                                Request::route()->getName() == "app_update_payment_methods") active @endif">
+                    <a href="{{ route('app_payment_methods', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}" class='sidebar-link'>
+                        <i class="fa-solid fa-coins"></i>
+                        <span>{{ __('dashboard.payment_methods') }}</span>
+                    </a>
+                </li>
+
                 <li class="sidebar-title">{{ __('dashboard.billing') }}</li>
 
                 <li class="sidebar-item  has-sub">
@@ -252,16 +272,6 @@
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-circle-down"></i>
                         <span>{{ __('dashboard.receivables') }}</span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item @if (Request::route()->getName() == "app_currency" ||
-                                             Request::route()->getName() == "app_create_currency" ||
-                                             Request::route()->getName() == "app_info_currency" ||
-                                             Request::route()->getName() == "app_update_currency") active @endif">
-                    <a href="{{ route('app_currency', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}" class='sidebar-link'>
-                        <i class="fa-solid fa-money-bill-trend-up"></i>
-                        <span>{{ __('dashboard.currencies') }}</span>
                     </a>
                 </li>
 

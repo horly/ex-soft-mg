@@ -77,4 +77,6 @@
 
         'creditors' => "Créanciers",
         'debtors' => "Débiteurs",
+
+        'payment_methods' => "Modes de paiement",
 ];

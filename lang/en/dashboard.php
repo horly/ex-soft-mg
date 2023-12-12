@@ -77,4 +77,6 @@
 
         'creditors' => "Creditors",
         'debtors' => "Debtors",
+
+        'payment_methods' => "Payment methods",
 ];

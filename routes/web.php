@@ -12,6 +12,7 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PaymentMethodesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
@@ -324,5 +325,23 @@ Route::controller(ServiceController::class)->group(function(){
          */
         Route::post('/create_service', 'createService')->name('app_create_service');
         Route::post('/delete_service', 'deleteService')->name('app_delete_service');
+    });
+});
+
+
+Route::controller(PaymentMethodesController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                Route::get('/payment_methods/{id:int}/{id2:int}', 'paymentMethods')->name('app_payment_methods');
+                Route::get('/create_payment_methods/{id:int}/{id2:int}', 'addNewPaymentMethods')->name('app_add_new_payment_methods');
+                Route::get('/info_payment_methods/{id:int}/{id2:int}/{id3:int}', 'infoPaymentMethods')->name('app_info_payment_methods');
+                Route::get('/update_payment_methods/{id:int}/{id2:int}/{id3:int}', 'upDatePaymentMethods')->name('app_update_payment_methods');
+            });
+        });
+
+        Route::post('/create_payment_methods', 'createPaymentMethods')->name('app_create_payment_methods');
+        Route::post('/delete_payment_methods', 'deletePaymentMethods')->name('app_delete_payment_methods');
+
     });
 });

@@ -28,4 +28,9 @@ class DeviseGestionUF extends Model
     {
         return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');
     }
+
+    public function paymentMethod()
+    {
+        return $this->hasMany('App\Models\PaymentMethod');
+    }
 }

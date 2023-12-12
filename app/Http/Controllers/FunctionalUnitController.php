@@ -8,6 +8,7 @@ use App\Models\FunctionalUnit;
 use App\Models\FunctionalunitEmail;
 use App\Models\FunctionalUnitPhone;
 use App\Models\ManageFU;
+use App\Models\PaymentMethod;
 use App\Repository\EntrepriseRepo;
 use App\Repository\NotificationRepo;
 use Illuminate\Http\Request;
@@ -60,11 +61,19 @@ class FunctionalUnitController extends Controller
                 'id_func_unit' => $functUnit->id
             ]);
 
-            DeviseGestionUF::create([
+            $devisGestUf = DeviseGestionUF::create([
                 'taux' => 1,
                 'default_cur_manage' => 1,
                 'id_devise' => $currency_fu,
                 'id_fu' =>  $functUnit->id,
+            ]);
+
+            PaymentMethod::create([
+                'designation' => 'cash',
+                'default' => 1,
+                'id_currency' => $devisGestUf->id,
+                'id_user' => Auth::user()->id,
+                'id_fu' => $functUnit->id,
             ]);
 
             //Notification

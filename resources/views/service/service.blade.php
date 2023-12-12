@@ -40,8 +40,8 @@
                 <div class="card">
                     <div class="card-body">
                         <a href="{{ route('app_add_new_service', ['id' => $entreprise->id, 'id2' => $functionalUnit->id ]) }}" class="btn btn-primary mb-3" role="button">
-                            <i class="fa-solid fa-toolbox"></i>
-                            &nbsp;{{ __('service.add_a_new_service') }}
+                            <i class="fa-solid fa-circle-plus"></i> 
+                            &nbsp;{{ __('auth.add') }}
                         </a>
                         
                         <table class="table table-striped table-hover border bootstrap-datatable">

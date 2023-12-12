@@ -40,8 +40,8 @@
                 <div class="card">
                     <div class="card-body">
                         <a href="{{ route('app_create_currency', ['id' => $entreprise->id, $functionalUnit->id]) }}" class="btn btn-primary mb-3" role="button">
-                            <i class="fa-solid fa-money-bill-trend-up"></i> 
-                            &nbsp;{{ __('dashboard.add_currency') }}
+                            <i class="fa-solid fa-circle-plus"></i> 
+                            &nbsp;{{ __('auth.add') }}
                         </a>
 
                         <form class="row mb-3" action="{{ route('app_change_default_currency') }}" method="POST">
