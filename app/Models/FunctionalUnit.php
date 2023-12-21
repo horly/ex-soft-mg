@@ -95,5 +95,20 @@ class FunctionalUnit extends Model
     {
         return $this->hasMany('App\Models\PaymentMethod');
     }
+
+    public function salesInvoice()
+    {
+        return $this->hasMany('App\Models\SalesInvoice');
+    }
+
+    public function invoiceMargin()
+    {
+        return $this->hasMany('App\Models\InvoiceMargin');
+    }
+
+    public function invoiceElement()
+    {
+        return $this->hasMany('App\Models\InvoiceElement');
+    }
 }
 

@@ -152,7 +152,7 @@
                     $entreprises = DB::table('entreprises')->where('id_user', Auth::user()->id)->get();
                 @endphp
 
-                <table class="table table-striped table-hover border bootstrap-datatable">
+                <table class="table table-striped table-hover border bootstrap-datatable-modal">
                     <thead>
                         <th>N°</th>
                         <th>{{ __('main.company_name') }}</th>

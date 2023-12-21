@@ -60,10 +60,19 @@
 
                         <div class="row mb-4">
                             <div class="col-md-4">
-                                {{ __('article.unit_price') }}
+                                {{ __('invoice.purchase_price') }}
                             </div>
                             <div class="col-md-8 text-primary fw-bold">
-                                {{ number_format($article->unit_price, 2, '.', ' ') }} {{ $deviseGest->iso_code }}
+                                {{ number_format($article->purchase_price, 2, '.', ' ') }} {{ $deviseGest->iso_code }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                {{ __('invoice.sale_prise') }}
+                            </div>
+                            <div class="col-md-8 text-primary fw-bold">
+                                {{ number_format($article->sale_price, 2, '.', ' ') }} {{ $deviseGest->iso_code }}
                             </div>
                         </div>
 
@@ -81,7 +90,7 @@
                                 {{ __('article.inventory_value') }}
                             </div>
                             <div class="col-md-8 text-primary fw-bold">
-                                {{ number_format($article->unit_price * $article->number_in_stock, 2, '.', ' ') }} {{ $deviseGest->iso_code }}
+                                {{ number_format($article->sale_price * $article->number_in_stock, 2, '.', ' ') }} {{ $deviseGest->iso_code }}
                             </div>
                         </div>
 

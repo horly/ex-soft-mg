@@ -214,14 +214,26 @@
 
                 <li class="sidebar-title">{{ __('dashboard.billing') }}</li>
 
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item  @if(Request::route()->getName() == "app_sales_invoice" ||
+                                                Request::route()->getName() == "app_add_new_sales_invoice" ||
+                                                Request::route()->getName() == "app_info_sales_invoice" ||
+                                                Request::route()->getName() == "app_update_sales_invoice") 
+                                                    active 
+                                            @endif  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-file-invoice-dollar"></i>
                         <span>{{ __('dashboard.sale') }}</span>
                     </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="#">{{ __('dashboard.sales_invoice') }}</a>
+                    <ul class="submenu @if(Request::route()->getName() == "app_sales_invoice" ||
+                                            Request::route()->getName() == "app_add_new_sales_invoice" ||
+                                            Request::route()->getName() == "app_info_sales_invoice" ||
+                                            Request::route()->getName() == "app_update_sales_invoice") 
+                                                active 
+                                        @endif">
+                        <li class="submenu-item @if(Request::route()->getName() == "app_sales_invoice") active @endif">
+                            <a href="{{ route('app_sales_invoice', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('dashboard.sales_invoice') }}
+                            </a>
                         </li>
                         <li class="submenu-item ">
                             <a href="#">{{ __('dashboard.proforma_invoice') }}</a>

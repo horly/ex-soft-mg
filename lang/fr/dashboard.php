@@ -18,7 +18,7 @@
 
         'billing' => "Facturation",
         'sale' => "Vente",
-        'sales_invoice' => "Facture de vente",
+        'sales_invoice' => "Factures de vente",
         'credit_invoice_sale' => "Note de crédit/Vente",
         'credit_invoice_purchases' => "Note de crédit/Achat",
         'offers_quotes' => "Offres/Devis",
@@ -28,7 +28,7 @@
         'debts' => "Dettes",
         'receivables' => "Créances",
         'report' => "Rapport",
-        'proforma_invoice' => "Facture proforma",
+        'proforma_invoice' => "Factures proforma",
         'others' => "Autres",
 
         'delivery_note' => "Bon de livraison",

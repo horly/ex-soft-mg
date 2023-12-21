@@ -11,17 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('articles', function (Blueprint $table) {
+        Schema::create('invoice_elements', function (Blueprint $table) {
             $table->id();
-            $table->string('reference_art', 255);
-            $table->integer('reference_number');
-            $table->string('description_art', 255);
-            $table->double('purchase_price');
-            $table->integer('number_in_stock')->default(0);
+            $table->string('ref_invoice', 255);
+            $table->string('ref_article', 255)->nullable();
+            $table->string('ref_service', 255)->nullable();
+            $table->string('description_inv_elmnt', 255);
+            $table->integer('quantity')->default(1);
+            $table->double('unit_price_inv_elmnt');
+            $table->double('total_price_inv_elmnt');
+            $table->integer('is_an_article')->default(1);
 
-            $table->bigInteger('id_sub_cat')->unsigned()->index();
-            $table->foreign('id_sub_cat')
-                    ->references('id')->on('subcategory_articles')
+            $table->bigInteger('id_marge')->unsigned()->index();
+            $table->foreign('id_marge')
+                    ->references('id')->on('invoice_margins')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
 
@@ -46,6 +49,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('articles');
+        Schema::dropIfExists('invoice_elements');
     }
 };

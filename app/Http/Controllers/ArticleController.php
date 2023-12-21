@@ -325,7 +325,8 @@ class ArticleController extends Controller
         $id_art = $requestF->input('id_art');
         $description_art = $requestF->input('description_art');
         $subcat_art = $requestF->input('subcat_art');
-        $unit_price_art = $requestF->input('unit_price_art');
+        $purchase_price_art = $requestF->input('purchase_price_art');
+        $sale_prise_art = $requestF->input('sale_prise_art');
         $number_in_stock_art = $requestF->input('number_in_stock_art');
         $customerRequest = $requestF->input('customerRequest');
 
@@ -339,7 +340,8 @@ class ArticleController extends Controller
                 'reference_art' => $ref,
                 'reference_number' => $refNum,
                 'description_art' => $description_art,
-                'unit_price' => $unit_price_art,
+                'purchase_price' => $purchase_price_art,
+                'sale_price' => $sale_prise_art,
                 'number_in_stock' => $number_in_stock_art,
                 'id_sub_cat' => $subcat_art,
                 'id_fu' => $id_fu,
@@ -360,7 +362,8 @@ class ArticleController extends Controller
                 ->where('id', $id_art)
                 ->update([
                     'description_art' => $description_art,
-                    'unit_price' => $unit_price_art,
+                    'purchase_price' => $purchase_price_art,
+                    'sale_price' => $sale_prise_art,
                     'number_in_stock' => $number_in_stock_art,
                     'id_sub_cat' => $subcat_art,
                     'updated_at' => new \DateTimeImmutable,

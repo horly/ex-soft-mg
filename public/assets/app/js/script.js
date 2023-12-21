@@ -164,3 +164,4 @@ $('#currency_name_dev').change(function(){
     var devise = $('option:selected', this).attr('devise');
     $('#currency_selected_dev').text(devise);
 });
+

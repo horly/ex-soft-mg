@@ -27,6 +27,7 @@
         <script src="{{ asset('assets/lib/jquery/jquery.js') }}"></script>
         <script src="{{ asset('assets/lib/sweet-alert/sweetalert.min.js') }}"></script>
         <script src="{{ asset('assets/lib/DataTables/datatables.js') }}"></script>
+        <script src="{{ asset('assets/lib/select2/select2.min.js') }}"></script>
 
         @if (Request::route()->getName() == "app_entreprise_info_page" || Request::route()->getName() == "app_profile")
             <script src="{{ asset('assets/lib/cropper/js/cropper.js') }}"></script>
@@ -52,5 +53,6 @@
         <script src="{{ asset('assets/app/js/dataTables-init.js') }}"></script>
         <script src="{{ asset('assets/app/js/entreprise.js') }}"></script>
         <script src="{{ asset('assets/app/js/contact.js') }}"></script>
+        <script src="{{ asset('assets/app/js/sales_invoice.js') }}"></script>
     </body>
 </html>

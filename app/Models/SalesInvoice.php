@@ -5,27 +5,28 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Article extends Model
+class SalesInvoice extends Model
 {
     use HasFactory;
 
-    protected $table = "articles";
+    protected $table = "sales_invoices";
 
     protected $fillable = [
-        'reference_art',
+        'reference_sales_invoice',
         'reference_number',
-        'description_art',
-        'purchase_price',
-        'sale_price',
-        'number_in_stock',
-        'id_sub_cat',
+        'sub_total',
+        'total',
+        'vat_amount',
+        'amount_received',
+        'id_client',
         'id_user',
         'id_fu',
+        'due_date',
     ];
 
-    public function subcatArticle()
+    function client()
     {
-        return $this->belongsTo('App\Models\SubcategoryArticle', 'id_sub_cat');
+        return $this->belongsTo('App\Models\Client', 'id_client');
     }
 
     function user()

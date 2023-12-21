@@ -40,4 +40,9 @@ class Client extends Model
     {
         return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');
     }
+
+    public function salesInvoice()
+    {
+        return $this->hasMany('App\Models\SalesInvoice');
+    }
 }

@@ -115,7 +115,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <h6 class="text-muted font-semibold">{{ __('dashboard.articles') }}</h6>
-                                    <h6 class="font-extrabold mb-0">0</h6>
+                                    <h6 class="font-extrabold mb-0">{{ $totalArticle }}</h6>
                                 </div>
                             </div>
                         </div>

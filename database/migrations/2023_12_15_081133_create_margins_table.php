@@ -11,19 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('articles', function (Blueprint $table) {
+        Schema::create('invoice_margins', function (Blueprint $table) {
             $table->id();
-            $table->string('reference_art', 255);
-            $table->integer('reference_number');
-            $table->string('description_art', 255);
-            $table->double('purchase_price');
-            $table->integer('number_in_stock')->default(0);
-
-            $table->bigInteger('id_sub_cat')->unsigned()->index();
-            $table->foreign('id_sub_cat')
-                    ->references('id')->on('subcategory_articles')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+            $table->string('ref_invoice', 255);
+            $table->integer('margin')->default(0);
+            $table->integer('invoice_saved')->default(0);
 
             $table->bigInteger('id_user')->unsigned()->index();
             $table->foreign('id_user')
@@ -46,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('articles');
+        Schema::dropIfExists('invoice_margins');
     }
 };

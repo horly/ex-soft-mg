@@ -76,13 +76,24 @@
                             </div>
 
                             <div class="mb-4 row">
-                                <label for="unit_price_art" class="col-sm-4 col-form-label">{{ __('article.unit_price') }}*</label> 
+                                <label for="purchase_price_art" class="col-sm-4 col-form-label">{{ __('invoice.purchase_price') }}*</label> 
                                 <div class="col-sm-8">
                                     <div class="input-group">
-                                        <input type="number" step="0.01" class="form-control text-end @error('unit_price_art') is-invalid @enderror" id="unit_price_art" name="unit_price_art" placeholder="{{ __('article.enter_the_article_unit_price') }}" value="{{ old('unit_price_art') }}">
+                                        <input type="number" step="0.01" class="form-control text-end @error('purchase_price_art') is-invalid @enderror" id="purchase_price_art" name="purchase_price_art" placeholder="{{ __('invoice.enter_the_article_purchase_prise') }}" value="{{ old('purchase_price_art') }}">
                                         <span class="input-group-text" id="basic-addon2">{{ $deviseGest->iso_code }}</span>
                                     </div>
-                                    <small class="text-danger">@error('unit_price_art') {{ $message }} @enderror</small>
+                                    <small class="text-danger">@error('purchase_price_art') {{ $message }} @enderror</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-4 row">
+                                <label for="sale_prise_art" class="col-sm-4 col-form-label">{{ __('invoice.sale_prise') }}*</label> 
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <input type="number" step="0.01" class="form-control text-end @error('sale_prise_art') is-invalid @enderror" id="sale_prise_art" name="sale_prise_art" placeholder="{{ __('invoice.enter_the_article_sale_prise') }}" value="{{ old('sale_prise_art') }}">
+                                        <span class="input-group-text" id="basic-addon2">{{ $deviseGest->iso_code }}</span>
+                                    </div>
+                                    <small class="text-danger">@error('sale_prise_art') {{ $message }} @enderror</small>
                                 </div>
                             </div>
 

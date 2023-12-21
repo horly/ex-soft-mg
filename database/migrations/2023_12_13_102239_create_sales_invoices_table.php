@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('articles', function (Blueprint $table) {
+        Schema::create('sales_invoices', function (Blueprint $table) {
             $table->id();
-            $table->string('reference_art', 255);
+            $table->string('reference_sales_invoice', 255);
             $table->integer('reference_number');
-            $table->string('description_art', 255);
-            $table->double('purchase_price');
-            $table->integer('number_in_stock')->default(0);
+            $table->double('sub_total');
+            $table->double('total');
+            $table->double('vat_amount');
+            $table->double('amount_received');
 
-            $table->bigInteger('id_sub_cat')->unsigned()->index();
-            $table->foreign('id_sub_cat')
-                    ->references('id')->on('subcategory_articles')
+            $table->bigInteger('id_client')->unsigned()->index();
+            $table->foreign('id_client')
+                    ->references('id')->on('clients')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
 
@@ -36,7 +37,8 @@ return new class extends Migration
                     ->references('id')->on('functional_units')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
-
+            
+            $table->timestamp('due_date'); //échéance
             $table->timestamps();
         });
     }
@@ -46,6 +48,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('articles');
+        Schema::dropIfExists('sales_invoices');
     }
 };

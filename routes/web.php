@@ -14,6 +14,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PaymentMethodesController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SalesInvoiceController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
 
@@ -334,7 +335,7 @@ Route::controller(PaymentMethodesController::class)->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
                 Route::get('/payment_methods/{id:int}/{id2:int}', 'paymentMethods')->name('app_payment_methods');
-                Route::get('/create_payment_methods/{id:int}/{id2:int}', 'addNewPaymentMethods')->name('app_add_new_payment_methods');
+                Route::get('/add_new_payment_methods/{id:int}/{id2:int}', 'addNewPaymentMethods')->name('app_add_new_payment_methods');
                 Route::get('/info_payment_methods/{id:int}/{id2:int}/{id3:int}', 'infoPaymentMethods')->name('app_info_payment_methods');
                 Route::get('/update_payment_methods/{id:int}/{id2:int}/{id3:int}', 'upDatePaymentMethods')->name('app_update_payment_methods');
             });
@@ -343,5 +344,27 @@ Route::controller(PaymentMethodesController::class)->group(function(){
         Route::post('/create_payment_methods', 'createPaymentMethods')->name('app_create_payment_methods');
         Route::post('/delete_payment_methods', 'deletePaymentMethods')->name('app_delete_payment_methods');
 
+    });
+});
+
+Route::controller(SalesInvoiceController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                Route::get('/sales_invoice/{id:int}/{id2:int}', 'salesInvoice')->name('app_sales_invoice');
+                Route::get('/add_new_sales_invoice/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewSalesInvoice')->name('app_add_new_sales_invoice');
+                Route::get('/info_sales_invoice/{id:int}/{id2:int}/{id3:int}', 'infoSalesInvoice')->name('app_info_sales_invoice');
+                Route::get('/update_sales_invoice/{id:int}/{id2:int}/{id3:int}', 'upDateSalesInvoice')->name('app_update_sales_invoice');
+            });
+        });
+
+        Route::post('/setup_invoice', 'setUpInvoice')->name('app_setup_invoice');
+        Route::post('/create_sales_invoice', 'createSalesInvoice')->name('app_create_sales_invoice');
+        Route::post('/delete_sales_invoice', 'deleteSalesInvoice')->name('app_delete_sales_invoice');
+        Route::post('/calculate_margin', 'calculateMargin')->name('app_calculate_margin');
+        Route::post('/insert_invoice_element', 'insertInvoiceElemebt')->name('app_insert_invoice_element');
+        Route::post('/delete_invoice_element', 'deleteInvoiceElement')->name('app_delete_invoice_element');
+        Route::post('/change_vat', 'changeVat')->name('app_change_vat');
+        Route::post('/change_discount_customer', 'changeDiscountCustomer')->name('app_change_discount_customer');
     });
 });

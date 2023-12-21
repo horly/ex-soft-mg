@@ -22,4 +22,10 @@
 
         'has_updated_a_payment_method_in_the_functional_unit' => "mis à jour un moyen de paiement dans l'unité fonctionnelle",
         'payment_method_updated_successfully' => "Mode de paiement mis à jour avec succès!",
+
+        'payment_method_details' => "Détails du mode de paiement",
+        'has_removed_a_payment_method' => "a supprimé un mode de paiement",
+        'payment_method_deleted_successfully' => "Mode de paiement supprimé avec succès!",
+
+        'update_a_payment_method' => "Mettre à jour un mode de paiement",
     ];

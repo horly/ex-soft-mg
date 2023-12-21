@@ -49,9 +49,9 @@
                                 <th>N°</th>
                                 <th>{{ __('client.reference') }}</th>
                                 <th>{{ __('article.description') }}</th>
-                                <th class="text-end">{{ __('article.unit_price') }}</th>
+                                <th class="text-end">{{ __('invoice.purchase_price') }}</th>
+                                <th class="text-end">{{ __('invoice.sale_prise') }}</th>
                                 <th class="text-end">{{ __('article.number_in_stock') }}</th>
-                                <th class="text-end">{{ __('article.inventory_value') }}</th>
                                 <th>{{ __('client.manager') }}</th>
                                 <th class="text-center">Action</th>
                             </thead>
@@ -70,13 +70,13 @@
                                         </td>
                                         <td>{{ $article->description_art }}</td>
                                         <td class="text-end">
-                                            {{ number_format($article->unit_price, 2, '.', ' ') }} {{ $deviseGest->iso_code }}
+                                            {{ number_format($article->purchase_price, 2, '.', ' ') }} {{ $deviseGest->iso_code }}
+                                        </td>
+                                        <td class="text-end">
+                                            {{ number_format($article->sale_price, 2, '.', ' ') }} {{ $deviseGest->iso_code }}
                                         </td>
                                         <td class="text-end">
                                             {{ $article->number_in_stock }}
-                                        </td>
-                                        <td class="text-end">
-                                            {{ number_format($article->unit_price * $article->number_in_stock, 2, '.', ' ') }} {{ $deviseGest->iso_code }}
                                         </td>
                                         <td>
                                             {{ $article->name }}

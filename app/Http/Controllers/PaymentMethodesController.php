@@ -140,4 +140,81 @@ class PaymentMethodesController extends Controller
                     ->with('success', __('payment_methods.payment_method_updated_successfully'));
         }
     }
+
+    public function infoPaymentMethods($id, $id2, $id3)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        $deviseGest = DB::table('devises')
+                    ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                    ->where([
+                        'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                        'devise_gestion_ufs.default_cur_manage' => 1,
+        ])->first();
+
+        $paymentMethod = DB::table('devises')
+                            ->join('devise_gestion_ufs', 'devises.id' , '=', 'devise_gestion_ufs.id_devise')
+                            ->join('payment_methods', 'devise_gestion_ufs.id', '=', 'payment_methods.id_currency')
+                            ->where('payment_methods.id', $id3)
+                            ->first();
+
+        return view('payment_methods.info_payment_methods', compact(
+            'entreprise', 
+            'functionalUnit', 
+            'deviseGest',
+            'paymentMethod',
+        ));
+    }
+
+    public function deletePaymentMethods()
+    {
+        $id_payment_method = $this->request->input('id_element1');
+        $id_entreprise = $this->request->input('id_element2');
+        $id_fu = $this->request->input('id_element3');
+
+        DB::table('payment_methods')->where('id', $id_payment_method)->delete();
+
+        //Notification
+        $url = route('app_payment_methods', ['id' => $id_entreprise, 'id2' => $id_fu]);
+        $description = "payment_methods.has_removed_a_payment_method";
+        $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+        return redirect()->route('app_payment_methods', [
+            'id' => $id_entreprise, 
+            'id2' => $id_fu ])->with('success', __('payment_methods.payment_method_deleted_successfully')); 
+    }
+
+    public function upDatePaymentMethods($id, $id2, $id3)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        $deviseGests = DB::table('devises')
+            ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+            ->where([
+                'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+            ])
+            ->orderBy('devise_gestion_ufs.id', 'desc')
+            ->get();
+
+        $paymentMethod = DB::table('devises')
+                            ->join('devise_gestion_ufs', 'devises.id' , '=', 'devise_gestion_ufs.id_devise')
+                            ->join('payment_methods', 'devise_gestion_ufs.id', '=', 'payment_methods.id_currency')
+                            ->where('payment_methods.id', $id3)
+                            ->first();
+        
+        $devisePaymethod = DB::table('devises')
+                            ->join('devise_gestion_ufs', 'devises.id' , '=', 'devise_gestion_ufs.id_devise')
+                            ->where('devise_gestion_ufs.id', $paymentMethod->id_currency)
+                            ->first();
+
+        return view('payment_methods.update_payment_methods', compact(
+            'entreprise', 
+            'functionalUnit', 
+            'deviseGests',
+            'paymentMethod',
+            'devisePaymethod'
+        ));
+    }
 }

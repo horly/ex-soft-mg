@@ -48,8 +48,11 @@ class DashboardController extends Controller
         $first_day_this_month = date('01-m-Y'); // hard-coded '01' for first day
         $last_day_this_month  = date('t-m-Y');
 
-        $tclient = DB::table('clients')->where('id_fu', $functionalUnit->id)->count();
-        $totalClient = $this->shortThousand->number_format_short($tclient);
+        $tclients = DB::table('clients')->where('id_fu', $functionalUnit->id)->count();
+        $totalClient = $this->shortThousand->number_format_short($tclients);
+
+        $articles = DB::table('articles')->where('id_fu', $functionalUnit->id)->count();
+        $totalArticle = $this->shortThousand->number_format_short($articles);
 
 
         return view('dashboard.dashboard', compact(
@@ -60,6 +63,7 @@ class DashboardController extends Controller
             'deviseGest',
             'deviseGestAll',
             'totalClient',
+            'totalArticle',
         ));
     }
 }

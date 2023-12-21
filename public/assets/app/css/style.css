@@ -8,6 +8,7 @@
 @import "../../lib/sweet-alert/sweetalert.css";
 @import "../../lib/DataTables/datatables.css";
 @import "../../lib/cropper/css/cropper.css";
+@import "../../lib/select2/select2.min.css";
 
 /**
  * Thème
@@ -24,3 +25,4 @@
 @import "./global.css";
 @import "./main.css";
 @import "./notification-icon.css";
+@import "./sales_invoice.css";
