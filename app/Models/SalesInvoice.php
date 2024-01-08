@@ -23,6 +23,7 @@ class SalesInvoice extends Model
         'discount_value',
         'vat',
         'discount_apply_amount',
+        'is_proforma_inv',
         'id_client',
         'id_user',
         'id_fu',

@@ -45,6 +45,10 @@ Route::middleware('guest')->group(function(){
     });
 });
 
+/*Route::get('/', function () {
+        return view('auth.login');
+});*/
+
 Route::controller(HomeController::class)->group(function(){
     Route::get('/infos-online-user/{matricule}', 'infosOnlineUser')->name('app_infos_online_user');
     Route::middleware('auth')->group(function(){
@@ -360,7 +364,11 @@ Route::controller(SalesInvoiceController::class)->group(function(){
                 Route::get('/add_new_sales_invoice/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewSalesInvoice')->name('app_add_new_sales_invoice');
                 Route::get('/info_sales_invoice/{id:int}/{id2:int}/{ref_invoice:string}', 'infoSalesInvoice')->name('app_info_sales_invoice');
                 Route::get('/update_sales_invoice/{id:int}/{id2:int}/{id3:int}', 'upDateSalesInvoice')->name('app_update_sales_invoice');
-        
+                
+                Route::get('/proforma/{id:int}/{id2:int}', 'proforma')->name('app_proforma');
+                Route::get('/add_new_proforma/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewProforma')->name('app_add_new_proforma');
+                Route::get('/info_proforma/{id:int}/{id2:int}/{ref_invoice:string}', 'infoProforma')->name('app_info_proforma');
+                Route::get('/update_proforma/{id:int}/{id2:int}/{id3:int}', 'updateProforma')->name('app_update_proforma');
             });
         });
 
@@ -375,6 +383,8 @@ Route::controller(SalesInvoiceController::class)->group(function(){
         Route::post('/save_sale_invoice', 'saveSaleInvoice')->name('app_save_sale_invoice');
         Route::post('/check_records_amount_invoice', 'checkRecordsAmountInvoice')->name('app_check_records_amount_invoice');
         Route::post('/save_record_payment', 'saveRecordPayment')->name('app_save_record_payment');
+
+        Route::post('/transform_invoice_simple', 'transformInvoiceSimple')->name('app_transform_invoice_simple');
     });
 });
 

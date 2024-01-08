@@ -14,6 +14,7 @@ class InvoiceMargin extends Model
     protected $fillable = [
         'ref_invoice',
         'margin',
+        'is_proforma',
         'invoice_saved',
         'id_user',
         'id_fu',

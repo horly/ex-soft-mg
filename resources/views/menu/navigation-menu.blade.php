@@ -217,7 +217,12 @@
                 <li class="sidebar-item  @if(Request::route()->getName() == "app_sales_invoice" ||
                                                 Request::route()->getName() == "app_add_new_sales_invoice" ||
                                                 Request::route()->getName() == "app_info_sales_invoice" ||
-                                                Request::route()->getName() == "app_update_sales_invoice") 
+                                                Request::route()->getName() == "app_update_sales_invoice" ||
+                                                
+                                                Request::route()->getName() == "app_proforma" ||
+                                                Request::route()->getName() == "app_add_new_proforma" ||
+                                                Request::route()->getName() == "app_info_proforma" ||
+                                                Request::route()->getName() == "app_update_proforma") 
                                                     active 
                                             @endif  has-sub">
                     <a href="#" class='sidebar-link'>
@@ -227,7 +232,12 @@
                     <ul class="submenu @if(Request::route()->getName() == "app_sales_invoice" ||
                                             Request::route()->getName() == "app_add_new_sales_invoice" ||
                                             Request::route()->getName() == "app_info_sales_invoice" ||
-                                            Request::route()->getName() == "app_update_sales_invoice") 
+                                            Request::route()->getName() == "app_update_sales_invoice" || 
+                                            
+                                            Request::route()->getName() == "app_proforma" ||
+                                            Request::route()->getName() == "app_add_new_proforma" ||
+                                            Request::route()->getName() == "app_info_proforma" ||
+                                            Request::route()->getName() == "app_update_proforma") 
                                                 active 
                                         @endif">
                         <li class="submenu-item @if(Request::route()->getName() == "app_sales_invoice") active @endif">
@@ -235,8 +245,10 @@
                                 {{ __('dashboard.sales_invoice') }}
                             </a>
                         </li>
-                        <li class="submenu-item ">
-                            <a href="#">{{ __('dashboard.proforma_invoice') }}</a>
+                        <li class="submenu-item @if(Request::route()->getName() == "app_proforma") active @endif">
+                            <a href="{{ route('app_proforma', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('dashboard.proforma_invoice') }}
+                            </a>
                         </li>
                         <li class="submenu-item ">
                             <a href="#">{{ __('dashboard.credit_invoice_sale') }}</a>

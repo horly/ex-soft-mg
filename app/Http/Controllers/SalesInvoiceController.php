@@ -47,7 +47,10 @@ class SalesInvoiceController extends Controller
 
         $invoices = DB::table('clients')
                         ->join('sales_invoices', 'clients.id', '=', 'sales_invoices.id_client')
-                        ->where('sales_invoices.id_fu', $functionalUnit->id)
+                        ->where([
+                            'sales_invoices.id_fu' => $functionalUnit->id,
+                            'sales_invoices.is_proforma_inv' => 0,
+                        ])
                         ->orderBy('sales_invoices.id', 'desc')
                         ->get();
 
@@ -58,43 +61,92 @@ class SalesInvoiceController extends Controller
     {
         $id_functionalUnit = $this->request->input('id_functionalUnit');
         $id_entreprise = $this->request->input('id_entreprise');
+        $is_proforma = $this->request->input('is_proforma');
 
-        $invoice_margin_not_saved = DB::table('invoice_margins')
-                        ->where([
-                            'invoice_saved' => 0,
-                            'id_user' => Auth::user()->id,
-                            'id_fu' => $id_functionalUnit,
-                        ])->first();
-        
-        if(!$invoice_margin_not_saved)
+        if($is_proforma == 0)
         {
-            /**
-             * Format N° de référence de la facture :  
-             * INV année mois jour heure minute seconde id_user
-             * INV2023121509093023
-             */
-            $refInvoice = "INV" . date('Y') . date('m') . date('d') . date('H') . date('i') . date('s') . Auth::user()->id;
-            
-            InvoiceMargin::create([
-                'ref_invoice' => $refInvoice,
+            $invoice_margin_not_saved = DB::table('invoice_margins')
+            ->where([
+                'invoice_saved' => 0,
                 'id_user' => Auth::user()->id,
+                'is_proforma' => 0,
                 'id_fu' => $id_functionalUnit,
-            ]);
+            ])->first();
 
-            return redirect()->route('app_add_new_sales_invoice', [
-                'id' => $id_entreprise, 
-                'id2' => $id_functionalUnit,
-                'ref_invoice' => $refInvoice,
+            if(!$invoice_margin_not_saved)
+            {
+                /**
+                 * Format N° de référence de la facture :  
+                 * INV année mois jour heure minute seconde id_user
+                 * INV2023121509093023
+                 */
+                $refInvoice = "INV" . date('Y') . date('m') . date('d') . date('H') . date('i') . date('s') . Auth::user()->id;
+
+                InvoiceMargin::create([
+                    'ref_invoice' => $refInvoice,
+                    'is_proforma' => $is_proforma,
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id_functionalUnit,
+                ]);
+
+                return redirect()->route('app_add_new_sales_invoice', [
+                    'id' => $id_entreprise, 
+                    'id2' => $id_functionalUnit,
+                    'ref_invoice' => $refInvoice,
             ]); 
+            }
+            else
+            {
+                return redirect()->route('app_add_new_sales_invoice', [
+                    'id' => $id_entreprise, 
+                    'id2' => $id_functionalUnit,
+                    'ref_invoice' => $invoice_margin_not_saved->ref_invoice,
+                ]);
+            }
         }
         else
         {
-            return redirect()->route('app_add_new_sales_invoice', [
-                'id' => $id_entreprise, 
-                'id2' => $id_functionalUnit,
-                'ref_invoice' => $invoice_margin_not_saved->ref_invoice,
+            $invoice_margin_not_saved = DB::table('invoice_margins')
+            ->where([
+                'invoice_saved' => 0,
+                'id_user' => Auth::user()->id,
+                'is_proforma' => 1,
+                'id_fu' => $id_functionalUnit,
+            ])->first();
+
+            if(!$invoice_margin_not_saved)
+            {
+                /**
+                 * Format N° de référence de la facture :  
+                 * INV année mois jour heure minute seconde id_user
+                 * INV2023121509093023
+                 */
+                $refInvoice = "INV" . date('Y') . date('m') . date('d') . date('H') . date('i') . date('s') . Auth::user()->id;
+
+                InvoiceMargin::create([
+                    'ref_invoice' => $refInvoice,
+                    'is_proforma' => $is_proforma,
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id_functionalUnit,
+                ]);
+
+                return redirect()->route('app_add_new_proforma', [
+                    'id' => $id_entreprise, 
+                    'id2' => $id_functionalUnit,
+                    'ref_invoice' => $refInvoice,
             ]); 
+            }
+            else
+            {
+                return redirect()->route('app_add_new_proforma', [
+                    'id' => $id_entreprise, 
+                    'id2' => $id_functionalUnit,
+                    'ref_invoice' => $invoice_margin_not_saved->ref_invoice,
+                ]);
+            }
         }
+
+       
     }
 
     public function addNewSalesInvoice($id, $id2, $ref_invoice)
@@ -117,14 +169,13 @@ class SalesInvoiceController extends Controller
         $invoice_margin = DB::table('invoice_margins')
                         ->where([
                             'ref_invoice' => $ref_invoice,
-                            'id_user' => Auth::user()->id,
+                            'is_proforma' => 0,
                             'id_fu' => $id2,
                         ])->first();
         
         $invoice_elements = DB::table('invoice_elements')
                             ->where([
                                 'ref_invoice' => $ref_invoice,
-                                'id_user' => Auth::user()->id,
                                 'id_fu' => $id2,
                             ])->get();
         
@@ -390,6 +441,7 @@ class SalesInvoiceController extends Controller
         $amount_received = $requestF->input('amount_received');
         $date_sales_invoice = $requestF->input('date_sales_invoice');
         $due_date_sales_invoice = $requestF->input('due_date_sales_invoice');
+        $is_proforma = $requestF->input('is_proforma');
 
         $time = date('H:i:s');
 
@@ -422,6 +474,7 @@ class SalesInvoiceController extends Controller
                 'id_fu' => $id_fu,
                 'created_at' => $date_invoice,
                 'due_date' => $due_date,
+                'is_proforma_inv' => $is_proforma,
             ]);
 
             DB::table('invoice_margins')
@@ -431,13 +484,26 @@ class SalesInvoiceController extends Controller
                     'updated_at' => new \DateTimeImmutable,
             ]);
 
-            //Notification
-            $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
-            $description = "invoice.added_an_invoice_in_the_functional_unit";
-            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+            if($is_proforma == 0)
+            {
+                //Notification
+                $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                $description = "invoice.added_an_invoice_in_the_functional_unit";
+                $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu ])
-            ->with('success', __('invoice.the_invoice_was_added_successfully'));
+                return redirect()->route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                ->with('success', __('invoice.the_invoice_was_added_successfully'));
+            }
+            else
+            {
+                //Notification
+                $url = route('app_info_proforma', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                $description = "invoice.added_a_new_proforma_invoice_in_the_functional_unit";
+                $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+                return redirect()->route('app_proforma', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                ->with('success', __('invoice.proforma_invoice_added_successfully'));
+            }
         }
         else
         {
@@ -458,15 +524,29 @@ class SalesInvoiceController extends Controller
                     'created_at' => $date_invoice,
                     'due_date' => $due_date,
                     'updated_at' => new \DateTimeImmutable,
+                    'is_proforma_inv' => $is_proforma,
             ]);
 
-            //Notification
-            $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
-            $description = "invoice.modified_an_invoice_in_the_functional_unit";
-            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+            if($is_proforma == 0)
+            {
+                //Notification
+                $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                $description = "invoice.modified_an_invoice_in_the_functional_unit";
+                $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu ])
-            ->with('success', __('invoice.the_invoice_was_successfully_modified'));
+                return redirect()->route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                ->with('success', __('invoice.the_invoice_was_successfully_modified'));
+            }
+            else
+            {
+                //Notification
+                $url = route('app_info_proforma', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                $description = "invoice.modified_a_proforma_invoice_in_the_functional_unit";
+                $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+                return redirect()->route('app_proforma', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                ->with('success', __('invoice.the_proforma_invoice_has_been_successfully_modified'));
+            }
         }
     }
 
@@ -612,15 +692,207 @@ class SalesInvoiceController extends Controller
         $id_entreprise = $this->request->input('id_element2');
         $id_fu = $this->request->input('id_element3');
 
+        $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first(); 
+        $is_proforma = $invoice->is_proforma_inv;
+
         DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->delete();
 
-        //Notification
-        $url = route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu]);
-        $description = "invoice.deleted_an_invoice_in_the_functional_unit";
-        $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+        if($is_proforma == 0)
+        {
+            //Notification
+            $url = route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $description = "invoice.deleted_an_invoice_in_the_functional_unit";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-        return redirect()->route('app_sales_invoice', [
-            'id' => $id_entreprise, 
-            'id2' => $id_fu ])->with('success', __('invoice.invoice_deleted_successfully'));
+            return redirect()->route('app_sales_invoice', [
+                'id' => $id_entreprise, 
+                'id2' => $id_fu ])->with('success', __('invoice.invoice_deleted_successfully'));
+        }
+        else
+        {
+            //Notification
+            $url = route('app_proforma', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $description = "invoice.deleted_a_proforma_invoice";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+            return redirect()->route('app_proforma', [
+                'id' => $id_entreprise, 
+                'id2' => $id_fu ])->with('success', __('invoice.proforma_invoice_successfully_deleted'));
+        }
+        
+    }
+
+    public function proforma($id, $id2)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+        $deviseGest = DB::table('devises')
+                    ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                    ->where([
+                        'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                        'devise_gestion_ufs.default_cur_manage' => 1,
+        ])->first();
+
+        $invoices = DB::table('clients')
+                        ->join('sales_invoices', 'clients.id', '=', 'sales_invoices.id_client')
+                        ->where([
+                            'sales_invoices.id_fu' => $functionalUnit->id,
+                            'sales_invoices.is_proforma_inv' => 1,
+                        ])
+                        ->orderBy('sales_invoices.id', 'desc')
+                        ->get();
+
+        return view('invoice_sales.proforma.proforma', compact(
+            'entreprise',
+            'functionalUnit',
+            'deviseGest',
+            'invoices',
+        ));
+    }
+
+    public function addNewProforma($id, $id2, $ref_invoice)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        $deviseGest = DB::table('devises')
+                    ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                    ->where([
+                        'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                        'devise_gestion_ufs.default_cur_manage' => 1,
+        ])->first();
+
+        $articles = DB::table('articles')->where('id_fu', $id2)->get();
+        $services = DB::table('services')->where('id_fu', $id2)->get();
+        $clients = DB::table('clients')->where('id_fu', $id2)->get();
+        $country = DB::table('countries')->where('id', $entreprise->id_country)->first();
+
+        $invoice_margin = DB::table('invoice_margins')
+                        ->where([
+                            'ref_invoice' => $ref_invoice,
+                            'is_proforma' => 1,
+                            'id_fu' => $id2,
+                        ])->first();
+        
+        $invoice_elements = DB::table('invoice_elements')
+                            ->where([
+                                'ref_invoice' => $ref_invoice,
+                                'id_fu' => $id2,
+                            ])->get();
+        
+        $tot_excl_tax = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->sum('total_price_inv_elmnt');
+
+        return view('invoice_sales.proforma.add_new_proforma', compact(
+            'entreprise', 
+            'functionalUnit', 
+            'clients', 
+            'deviseGest', 
+            'ref_invoice',
+            'services',
+            'articles',
+            'invoice_margin',
+            'invoice_elements',
+            'country',
+            'tot_excl_tax',
+        ));
+    }
+
+    public function infoProforma($id, $id2, $ref_invoice)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
+        $customer = DB::table('clients')->where('id', $invoice->id_client)->first();
+
+        $country = DB::table('countries')->where('id', $entreprise->id_country)->first();
+
+        $deviseGest = DB::table('devises')
+                    ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                    ->where([
+                        'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                        'devise_gestion_ufs.default_cur_manage' => 1,
+        ])->first();
+
+        $invoice_elements = DB::table('invoice_elements')
+                            ->where([
+                                'ref_invoice' => $ref_invoice,
+                                'id_fu' => $id2,
+                            ])->get();
+
+        $tot_excl_tax = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->sum('total_price_inv_elmnt');
+
+        $paymentReceived = DB::table('encaissements')
+                            ->where([
+                                'reference_enc' => $ref_invoice,
+                                'id_fu' => $id2,
+                            ])->sum('amount');
+
+
+        $remainingBalance = $invoice->total - $paymentReceived;
+        
+
+        $encaissements = DB::table('devises')
+                        ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                        ->join('payment_methods', 'payment_methods.id_currency', '=', 'devise_gestion_ufs.id')
+                        ->join('encaissements', 'encaissements.id_pay_meth', '=', 'payment_methods.id')
+                        ->where([
+                            'encaissements.reference_enc' => $ref_invoice, 
+                            'encaissements.id_user' => Auth::user()->id,
+                            'encaissements.id_fu' => $id2,
+                        ])->get();
+
+        $paymentMethods = DB::table('devises')
+                            ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                            ->join('payment_methods', 'payment_methods.id_currency', '=', 'devise_gestion_ufs.id')
+                            ->where([
+                                'payment_methods.id_fu' => $functionalUnit->id,
+                                'devises.iso_code' => $deviseGest->iso_code,
+                            ])->get();
+
+        //dd($paymentMethods);
+
+        return view('invoice_sales.proforma.info_proforma', compact(
+            'entreprise', 
+            'functionalUnit', 
+            'invoice',
+            'ref_invoice',
+            'customer',
+            'country',
+            'invoice_elements',
+            'deviseGest',
+            'tot_excl_tax',
+            'encaissements',
+            'paymentReceived', 
+            'remainingBalance',
+            'paymentMethods'
+        ));
+    }
+
+    public function transformInvoiceSimple()
+    {
+        $id_entreprise = $this->request->input('id_entreprise');
+        $id_fu = $this->request->input('id_fu');
+        $ref_invoice = $this->request->input('ref_invoice');
+
+        DB::table('sales_invoices')
+            ->where('reference_sales_invoice', $ref_invoice)
+            ->update([
+                'is_proforma_inv' => 0,
+                'updated_at' => new \DateTimeImmutable
+        ]);
+
+        DB::table('invoice_margins')
+            ->where('ref_invoice', $ref_invoice)
+            ->update([
+                'is_proforma' => 0,
+                'updated_at' => new \DateTimeImmutable
+        ]);
+
+        return redirect()->route('app_info_sales_invoice', [
+            'id' => $id_entreprise,
+            'id2' => $id_fu,
+            'ref_invoice' => $ref_invoice
+        ]);
     }
 }

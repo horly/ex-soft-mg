@@ -13,6 +13,10 @@
             font-size: 13px;
         }
 
+        .small-text-sm {
+            font-size: 10px;
+        }
+
         .invoice-title {
             color: #0d3d9e;
             border-bottom: 2px solid #0d3d9e;
@@ -104,7 +108,13 @@
         @endif
     </div>
     <div>
-        <h2 class="invoice-title">{{ __('invoice.invoice_MAJ') }} N° {{ $invoice->reference_sales_invoice }}</h2>
+        <h2 class="invoice-title">
+            @if ($invoice->is_proforma_inv == 0)
+                {{ __('invoice.invoice_MAJ') }} N° {{ $invoice->reference_sales_invoice }}
+            @else
+                {{ __('invoice.proforma_invoice_MAJ') }} N° {{ $invoice->reference_sales_invoice }}
+            @endif
+        </h2>
     </div>
 
     <div class="box small-text">
@@ -226,12 +236,15 @@
         </div>
     </div>
 
-    <div class="footer small-text">
+    <div class="footer small-text-sm">
         @php
             $phones = DB::table('functional_unit_phones')->where('id_func_unit', $functionalUnit->id)->get();
             $emails = DB::table('functionalunit_emails')->where('id_func_unit', $functionalUnit->id)->get();
             $bankAc = DB::table('bank_accounts')->where('id_entreprise', $entreprise->id)->get();
         @endphp
+        <div class="fw-bold">
+            {{ $entreprise->name }} {{ $entreprise->slogan }}
+        </div>
         <div>RCCM : {{ $entreprise->rccm }} - IDNAT : {{ $entreprise->id_nat }} - IDNAT : {{ $entreprise->nif }}</div>
         <div>Contact : 
             @foreach ($phones as $phone)
@@ -243,7 +256,7 @@
             @foreach ($emails as $email)
                 {{ $email->email }}
             @endforeach
-            - Web : {{ $entreprise->website }}
+            - Web : <a href="https://{{ $entreprise->website }}" target="_blank">{{ $entreprise->website }}</a>
         </div>
         <div>
             {{ __('main.address') }} : {{ $functionalUnit->address }} - 

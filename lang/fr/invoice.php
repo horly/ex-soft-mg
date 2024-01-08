@@ -75,4 +75,23 @@
         'invoice_MAJ' => "FACTURE",
         'invoice_MIN' => "Facture",
         'invoice_generated_by_EXADERP' => "Facture générée par EXADERP",
+
+        /**
+         * Proforma invoice
+         */
+        'proforma_invoice_list' => "Liste des factures proforma", 
+        'add_a_proforma_invoice' => "Ajouter une facture proforma",
+        'added_a_new_proforma_invoice_in_the_functional_unit' => "a ajouté une nouvelle facture proforma dans l'unité fonctionnelle",
+        'proforma_invoice_added_successfully' => "Facture proforma ajoutée avec succès!",
+        'modified_a_proforma_invoice_in_the_functional_unit' => "a modifié une facture proforma dans l'unité fonctionnelle",
+        'the_proforma_invoice_has_been_successfully_modified' => "La facture proforma a été modifiée avec succès!",
+
+        'proforma_details' => "Détails proforma",
+        'proforma_invoice_MIN' => "Facture proforma",
+        'proforma_invoice_MAJ' => "FACTURE PROFORMA",
+
+        'deleted_a_proforma_invoice' => "a supprimé une facture pro forma",
+        'proforma_invoice_successfully_deleted' => "Facture proforma supprimée avec succès!",
+
+        'convert_to_simple_invoice' => "Convertir en facture simple",
     ];
