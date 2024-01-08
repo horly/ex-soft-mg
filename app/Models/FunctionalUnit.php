@@ -110,5 +110,10 @@ class FunctionalUnit extends Model
     {
         return $this->hasMany('App\Models\InvoiceElement');
     }
+
+    public function encaissement()
+    {
+        return $this->hasMany('App\Models\Encaissement');
+    }
 }
 

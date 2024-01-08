@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SaveSaleInvoiceForm;
+use App\Models\Encaissement;
 use App\Models\InvoiceElement;
 use App\Models\InvoiceMargin;
+use App\Models\SalesInvoice;
 use App\Repository\EntrepriseRepo;
 use App\Repository\GenerateRefenceNumber;
 use App\Repository\NotificationRepo;
@@ -239,7 +242,11 @@ class SalesInvoiceController extends Controller
             //si c'est un article
             if($is_an_article == 1)
             {
-                $article_exist = DB::table('invoice_elements')->where('ref_article', $article_sales_invoice)->first();
+                $article_exist = DB::table('invoice_elements')
+                    ->where([
+                        'ref_article' => $article_sales_invoice,
+                        'ref_invoice' => $ref_invoice,
+                    ])->first();
 
                 if(!$article_exist)
                 {
@@ -298,7 +305,11 @@ class SalesInvoiceController extends Controller
             //si c'est un service
             else
             {
-                $service_exist = DB::table('invoice_elements')->where('ref_service', $article_sales_invoice)->first();
+                $service_exist = DB::table('invoice_elements')
+                                    ->where([
+                                        'ref_service' => $article_sales_invoice,
+                                        'ref_invoice' => $ref_invoice,
+                                    ])->first();
 
                 if(!$service_exist)
                 {
@@ -358,5 +369,258 @@ class SalesInvoiceController extends Controller
                     ->delete();
 
         return redirect()->back();
+    }
+
+    public function saveSaleInvoice(SaveSaleInvoiceForm $requestF)
+    {
+        $id_entreprise = $requestF->input('id_entreprise');
+        $id_fu = $requestF->input('id_fu');
+        $id_invoice = $requestF->input('id_invoice');
+        $ref_invoice = $requestF->input('ref_invoice');
+        $customerRequest = $requestF->input('customerRequest');
+        $client_sales_invoice = $requestF->input('client_sales_invoice');
+        $discount_choise = $requestF->input('discount_choise');
+        $discount_set = $requestF->input('discount_set');
+        $discount_value = $requestF->input('discount_value');
+        $vat_apply_change = $requestF->input('vat-apply-change');
+        $tot_excl_tax = $requestF->input('tot_excl_tax');
+        $discount_apply_input = $requestF->input('discount_apply_input');
+        $vat_apply_input = $requestF->input('vat_apply_input');
+        $tot_incl_tax_input = $requestF->input('tot_incl_tax_input');
+        $amount_received = $requestF->input('amount_received');
+        $date_sales_invoice = $requestF->input('date_sales_invoice');
+        $due_date_sales_invoice = $requestF->input('due_date_sales_invoice');
+
+        $time = date('H:i:s');
+
+        $choise_dist = 0;
+        $discount_choise == "yes" ? $choise_dist = 1 : $choise_dist = 0; 
+
+        $date_invoice = date('Y-m-d H:i:s',strtotime($date_sales_invoice.' '.$time)); 
+        $due_date = date('Y-m-d H:i:s',strtotime($due_date_sales_invoice.' '.$time));
+
+        //dd($requestF->all());
+
+        $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
+
+        if(!$invoice)
+        {
+            SalesInvoice::create([
+                'reference_sales_invoice' => $ref_invoice,
+                'reference_number' => 0,
+                'discount_choice' => $choise_dist,
+                'discount_type' => $discount_set,
+                'discount_value' => $discount_value,
+                'sub_total' => $tot_excl_tax,
+                'total' => $tot_incl_tax_input,
+                'vat_amount' => $vat_apply_input,
+                'amount_received' => $amount_received,
+                'vat' => $vat_apply_change,
+                'discount_apply_amount' => $discount_apply_input,
+                'id_client' => $client_sales_invoice, 
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id_fu,
+                'created_at' => $date_invoice,
+                'due_date' => $due_date,
+            ]);
+
+            DB::table('invoice_margins')
+                ->where('ref_invoice', $ref_invoice)
+                ->update([
+                    'invoice_saved' => 1,
+                    'updated_at' => new \DateTimeImmutable,
+            ]);
+
+            //Notification
+            $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+            $description = "invoice.added_an_invoice_in_the_functional_unit";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+            return redirect()->route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            ->with('success', __('invoice.the_invoice_was_added_successfully'));
+        }
+        else
+        {
+            DB::table('sales_invoices')
+                ->where('reference_sales_invoice', $ref_invoice)
+                ->update([
+                    'discount_choice' => $choise_dist,
+                    'discount_type' => $discount_set,
+                    'discount_value' => $discount_value,
+                    'sub_total' => $tot_excl_tax,
+                    'total' => $tot_incl_tax_input,
+                    'vat_amount' => $vat_apply_input,
+                    'amount_received' => $amount_received,
+                    'vat' => $vat_apply_change,
+                    'discount_apply_amount' => $discount_apply_input,
+                    'id_client' => $client_sales_invoice, 
+                    'id_fu' => $id_fu,
+                    'created_at' => $date_invoice,
+                    'due_date' => $due_date,
+                    'updated_at' => new \DateTimeImmutable,
+            ]);
+
+            //Notification
+            $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+            $description = "invoice.modified_an_invoice_in_the_functional_unit";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+            return redirect()->route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            ->with('success', __('invoice.the_invoice_was_successfully_modified'));
+        }
+    }
+
+    public function infoSalesInvoice($id, $id2, $ref_invoice)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
+        $customer = DB::table('clients')->where('id', $invoice->id_client)->first();
+
+        $country = DB::table('countries')->where('id', $entreprise->id_country)->first();
+
+        $deviseGest = DB::table('devises')
+                    ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                    ->where([
+                        'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                        'devise_gestion_ufs.default_cur_manage' => 1,
+        ])->first();
+
+        $invoice_elements = DB::table('invoice_elements')
+                            ->where([
+                                'ref_invoice' => $ref_invoice,
+                                'id_fu' => $id2,
+                            ])->get();
+
+        $tot_excl_tax = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->sum('total_price_inv_elmnt');
+
+        $paymentReceived = DB::table('encaissements')
+                            ->where([
+                                'reference_enc' => $ref_invoice,
+                                'id_fu' => $id2,
+                            ])->sum('amount');
+
+
+        $remainingBalance = $invoice->total - $paymentReceived;
+        
+
+        $encaissements = DB::table('devises')
+                        ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                        ->join('payment_methods', 'payment_methods.id_currency', '=', 'devise_gestion_ufs.id')
+                        ->join('encaissements', 'encaissements.id_pay_meth', '=', 'payment_methods.id')
+                        ->where([
+                            'encaissements.reference_enc' => $ref_invoice, 
+                            'encaissements.id_user' => Auth::user()->id,
+                            'encaissements.id_fu' => $id2,
+                        ])->get();
+
+        $paymentMethods = DB::table('devises')
+                            ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                            ->join('payment_methods', 'payment_methods.id_currency', '=', 'devise_gestion_ufs.id')
+                            ->where([
+                                'payment_methods.id_fu' => $functionalUnit->id,
+                                'devises.iso_code' => $deviseGest->iso_code,
+                            ])->get();
+
+        //dd($paymentMethods);
+
+        return view('invoice_sales.info_sales_invoice', compact(
+            'entreprise', 
+            'functionalUnit', 
+            'invoice',
+            'ref_invoice',
+            'customer',
+            'country',
+            'invoice_elements',
+            'deviseGest',
+            'tot_excl_tax',
+            'encaissements',
+            'paymentReceived', 
+            'remainingBalance',
+            'paymentMethods'
+        ));
+    }
+
+    public function checkRecordsAmountInvoice()
+    {
+        $ref_invoice = $this->request->input('ref_invoice');
+        $amount = $this->request->input('amount');
+        $id_fu = $this->request->input('id_fu');
+
+        $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
+
+        $paymentReceived = DB::table('encaissements')
+                            ->where([
+                                'reference_enc' => $ref_invoice, 
+                                'id_user' => Auth::user()->id,
+                                'id_fu' => $id_fu,
+                            ])->sum('amount');
+
+        $remainingBalance = $invoice->total - $paymentReceived;
+
+        $result = "";
+
+        if($amount <= $remainingBalance)
+        {
+            $result = "success";
+        }
+        else
+        {
+            $result = "danger";
+        }
+
+        return response()->json([
+            'code' => 200,
+            'amount' => $amount,
+            'remainingBalance' => $remainingBalance,
+            'result' => $result,
+        ]);
+    }
+
+    public function saveRecordPayment()
+    {
+        $ref_invoice = $this->request->input('ref_invoice');
+        $amount = $this->request->input('amount_invoice_record');
+        $payment_method = $this->request->input('payment_methods_invoice_record');
+        $id_fu = $this->request->input('id_fu');
+        $id_entreprise = $this->request->input('id_entreprise'); 
+
+
+        Encaissement::create([
+            'description' => 'invoice.collection_of_the_invoice',
+            'reference_enc' => $ref_invoice,
+            'is_invoice' => 1,
+            'amount' => $amount,
+            'id_pay_meth' => $payment_method,
+            'id_user' => Auth::user()->id,
+            'id_fu' => $id_fu,
+        ]);
+
+         //Notification
+         $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+         $description = "invoice.recorded_an_invoice_payment";
+         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+        return redirect()->back()
+            ->with('success', __('invoice.payment_registered_successfully'));
+    }
+
+    public function deleteSalesInvoice()
+    {
+        $ref_invoice = $this->request->input('id_element1');
+        $id_entreprise = $this->request->input('id_element2');
+        $id_fu = $this->request->input('id_element3');
+
+        DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->delete();
+
+        //Notification
+        $url = route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu]);
+        $description = "invoice.deleted_an_invoice_in_the_functional_unit";
+        $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+        return redirect()->route('app_sales_invoice', [
+            'id' => $id_entreprise, 
+            'id2' => $id_fu ])->with('success', __('invoice.invoice_deleted_successfully'));
     }
 }

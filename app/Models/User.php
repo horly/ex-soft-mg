@@ -187,4 +187,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\InvoiceElement');
     }
+
+    public function encaissement()
+    {
+        return $this->hasMany('App\Models\Encaissement');
+    }
 }

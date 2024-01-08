@@ -43,4 +43,36 @@
 
         'this_item_has_already_been_inserted' => "Cet élément a déjà été inséré, veuillez modifier la quantité sur le tableau.",
         'apply_discount' => "Appliquer la remise",
+
+        'select_customer_please' => "Sélectionnez le client s'il vous plaît!",
+
+        'added_an_invoice_in_the_functional_unit' => "a ajouté une facture dans l'unité fonctionnelle",
+        'the_invoice_was_added_successfully' => "La facture a été ajoutée avec succès!",
+
+        'modified_an_invoice_in_the_functional_unit' => "a modifié une facture dans l'unité fonctionnelle!",
+        'the_invoice_was_successfully_modified' => "La facture a été modifiée avec succès!",
+
+        'invoice_details' => "Détails de la facture",
+
+        'invoice_content' => "Contenu de la facture",
+        'payment_details' => "Détails de paiement",
+        'cash_in' => "Encaisser",
+        'print' => "Imprimer",
+
+        'record_a_payment' => "Enregistrer un paiement",
+        'the_amount_to_be_collected_cannot_be_greater_than_the_remaining_balance' => "Le montant à percevoir ne peut être supérieur au solde restant.",
+        'amount_cannot_be_empty' => "Le montant ne peut être vide",
+        'select_a_payment_method' => "Choisissez un mode de paiement",
+        'select_a_payment_method_please' => "Choisissez un mode de paiement s'il vous plaît!",
+
+        'collection_of_the_invoice' => "Encaissement de la facture",
+        'recorded_an_invoice_payment' => "a enregistré un paiement de la facture",
+        'payment_registered_successfully' => "Paiement enregistré avec succès!",
+
+        'deleted_an_invoice_in_the_functional_unit' => "a supprimé une facture dans l'unité fonctionnelle",
+        'invoice_deleted_successfully' => "Facture supprimée avec succès",
+
+        'invoice_MAJ' => "FACTURE",
+        'invoice_MIN' => "Facture",
+        'invoice_generated_by_EXADERP' => "Facture générée par EXADERP",
     ];

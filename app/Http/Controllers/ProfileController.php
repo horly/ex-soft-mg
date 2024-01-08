@@ -62,6 +62,7 @@ class ProfileController extends Controller
                 ->where('id', $id_entreprise)
                 ->update([
                 'url_logo' => $image_hash,
+                'url_logo_base64' => $image,
                 'updated_at' => new \DateTimeImmutable
             ]);
 
@@ -87,6 +88,7 @@ class ProfileController extends Controller
                 ->where('id', $id_user)
                 ->update([
                 'photo_profile_url' => $image_hash,
+                'photo_profile_url' => $image,
                 'updated_at' => new \DateTimeImmutable
             ]);
 

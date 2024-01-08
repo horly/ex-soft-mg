@@ -71,7 +71,13 @@
                                             </a>
                                         </td>
                                         <td class="text-end">
-                                            {{ number_format(0, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
+                                            @php
+                                                $paymentReceived = DB::table('encaissements')
+                                                                    ->where([
+                                                                        'id_pay_meth' => $paymentMethod->id,
+                                                                    ])->sum('amount');
+                                            @endphp
+                                            {{ number_format($paymentReceived, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
                                         </td>
                                         <td class="text-end">
                                             {{ number_format(0, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}

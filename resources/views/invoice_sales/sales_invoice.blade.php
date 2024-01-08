@@ -51,7 +51,8 @@
                                 <th>{{ __('invoice.date') }}</th>
                                 <th>{{ __('invoice.customer') }}</th>
                                 <th>{{ __('invoice.due_date') }}</th>
-                                <th class="text-end">{{ __('invoice.total_incl_tax') }}</th>
+                                <th class="text-end">{{ __('invoice.total_incl_tax') }} {{ $deviseGest->iso_code }}</th>
+                                <th class="text-end">{{ __('invoice.payment_received') }} {{ $deviseGest->iso_code }}</th>
                                 <th>{{ __('client.manager') }}</th>
                                 <th class="text-center">Action</th>
                             </thead>
@@ -60,19 +61,46 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
-                                            <a href="#">
+                                            <a href="{{ route('app_info_sales_invoice', [
+                                                'id' => $entreprise->id, 
+                                                'id2' => $functionalUnit->id, 
+                                                'ref_invoice' => $invoice->reference_sales_invoice ]) }}">
                                                 {{ $invoice->reference_sales_invoice }}
                                             </a>
                                         </td>
-                                        <td>{{ $invoice->created_at }}</td>
-                                        <td></td>
-                                        <td>{{ $invoice->due_date }}</td>
-                                        <td class="text-end">
-                                            {{ number_format($invoice->total, 2, '.', ' ') }} {{ $deviseGest->iso_code }}
+                                        <td>{{ date('Y-m-d', strtotime($invoice->created_at)) }}</td>
+                                        <td>
+                                            @if ($invoice->entreprise_name_cl == "-" || $invoice->entreprise_name_cl == "")
+                                                {{ $invoice->contact_name_cl }}
+                                            @else
+                                                {{ $invoice->entreprise_name_cl }}
+                                            @endif
                                         </td>
-                                        <td></td>
+                                        <td>{{ date('Y-m-d', strtotime($invoice->due_date)) }}</td>
+                                        <td class="text-end">
+                                            {{ number_format($invoice->total, 2, '.', ' ') }} 
+                                        </td>
+                                        <td class="text-end">
+                                            @php
+                                                $paymentReceived = DB::table('encaissements')
+                                                    ->where([
+                                                        'reference_enc' => $invoice->reference_sales_invoice,
+                                                        'id_fu' => $functionalUnit->id,
+                                                    ])->sum('amount');
+                                            @endphp
+                                            {{ number_format($paymentReceived, 2, '.', ' ') }}
+                                        </td>
+                                        <td>
+                                            @php
+                                                $user = DB::table('users')->where('id', $invoice->id_user)->first();
+                                            @endphp
+                                            {{ $user->name }}
+                                        </td>
                                         <td class="text-center">
-                                            <a href="#">
+                                            <a href="{{ route('app_info_sales_invoice', [
+                                                'id' => $entreprise->id, 
+                                                'id2' => $functionalUnit->id, 
+                                                'ref_invoice' => $invoice->reference_sales_invoice ]) }}">
                                                 {{ __('main.show') }}
                                             </a>
                                         </td>

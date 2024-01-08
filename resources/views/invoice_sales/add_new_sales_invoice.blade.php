@@ -39,12 +39,13 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        <form action="#" method="POST">
+                        <form action="{{ route('app_save_sale_invoice') }}" method="POST">
                             @csrf
 
                             <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
                             <input type="hidden" name="id_fu" value="{{ $functionalUnit->id }}">
                             <input type="hidden" name="id_invoice" value="0">
+                            <input type="hidden" name="ref_invoice" value="{{ $ref_invoice }}">
                             <input type="hidden" name="customerRequest" id="customerRequest" value="add">
 
                             <div class="mb-4 row">
@@ -79,8 +80,8 @@
                                     <th scope="col">#</th>
                                     <th scope="col">{{ __('article.description') }}</th>
                                     <th scope="col" class="text-end">{{ __('invoice.quantity') }}</th>
-                                    <th scope="col" class="text-end">{{ __('article.unit_price') }}</th>
-                                    <th scope="col" class="text-end">{{ __('invoice.total_price') }}</th>
+                                    <th scope="col" class="text-end">{{ __('article.unit_price') }} {{ $deviseGest->iso_code }}</th>
+                                    <th scope="col" class="text-end">{{ __('invoice.total_price') }} {{ $deviseGest->iso_code }}</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -99,8 +100,8 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $invoice_element->description_inv_elmnt }}</td>
                                             <td class="text-end">{{ $invoice_element->quantity }}</td>
-                                            <td class="text-end">{{ number_format($invoice_element->unit_price_inv_elmnt, 2, '.', ' ') }} {{ $deviseGest->iso_code }}</td>
-                                            <td class="text-end">{{ number_format($invoice_element->total_price_inv_elmnt, 2, '.', ' ') }} {{ $deviseGest->iso_code }}</td>
+                                            <td class="text-end">{{ number_format($invoice_element->unit_price_inv_elmnt, 2, '.', ' ') }}</td>
+                                            <td class="text-end">{{ number_format($invoice_element->total_price_inv_elmnt, 2, '.', ' ') }}</td>
                                         </tr>
                                         <div>
                                             <input type="hidden" id="ref_article-{{ $invoice_element->id }}" value="{{ $invoice_element->ref_article }}">
@@ -137,11 +138,11 @@
                                 <label for="discount_invoice" class="col-sm-4 col-form-label">{{ __('invoice.apply_discount') }}</label>
                                 <div class="col-sm-8">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="discount_choise" id="discount-yes" onclick="choiseDiscount('yes');">
+                                        <input class="form-check-input" type="radio" name="discount_choise" id="discount-yes" onclick="choiseDiscount('yes');" value="yes">
                                         <label class="form-check-label" for="discount-yes">{{ __('invoice.yes') }}</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="discount_choise" id="discount-no" onclick="choiseDiscount('no');" checked>
+                                        <input class="form-check-input" type="radio" name="discount_choise" id="discount-no" onclick="choiseDiscount('no');" value="no" checked>
                                         <label class="form-check-label" for="discount-no">{{ __('invoice.no') }}</label>
                                     </div>
                                 </div>
@@ -151,11 +152,11 @@
                                 <label for="discount_invoice" class="col-sm-4 col-form-label">{{ __('invoice.discount') }}</label>
                                 <div class="col-sm-8">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="discount_set" id="discount-pourcentage" onclick="changeDiscountSet('%');"  value="yes" checked>
+                                        <input class="form-check-input" type="radio" name="discount_set" id="discount-pourcentage" onclick="changeDiscountSet('%');"  value="%" checked>
                                         <label class="form-check-label" for="discount-pourcentage">%</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="discount_set" id="discount-currency" onclick="changeDiscountSet('{{ $deviseGest->iso_code }}');" value="no">
+                                        <input class="form-check-input" type="radio" name="discount_set" id="discount-currency" onclick="changeDiscountSet('{{ $deviseGest->iso_code }}');" value="{{ $deviseGest->iso_code }}">
                                         <label class="form-check-label" for="discount-currency">{{ $deviseGest->iso_code }}</label>
                                     </div>
                                 </div>
@@ -193,7 +194,7 @@
                                         <td></td>
                                         <td></td>
                                         <td class="text-end fw-bold">
-                                            <span id="tot_excl_tax_td">{{ number_format($tot_excl_tax, 2, '.', ' ') }}</span> {{ $deviseGest->iso_code }}
+                                            <span id="tot_excl_tax_td">{{ number_format($tot_excl_tax, 2, '.', ' ') }}</span>
                                         </td>
                                     </tr>
                                     <tr class="d-none discount-zone">
@@ -202,7 +203,7 @@
                                         <td></td>
                                         <td></td>
                                         <td class="text-end fw-bold">
-                                            <span id="discount_apply_td">0.00</span> {{ $deviseGest->iso_code }}
+                                            <span id="discount_apply_td">0.00</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -211,23 +212,24 @@
                                         <td></td>
                                         <td></td>
                                         <td class="text-end fw-bold">
-                                            <span id="vat_apply_td">0.00</span> {{ $deviseGest->iso_code }}
+                                            <span id="vat_apply_td">0.00</span>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="fw-bold">{{ __('invoice.total_incl_tax') }}</td>
+                                        <td class="fw-bold">{{ __('invoice.total_incl_tax') }} {{ $deviseGest->iso_code }}</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
                                         <td class="text-end fw-bold">
-                                            <span id="tot_incl_tax_td">{{ number_format($tot_excl_tax, 2, '.', ' ') }} </span> {{ $deviseGest->iso_code }}
+                                            <span id="tot_incl_tax_td">{{ number_format($tot_excl_tax, 2, '.', ' ') }} </span>
                                         </td>
                                     </tr>
                                     <div>
                                         <input type="hidden" name="tot_excl_tax" id="tot_excl_tax" value="{{ $tot_excl_tax }}">
-                                        <input type="hidden" name="vat_apply_input" id="vat_apply_input">
-                                        <input type="hidden" name="tot_incl_tax_input" id="tot_incl_tax_input"> 
-                                        <input type="hidden" name="discount_apply_input" id="discount_apply_input">
+                                        <input type="hidden" name="discount_apply_input" id="discount_apply_input" value="0">
+                                        <input type="hidden" name="vat_apply_input" id="vat_apply_input" value="0">
+                                        <input type="hidden" name="tot_incl_tax_input" id="tot_incl_tax_input" value="{{ $tot_excl_tax }}">
+                                        <input type="hidden" name="amount_received" id="amount_received" value="0"> 
                                     </div>
                                 </tbody>
                             </table>
@@ -235,14 +237,14 @@
                             <div class="mb-4 row">
                                 <label for="date_sales_invoice" class="col-sm-4 col-form-label">{{ __('invoice.date') }}*</label>
                                 <div class="col-sm-8">
-                                    <input type="date" class="form-control @error('date_sales_invoice') is-invalid @enderror" id="date_sales_invoice" name="date_sales_invoice"  value="{{ date('Y-m-d') }}">
+                                    <input type="date" class="form-control" id="date_sales_invoice" name="date_sales_invoice"  value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
 
                             <div class="mb-4 row">
-                                <label for="date_sales_invoice" class="col-sm-4 col-form-label">{{ __('invoice.due_date') }}*</label>
+                                <label for="due_date_sales_invoice" class="col-sm-4 col-form-label">{{ __('invoice.due_date') }}*</label>
                                 <div class="col-sm-8">
-                                    <input type="date" class="form-control @error('date_sales_invoice') is-invalid @enderror" id="date_sales_invoice" name="date_sales_invoice"  value="{{ date('Y-m-d') }}">
+                                    <input type="date" class="form-control" id="due_date_sales_invoice" name="due_date_sales_invoice"  value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
 

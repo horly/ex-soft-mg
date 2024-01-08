@@ -39,4 +39,9 @@ class PaymentMethod extends Model
     {
         return $this->belongsTo('App\Models\DeviseGestionUF', 'id_currency');
     }
+
+    public function encaissement()
+    {
+        return $this->hasMany('App\Models\Encaissement');
+    }
 }

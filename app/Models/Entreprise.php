@@ -20,6 +20,7 @@ class Entreprise extends Model
         'website',
         'slogan',
         'url_logo',
+        'url_logo_base64',
         'id_user',
         'id_country',
         'sub_id',

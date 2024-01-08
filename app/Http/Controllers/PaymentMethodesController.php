@@ -159,11 +159,17 @@ class PaymentMethodesController extends Controller
                             ->where('payment_methods.id', $id3)
                             ->first();
 
+        $paymentReceived = DB::table('encaissements')
+                            ->where([
+                                'id_pay_meth' => $paymentMethod->id,
+                            ])->sum('amount');
+
         return view('payment_methods.info_payment_methods', compact(
             'entreprise', 
             'functionalUnit', 
             'deviseGest',
             'paymentMethod',
+            'paymentReceived'
         ));
     }
 

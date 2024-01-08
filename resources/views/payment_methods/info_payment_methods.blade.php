@@ -58,7 +58,7 @@
                                 {{ __('payment_methods.collections') }}
                             </div>
                             <div class="col-md-8 text-primary fw-bold">
-                                {{ number_format(0, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
+                                {{ number_format($paymentReceived, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
                             </div>
                         </div>
 
@@ -76,7 +76,7 @@
                                 {{ __('payment_methods.balance') }}
                             </div>
                             <div class="col-md-8 text-primary fw-bold">
-                                {{ number_format(0, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
+                                {{ number_format($paymentReceived - 0, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
                             </div>
                         </div>
 

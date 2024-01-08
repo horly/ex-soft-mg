@@ -6,7 +6,9 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DebtorController;
+use App\Http\Controllers\DomPdfController;
 use App\Http\Controllers\EntrepriseController;
+use App\Http\Controllers\FpdfController;
 use App\Http\Controllers\FunctionalUnitController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +19,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SalesInvoiceController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,8 +39,10 @@ Route::get('/lang/{lang}',
     [LanguageController::class, 'switchLang'])
         ->name('app_language');
 
-Route::get('/', function () {
-    return view('auth.login');
+Route::middleware('guest')->group(function(){
+    Route::get('/', function () {
+        return view('auth.login');
+    });
 });
 
 Route::controller(HomeController::class)->group(function(){
@@ -353,8 +358,9 @@ Route::controller(SalesInvoiceController::class)->group(function(){
             Route::middleware('funcUnit')->group(function(){
                 Route::get('/sales_invoice/{id:int}/{id2:int}', 'salesInvoice')->name('app_sales_invoice');
                 Route::get('/add_new_sales_invoice/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewSalesInvoice')->name('app_add_new_sales_invoice');
-                Route::get('/info_sales_invoice/{id:int}/{id2:int}/{id3:int}', 'infoSalesInvoice')->name('app_info_sales_invoice');
+                Route::get('/info_sales_invoice/{id:int}/{id2:int}/{ref_invoice:string}', 'infoSalesInvoice')->name('app_info_sales_invoice');
                 Route::get('/update_sales_invoice/{id:int}/{id2:int}/{id3:int}', 'upDateSalesInvoice')->name('app_update_sales_invoice');
+        
             });
         });
 
@@ -366,5 +372,30 @@ Route::controller(SalesInvoiceController::class)->group(function(){
         Route::post('/delete_invoice_element', 'deleteInvoiceElement')->name('app_delete_invoice_element');
         Route::post('/change_vat', 'changeVat')->name('app_change_vat');
         Route::post('/change_discount_customer', 'changeDiscountCustomer')->name('app_change_discount_customer');
+        Route::post('/save_sale_invoice', 'saveSaleInvoice')->name('app_save_sale_invoice');
+        Route::post('/check_records_amount_invoice', 'checkRecordsAmountInvoice')->name('app_check_records_amount_invoice');
+        Route::post('/save_record_payment', 'saveRecordPayment')->name('app_save_record_payment');
     });
+});
+
+/*Route::controller(FpdfController::class)->group(function(){
+    Route::get('/invoice_pdf/{id:int}/{id2:int}/{ref_invoice:string}', 'invoicePdf')->name('app_invoice_pdf');
+    Route::get('/invoice_pdf/{id:int}/{id2:int}/{ref_invoice:string}', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf, $id, $id2) {
+
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+        
+        $fpdf->AddPage();
+        $fpdf->SetFont('Courier', 'B', 18);
+
+        
+        $fpdf->Cell(50, 25, 'Hello World!');
+        $fpdf->Output();
+        exit;
+    
+    });
+});*/
+
+Route::controller(DomPdfController::class)->group(function(){
+    Route::get('/invoice_pdf/{id:int}/{id2:int}/{ref_invoice:string}', 'invoicePdf')->name('app_invoice_pdf');
 });
