@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateClientForm;
 use App\Models\Client;
+use App\Models\CustomerContact;
 use App\Repository\EntrepriseRepo;
 use App\Repository\GenerateRefenceNumber;
 use App\Repository\NotificationRepo;
@@ -39,6 +40,7 @@ class CustomerController extends Controller
                     ->where('id_fu', $functionalUnit->id)
                     ->orderByDesc('id')
                     ->get();
+
         
         return view('client.client', compact('entreprise', 'functionalUnit', 'clients'));
     }
@@ -69,6 +71,7 @@ class CustomerController extends Controller
         $email_cl = $requestF->input('email_cl');
         $phone_number_cl = $requestF->input('phone_number_cl');
         $address_cl = $requestF->input('address_cl');
+        $department_cl = $requestF->input('department_cl');
 
         if($customerRequest != "edit")
         {
@@ -87,11 +90,6 @@ class CustomerController extends Controller
                     'nif_cl' => $company_nif_cl,
                     'account_num_cl' => $company_account_number_cl,
                     'website_cl' => $company_website_cl,
-                    'contact_name_cl' => $full_name_cl,
-                    'fonction_contact_cl' => $grade_cl,
-                    'phone_number_cl' => $phone_number_cl,
-                    'email_adress_cl' => $email_cl,
-                    'address_cl' => $address_cl,
                     'id_fu' => $id_fu,
                     'id_user' => Auth::user()->id,
                 ]);
@@ -101,15 +99,20 @@ class CustomerController extends Controller
                     'type' => $customer_type_cl,
                     'reference_cl' => $ref,
                     'reference_number' => $refNum,
-                    'contact_name_cl' => $full_name_cl,
-                    'fonction_contact_cl' => $grade_cl,
-                    'phone_number_cl' => $phone_number_cl,
-                    'email_adress_cl' => $email_cl,
-                    'address_cl' => $address_cl,
                     'id_fu' => $id_fu,
                     'id_user' => Auth::user()->id,
                 ]);
             }
+
+            CustomerContact::create([
+                'fullname_cl' => $full_name_cl,
+                'fonction_contact_cl' => $grade_cl,
+                'phone_number_cl' => $phone_number_cl,
+                'email_adress_cl' => $email_cl,
+                'address_cl' => $address_cl,
+                'departement_cl' => $department_cl,
+                'id_client' => $client_saved->id,
+            ]);
 
             //Notification
             $url = route('app_info_customer', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $client_saved->id]);
@@ -133,11 +136,6 @@ class CustomerController extends Controller
                     'nif_cl' => $company_nif_cl,
                     'account_num_cl' => $company_account_number_cl,
                     'website_cl' => $company_website_cl,
-                    'contact_name_cl' => $full_name_cl,
-                    'fonction_contact_cl' => $grade_cl,
-                    'phone_number_cl' => $phone_number_cl,
-                    'email_adress_cl' => $email_cl,
-                    'address_cl' => $address_cl,
                     'updated_at' => new \DateTimeImmutable,
                 ]);
             }
@@ -153,11 +151,6 @@ class CustomerController extends Controller
                     'nif_cl' => "-",
                     'account_num_cl' => "-",
                     'website_cl' => "-",
-                    'contact_name_cl' => $full_name_cl,
-                    'fonction_contact_cl' => $grade_cl,
-                    'phone_number_cl' => $phone_number_cl,
-                    'email_adress_cl' => $email_cl,
-                    'address_cl' => $address_cl,
                     'updated_at' => new \DateTimeImmutable,
                 ]);
             }
@@ -180,7 +173,9 @@ class CustomerController extends Controller
                     ->join('clients', 'clients.id_user', '=', 'users.id')
                     ->where('clients.id', $id3)->first();
 
-        return view('client.info_client', compact('entreprise', 'functionalUnit', 'client'));
+        $contacts = DB::table('customer_contacts')->where('id_client', $client->id)->get();
+
+        return view('client.info_client', compact('entreprise', 'functionalUnit', 'client', 'contacts'));
     }
 
     public function deleteClient()
@@ -208,5 +203,62 @@ class CustomerController extends Controller
         $client = DB::table('clients')->where('id', $id3)->first();
 
         return view('client.update_client', compact('entreprise', 'functionalUnit', 'client'));
+    }
+
+    public function addNewContactClient()
+    {
+        $full_name_cl = $this->request->input('full_name_cl');
+        $grade_cl = $this->request->input('grade_cl');
+        $department_cl = $this->request->input('department_cl');
+        $email_cl = $this->request->input('email_cl');
+        $phone_number_cl = $this->request->input('phone_number_cl');
+        $address_cl = $this->request->input('address_cl'); 
+        $id_client = $this->request->input('id_client');
+        $modalRequest = $this->request->input('modalRequest');
+        $id_contact = $this->request->input('id_contact'); 
+        $id_entreprise = $this->request->input('id_entreprise');
+        $id_fu = $this->request->input('id_fu');
+
+        //dd($this->request->all());
+
+        if($modalRequest != "edit")
+        {
+            CustomerContact::create([
+                'fullname_cl' => $full_name_cl,
+                'fonction_contact_cl' => $grade_cl,
+                'phone_number_cl' => $phone_number_cl,
+                'email_adress_cl' => $email_cl,
+                'address_cl' => $address_cl,
+                'departement_cl' => $department_cl,
+                'id_client' => $id_client,
+            ]);
+
+             //Notification
+             $url = route('app_info_customer', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_client]);
+             $description = "client.added_a_customer_contact";
+             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+ 
+             return redirect()->back()->with('success', __('client.contact_saved_successfully'));
+        }
+        else
+        {
+            DB::table('customer_contacts')
+                ->where('id', $id_contact)
+                ->update([
+                    'fullname_cl' => $full_name_cl,
+                    'fonction_contact_cl' => $grade_cl,
+                    'phone_number_cl' => $phone_number_cl,
+                    'email_adress_cl' => $email_cl,
+                    'address_cl' => $address_cl,
+                    'departement_cl' => $department_cl,
+                    'updated_at' => new \DateTimeImmutable
+            ]);
+
+            $url = route('app_info_customer', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_client]);
+            $description = "client.updated_a_customer_contact";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+ 
+            return redirect()->back()->with('success', __('client.contact_updated_successfully'));
+        }
     }
 }

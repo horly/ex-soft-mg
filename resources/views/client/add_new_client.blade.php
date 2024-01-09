@@ -129,6 +129,14 @@
                             </div>
 
                             <div class="mb-4 row">
+                                <label for="department_cl" class="col-sm-4 col-form-label">{{ __('client.department') }}*</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control @error('department_cl') is-invalid @enderror" id="department_cl" name="department_cl" placeholder="{{ __('client.contact_department') }}" value="{{ old('department_cl') }}">
+                                    <small class="text-danger">@error('department_cl') {{ $message }} @enderror</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-4 row">
                                 <label for="email_cl" class="col-sm-4 col-form-label">{{ __('main.email_address') }}*</label>
                                 <div class="col-sm-8">
                                     <input type="email" class="form-control @error('email_cl') is-invalid @enderror" id="email_cl" name="email_cl" placeholder="{{ __('client.enter_the_customers_email_address') }}" value="{{ old('email_cl') }}">

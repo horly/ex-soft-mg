@@ -27,6 +27,7 @@ class SalesInvoice extends Model
         'id_client',
         'id_user',
         'id_fu',
+        'id_contact',
         'due_date',
     ];
 

@@ -94,4 +94,6 @@
         'proforma_invoice_successfully_deleted' => "Proforma invoice successfully deleted!",
 
         'convert_to_simple_invoice' => "Convert to simple invoice",
+        'add_a_new_contact' => "Add a new contact",
+        'edit_contact' => "Edit contact",
 ];

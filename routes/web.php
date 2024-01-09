@@ -19,6 +19,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SalesInvoiceController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
+use FontLib\Table\Type\name;
 use Illuminate\Support\Facades\DB;
 
 /*
@@ -203,6 +204,8 @@ Route::controller(CustomerController::class)->group(function(){
         //
         Route::post('/create_client', 'createClient')->name('app_create_client');
         Route::post('/delete_client', 'deleteClient')->name('app_delete_client');
+        
+        Route::post('/add_new_contact_client', 'addNewContactClient')->name('app_add_new_contact_client');
     });
 });
 

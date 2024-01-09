@@ -12,27 +12,23 @@
                 <input type="hidden" name="is_proforma" value="{{ $invoice_margin->is_proforma }}">
 
                 <div class="mb-4 row">
-                    <label for="client_sales_invoice" class="col-sm-4 col-form-label">{{ __('invoice.customer') }}*</label>
-                    <div class="col-sm-5">
+                    <label for="client_sales_invoice" class="col-sm-2 col-form-label">{{ __('invoice.customer') }}*</label>
+                    <div class="col-sm-4">
                         <select class="form-select" name="client_sales_invoice" id="client_sales_invoice">
                             <option value="" selected>{{ __('invoice.select_a_customer') }}</option>
                             @foreach ($clients as $client)
                                 <option value="{{ $client->id }}">
-                                    @if ($client->entreprise_name_cl == "-" || $client->entreprise_name_cl == "")
-                                        {{ $client->contact_name_cl }}
-                                    @else
-                                        {{ $client->entreprise_name_cl }}
-                                    @endif
+                                    {{ $client->entreprise_name_cl }}
                                 </option>
                             @endforeach
                         </select>
                         <small class="text-danger">@error('client_sales_invoice') {{ $message }} @enderror</small>
                     </div>
-                    <div class="col-sm-3 d-grid gap-2">
-                        <a href="{{ route('app_add_new_client', ['id' => $entreprise->id, 'id2' => $functionalUnit->id ]) }}" class="btn btn-primary" role="button">
-                            <i class="fa-solid fa-circle-plus"></i> 
-                            &nbsp;{{ __('auth.add') }}
-                        </a>
+                    <label for="client_contact_sales_invoice" class="col-sm-2 col-form-label">Contact*</label>
+                    <div class="col-sm-4">
+                        <select class="form-select" name="client_contact_sales_invoice" id="client_contact_sales_invoice">
+                            <option value="" selected>{{ __('client.select_a_contact') }}</option>
+                        </select>
                     </div>
                 </div>
 

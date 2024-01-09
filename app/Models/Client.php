@@ -45,4 +45,9 @@ class Client extends Model
     {
         return $this->hasMany('App\Models\SalesInvoice');
     }
+
+    public function contact()
+    {
+        return $this->hasMany('App\Models\CustomerContact');
+    }
 }

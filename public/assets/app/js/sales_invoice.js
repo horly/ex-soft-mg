@@ -1,4 +1,4 @@
-$('#client_sales_invoice').select2();
+//$('#client_sales_invoice').select2();
 
 $('#article_sales_invoice').select2({
     dropdownParent: $('#new_article_invoice'),

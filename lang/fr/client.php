@@ -69,4 +69,16 @@ return [
     'update_customer' => "Mettre à jour le client",
 
     'reference' => "Référence",
+
+    'department' => "Département",
+    'contact_department' => "Département du contact",
+    'please_enter_the_contact_department' => "Veuillez entrer le département du contact",
+
+    'contact_saved_successfully' => "Contact enregistré avec succès",
+    'added_a_customer_contact' => "a ajouté un contact client",
+    'contact_updated_successfully' => "Contact mis à jour avec succès",
+    'updated_a_customer_contact' => "a mis à jour un contact client",
+
+    'customer_contact' => "Contact client",
+    'select_a_contact' => "Sélectionnez un contact",
 ];

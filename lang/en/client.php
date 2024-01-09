@@ -68,4 +68,16 @@ return [
     'update_customer' => "Update customer",
 
     'reference' => "Reference",
+
+    'department' => "Department",
+    'contact_department' => "Contact Department",
+    'please_enter_the_contact_department' => "Please enter the contact department",
+
+    'contact_saved_successfully' => "Contact saved successfully",
+    'added_a_customer_contact' => "added a customer contact",
+    'contact_updated_successfully' => "Contact updated successfully",
+    'updated_a_customer_contact' => "updated a customer contact",
+
+    'customer_contact' => "Customer contact",
+    'select_a_contact' => "Select a contact",
 ];

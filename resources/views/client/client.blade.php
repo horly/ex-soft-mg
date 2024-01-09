@@ -50,9 +50,6 @@
                                 <th>{{ __('client.reference') }}</th>
                                 <th>{{ __('client.customer_type') }}</th>
                                 <th>{{ __('main.company_name') }}</th>
-                                <th>{{ __('client.contact_name') }}</th>
-                                <th>{{ __('main.email_address') }}</th>
-                                <th>{{ __('main.phone_number') }}</th>
                                 <th>Action</th>
                             </thead>
                             <tbody>
@@ -69,10 +66,16 @@
                                             </a>
                                         </td>
                                         <td>{{ __('client.' .$client->type) }}</td>
-                                        <td>{{ $client->entreprise_name_cl }}</td>
-                                        <td>{{ $client->contact_name_cl }}</td>
-                                        <td>{{ $client->email_adress_cl }}</td>
-                                        <td>{{ $client->phone_number_cl }}</td>
+                                        <td>
+                                            @if ($client->type == "particular")
+                                                @php
+                                                    $contact = DB::table('customer_contacts')->where('id_client', $client->id)->first();
+                                                @endphp
+                                                {{ $contact->fullname_cl }}
+                                            @else
+                                                {{ $client->entreprise_name_cl }}
+                                            @endif
+                                        </td>
                                         <td>
                                             <a href="{{ route('app_info_customer', [
                                                 'id' => $entreprise->id,

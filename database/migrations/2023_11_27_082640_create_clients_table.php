@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->string('type', 255);
-            $table->string('entreprise_name_cl', 255)->default('-');
-            $table->string('rccm_cl', 255)->default('-');
-            $table->string('id_nat_cl', 255)->default('-');
-            $table->string('account_num_cl', 255)->default('-');
-            $table->string('website_cl', 255)->default('-');
+            $table->string('entreprise_name_cl', 255)->nullable();
+            $table->string('rccm_cl', 255)->nullable();
+            $table->string('id_nat_cl', 255)->nullable();
+            $table->string('account_num_cl', 255)->nullable();
+            $table->string('website_cl', 255)->nullable();
             $table->string('contact_name_cl', 255);
             $table->string('fonction_contact_cl', 255);
             $table->string('phone_number_cl', 255);

@@ -31,6 +31,7 @@ class CreateClientForm extends FormRequest
             'email_cl' => 'required|email',
             'phone_number_cl' => 'required|numeric',
             'address_cl' => 'required',
+            'department_cl' => 'required',
         ];
     }
 
@@ -51,6 +52,7 @@ class CreateClientForm extends FormRequest
             'phone_number_cl.numeric' => __('client.enter_a_valid_customers_phone_number_please'),
 
             'address_cl.required' => __('client.enter_the_customers_business_address_please'),
+            'department_cl.required' => __('client.please_enter_the_contact_department'),
         ];
     }
 }
