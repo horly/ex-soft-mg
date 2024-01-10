@@ -24,6 +24,7 @@ class DomPdfController extends Controller
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
         $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
         $customer = DB::table('clients')->where('id', $invoice->id_client)->first();
+        $contact = DB::table('customer_contacts')->where('id', $invoice->id_contact)->first();
         $deviseGest = DB::table('devises')
                     ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
                     ->where([
@@ -51,6 +52,7 @@ class DomPdfController extends Controller
             'invoice_elements',
             'logo',
             'tot_excl_tax',
+            'contact'
         ));
         return $pdf->stream('invoice.pdf');
     }

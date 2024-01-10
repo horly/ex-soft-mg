@@ -13,6 +13,8 @@ use App\Repository\NotificationRepo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Symfony\Component\Console\Input\Input;
 
 class SalesInvoiceController extends Controller
 {
@@ -62,6 +64,23 @@ class SalesInvoiceController extends Controller
         $id_functionalUnit = $this->request->input('id_functionalUnit');
         $id_entreprise = $this->request->input('id_entreprise');
         $is_proforma = $this->request->input('is_proforma');
+
+        if(Session::has('id_client') || 
+            Session::has('entreprise_client') ||
+            Session::has('id_contact') ||
+            Session::has('fullname_contact') ||
+            
+            Session::has('date_sales_invoice') ||
+            Session::has('due_date_sales_invoice')
+        )
+        {
+            Session::forget('id_client');
+            Session::forget('entreprise_client');
+            Session::forget('id_contact');
+            Session::forget('fullname_contact');
+            Session::forget('date_sales_invoice');
+            Session::forget('due_date_sales_invoice');
+        }
 
         if($is_proforma == 0)
         {
@@ -181,6 +200,29 @@ class SalesInvoiceController extends Controller
         
         $tot_excl_tax = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->sum('total_price_inv_elmnt');
 
+        $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
+
+        if($invoice)
+        {
+            $client = DB::table('clients')->where('id', $invoice->id_client)->first();
+            $contact = DB::table('customer_contacts')->where('id', $invoice->id_contact)->first();
+
+            $this->request->session()->put('id_client', $client->id);
+            $client->type == 'particular' 
+                ? $this->request->session()->put('entreprise_client', $contact->fullname_cl)
+                : $this->request->session()->put('entreprise_client', $client->entreprise_name_cl);   
+
+            $this->request->session()->put('id_contact', $contact->id);
+            $this->request->session()->put('fullname_contact', $contact->fullname_cl); 
+
+            $date = $invoice->created_at;
+            $due_date = $invoice->due_date;
+
+            $this->request->session()->put('date_sales_invoice', date('Y-m-d', strtotime($date)));
+            $this->request->session()->put('due_date_sales_invoice', date('Y-m-d', strtotime($due_date))); 
+        }  
+        
+
         return view('invoice_sales.add_new_sales_invoice', compact(
             'entreprise', 
             'functionalUnit', 
@@ -287,6 +329,26 @@ class SalesInvoiceController extends Controller
         $article_sale_price_invoice = $this->request->input('article_sale_price_invoice');
         $total_price_inv_elmnt = $this->request->input('article_total_price_invoice');
         $is_an_article = $this->request->input('is_an_article');
+
+        $id_customer_session_art = $this->request->input('id_customer_session_art');
+        $id_contact_session_art = $this->request->input('id_contact_session_art');
+
+        if($id_customer_session_art != 0 && $id_contact_session_art != 0)
+        {
+            $client = DB::table('clients')->where('id', $id_customer_session_art)->first();
+            $contact = DB::table('customer_contacts')->where('id', $id_contact_session_art)->first();
+
+            $this->request->session()->put('id_client', $client->id);
+
+            $client->type == "particular" 
+                ? $this->request->session()->put('entreprise_client', $contact->fullname_cl) 
+                : $this->request->session()->put('entreprise_client', $client->entreprise_name_cl);
+
+            $this->request->session()->put('id_contact', $contact->id);
+            $this->request->session()->put('fullname_contact', $contact->fullname_cl);
+        }
+
+        //dd($this->request->all());
 
         if($modalRequest != "edit")
         {
@@ -441,7 +503,8 @@ class SalesInvoiceController extends Controller
         $amount_received = $requestF->input('amount_received');
         $date_sales_invoice = $requestF->input('date_sales_invoice');
         $due_date_sales_invoice = $requestF->input('due_date_sales_invoice');
-        $is_proforma = $requestF->input('is_proforma');
+        $is_proforma = $requestF->input('is_proforma'); 
+        $client_contact_sales_invoice = $requestF->input('client_contact_sales_invoice');
 
         $time = date('H:i:s');
 
@@ -455,61 +518,19 @@ class SalesInvoiceController extends Controller
 
         $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
 
-        if(!$invoice)
+        $invoice_elmnt = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->first();
+
+        //variable de session 
+        $this->request->session()->put('date_sales_invoice', $date_sales_invoice);
+        $this->request->session()->put('due_date_sales_invoice', $due_date_sales_invoice);
+
+        if($invoice_elmnt) //si au moins un element est inséré dans la facture
         {
-            SalesInvoice::create([
-                'reference_sales_invoice' => $ref_invoice,
-                'reference_number' => 0,
-                'discount_choice' => $choise_dist,
-                'discount_type' => $discount_set,
-                'discount_value' => $discount_value,
-                'sub_total' => $tot_excl_tax,
-                'total' => $tot_incl_tax_input,
-                'vat_amount' => $vat_apply_input,
-                'amount_received' => $amount_received,
-                'vat' => $vat_apply_change,
-                'discount_apply_amount' => $discount_apply_input,
-                'id_client' => $client_sales_invoice, 
-                'id_user' => Auth::user()->id,
-                'id_fu' => $id_fu,
-                'created_at' => $date_invoice,
-                'due_date' => $due_date,
-                'is_proforma_inv' => $is_proforma,
-            ]);
-
-            DB::table('invoice_margins')
-                ->where('ref_invoice', $ref_invoice)
-                ->update([
-                    'invoice_saved' => 1,
-                    'updated_at' => new \DateTimeImmutable,
-            ]);
-
-            if($is_proforma == 0)
+            if(!$invoice)
             {
-                //Notification
-                $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
-                $description = "invoice.added_an_invoice_in_the_functional_unit";
-                $this->notificationRepo->setNotification($id_entreprise, $description, $url);
-
-                return redirect()->route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu ])
-                ->with('success', __('invoice.the_invoice_was_added_successfully'));
-            }
-            else
-            {
-                //Notification
-                $url = route('app_info_proforma', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
-                $description = "invoice.added_a_new_proforma_invoice_in_the_functional_unit";
-                $this->notificationRepo->setNotification($id_entreprise, $description, $url);
-
-                return redirect()->route('app_proforma', ['id' => $id_entreprise, 'id2' => $id_fu ])
-                ->with('success', __('invoice.proforma_invoice_added_successfully'));
-            }
-        }
-        else
-        {
-            DB::table('sales_invoices')
-                ->where('reference_sales_invoice', $ref_invoice)
-                ->update([
+                SalesInvoice::create([
+                    'reference_sales_invoice' => $ref_invoice,
+                    'reference_number' => 0,
                     'discount_choice' => $choise_dist,
                     'discount_type' => $discount_set,
                     'discount_value' => $discount_value,
@@ -520,33 +541,92 @@ class SalesInvoiceController extends Controller
                     'vat' => $vat_apply_change,
                     'discount_apply_amount' => $discount_apply_input,
                     'id_client' => $client_sales_invoice, 
+                    'id_user' => Auth::user()->id,
                     'id_fu' => $id_fu,
+                    'id_contact' => $client_contact_sales_invoice,
                     'created_at' => $date_invoice,
                     'due_date' => $due_date,
-                    'updated_at' => new \DateTimeImmutable,
                     'is_proforma_inv' => $is_proforma,
-            ]);
+                ]);
 
-            if($is_proforma == 0)
-            {
-                //Notification
-                $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
-                $description = "invoice.modified_an_invoice_in_the_functional_unit";
-                $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+                DB::table('invoice_margins')
+                    ->where('ref_invoice', $ref_invoice)
+                    ->update([
+                        'invoice_saved' => 1,
+                        'updated_at' => new \DateTimeImmutable,
+                ]);
 
-                return redirect()->route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu ])
-                ->with('success', __('invoice.the_invoice_was_successfully_modified'));
+                if($is_proforma == 0)
+                {
+                    //Notification
+                    $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                    $description = "invoice.added_an_invoice_in_the_functional_unit";
+                    $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+                    return redirect()->route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                    ->with('success', __('invoice.the_invoice_was_added_successfully'));
+                }
+                else
+                {
+                    //Notification
+                    $url = route('app_info_proforma', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                    $description = "invoice.added_a_new_proforma_invoice_in_the_functional_unit";
+                    $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+                    return redirect()->route('app_proforma', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                    ->with('success', __('invoice.proforma_invoice_added_successfully'));
+                }
             }
             else
             {
-                //Notification
-                $url = route('app_info_proforma', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
-                $description = "invoice.modified_a_proforma_invoice_in_the_functional_unit";
-                $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+                DB::table('sales_invoices')
+                    ->where('reference_sales_invoice', $ref_invoice)
+                    ->update([
+                        'discount_choice' => $choise_dist,
+                        'discount_type' => $discount_set,
+                        'discount_value' => $discount_value,
+                        'sub_total' => $tot_excl_tax,
+                        'total' => $tot_incl_tax_input,
+                        'vat_amount' => $vat_apply_input,
+                        'amount_received' => $amount_received,
+                        'vat' => $vat_apply_change,
+                        'discount_apply_amount' => $discount_apply_input,
+                        'id_client' => $client_sales_invoice, 
+                        'id_fu' => $id_fu,
+                        'id_contact' => $client_contact_sales_invoice,
+                        'created_at' => $date_invoice,
+                        'due_date' => $due_date,
+                        'updated_at' => new \DateTimeImmutable,
+                        'is_proforma_inv' => $is_proforma,
+                ]);
 
-                return redirect()->route('app_proforma', ['id' => $id_entreprise, 'id2' => $id_fu ])
-                ->with('success', __('invoice.the_proforma_invoice_has_been_successfully_modified'));
+                if($is_proforma == 0)
+                {
+                    //Notification
+                    $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                    $description = "invoice.modified_an_invoice_in_the_functional_unit";
+                    $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+                    return redirect()->route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                    ->with('success', __('invoice.the_invoice_was_successfully_modified'));
+                }
+                else
+                {
+                    //Notification
+                    $url = route('app_info_proforma', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                    $description = "invoice.modified_a_proforma_invoice_in_the_functional_unit";
+                    $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+                    return redirect()->route('app_proforma', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                    ->with('success', __('invoice.the_proforma_invoice_has_been_successfully_modified'));
+                }
             }
+        }
+        else
+        {
+            return redirect()->back()
+                ->with('danger', __('invoice.please_include_at_least_one_item_in_the_invoice'))
+                ->withInput();
         }
     }
 
@@ -557,6 +637,7 @@ class SalesInvoiceController extends Controller
 
         $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
         $customer = DB::table('clients')->where('id', $invoice->id_client)->first();
+        $contact = DB::table('customer_contacts')->where('id', $invoice->id_contact)->first();
 
         $country = DB::table('countries')->where('id', $entreprise->id_country)->first();
 
@@ -618,7 +699,8 @@ class SalesInvoiceController extends Controller
             'encaissements',
             'paymentReceived', 
             'remainingBalance',
-            'paymentMethods'
+            'paymentMethods',
+            'contact'
         ));
     }
 
@@ -893,6 +975,21 @@ class SalesInvoiceController extends Controller
             'id' => $id_entreprise,
             'id2' => $id_fu,
             'ref_invoice' => $ref_invoice
+        ]);
+    }
+
+    public function getContactClientinvoice()
+    {
+        $id_client = $this->request->input('id_client');
+
+        $contacts = DB::table('customer_contacts')->where('id_client', $id_client)->get();
+        $contact_first = DB::table('customer_contacts')->where('id_client', $id_client)->first();
+
+        return response()->json([
+            'code' => 200, 
+            'status' => "success",
+            'contacts' => $contacts,
+            'contact_first' => $contact_first,
         ]);
     }
 }

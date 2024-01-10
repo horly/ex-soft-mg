@@ -14,11 +14,25 @@
                 <div class="mb-4 row">
                     <label for="client_sales_invoice" class="col-sm-2 col-form-label">{{ __('invoice.customer') }}*</label>
                     <div class="col-sm-4">
-                        <select class="form-select" name="client_sales_invoice" id="client_sales_invoice">
-                            <option value="" selected>{{ __('invoice.select_a_customer') }}</option>
+                        <select class="form-select @error('client_sales_invoice') is-invalid @enderror" name="client_sales_invoice" id="client_sales_invoice" url="{{ route('app_get_contact_client_invoice') }}" token="{{ csrf_token() }}">
+                            <option value="@if(Session::has('id_client')){{ Session::get('id_client') }}@endif" selected>
+                                @if(Session::has('entreprise_client'))
+                                    {{ Session::get('entreprise_client') }}
+                                @else
+                                    {{ __('invoice.select_a_customer') }}
+                                @endif
+                            </option>
+
                             @foreach ($clients as $client)
                                 <option value="{{ $client->id }}">
-                                    {{ $client->entreprise_name_cl }}
+                                    @if ($client->type == "particular")
+                                        @php
+                                            $contact = DB::table('customer_contacts')->where('id_client', $client->id)->first();
+                                        @endphp
+                                        {{ $contact->fullname_cl }}
+                                    @else
+                                        {{ $client->entreprise_name_cl }}
+                                    @endif
                                 </option>
                             @endforeach
                         </select>
@@ -27,8 +41,15 @@
                     <label for="client_contact_sales_invoice" class="col-sm-2 col-form-label">Contact*</label>
                     <div class="col-sm-4">
                         <select class="form-select" name="client_contact_sales_invoice" id="client_contact_sales_invoice">
-                            <option value="" selected>{{ __('client.select_a_contact') }}</option>
+                            <option value="@if(Session::has('id_contact')){{ Session::get('id_contact') }}@endif" selected>
+                                @if(Session::has('fullname_contact'))
+                                    {{ Session::get('fullname_contact') }}
+                                @else
+                                    {{ __('client.select_a_contact') }}
+                                @endif
+                            </option>
                         </select>
+                        <input type="hidden" id="client_select_a_contact" name="client_select_a_contact" value="{{ __('client.select_a_contact') }}">
                     </div>
                 </div>
 
@@ -94,7 +115,7 @@
                 </table>
 
                 <div class="mb-4 row">
-                    <label for="discount_invoice" class="col-sm-4 col-form-label">{{ __('invoice.apply_discount') }}</label>
+                    <label for="discount-yes" class="col-sm-4 col-form-label">{{ __('invoice.apply_discount') }}</label>
                     <div class="col-sm-8">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="discount_choise" id="discount-yes" onclick="choiseDiscount('yes');" value="yes">
@@ -108,7 +129,7 @@
                 </div>
 
                 <div class="mb-4 row d-none discount-zone">
-                    <label for="discount_invoice" class="col-sm-4 col-form-label">{{ __('invoice.discount') }}</label>
+                    <label for="discount-pourcentage" class="col-sm-4 col-form-label">{{ __('invoice.discount') }}</label>
                     <div class="col-sm-8">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="discount_set" id="discount-pourcentage" onclick="changeDiscountSet('%');"  value="%" checked>
@@ -122,7 +143,7 @@
                 </div>
 
                 <div class="mb-4 row d-none discount-zone">
-                    <label for="discount_invoice" class="col-sm-4 col-form-label">{{ __('invoice.discount_value') }}</label>
+                    <label for="discount_value" class="col-sm-4 col-form-label">{{ __('invoice.discount_value') }}</label>
                     <div class="col-sm-8">
                         <div class="input-group">
                             <input type="number" class="form-control" id="discount_value" onkeyup="changeDiscountValue('{{ route('app_change_discount_customer') }}', '{{ csrf_token() }}');" onchange="changeDiscountValue('{{ route('app_change_discount_customer') }}', '{{ csrf_token() }}');" name="discount_value" value="0">
@@ -133,7 +154,7 @@
 
 
                 <div class="mb-4 row">
-                    <label for="date_sales_invoice" class="col-sm-4 col-form-label">{{ __('invoice.vat') }}</label>
+                    <label for="vat-apply-change" class="col-sm-4 col-form-label">{{ __('invoice.vat') }}</label>
                     <div class="col-sm-8">
                         <div class="input-group mb-3">
                             <select class="form-select" name="vat-apply-change" id="vat-apply-change" onchange="changeVat('{{ route('app_change_vat') }}', '{{ csrf_token() }}');">
@@ -196,14 +217,14 @@
                 <div class="mb-4 row">
                     <label for="date_sales_invoice" class="col-sm-4 col-form-label">{{ __('invoice.date') }}*</label>
                     <div class="col-sm-8">
-                        <input type="date" class="form-control" id="date_sales_invoice" name="date_sales_invoice"  value="{{ date('Y-m-d') }}">
+                        <input type="date" class="form-control" id="date_sales_invoice" name="date_sales_invoice"  value="@if(Session::has('date_sales_invoice')){{ Session::get('date_sales_invoice') }}@else{{ date('Y-m-d') }}@endif">
                     </div>
                 </div>
 
                 <div class="mb-4 row">
                     <label for="due_date_sales_invoice" class="col-sm-4 col-form-label">{{ __('invoice.due_date') }}*</label>
                     <div class="col-sm-8">
-                        <input type="date" class="form-control" id="due_date_sales_invoice" name="due_date_sales_invoice"  value="{{ date('Y-m-d') }}">
+                        <input type="date" class="form-control" id="due_date_sales_invoice" name="due_date_sales_invoice"  value="@if(Session::has('due_date_sales_invoice')){{ Session::get('due_date_sales_invoice') }}@else{{ date('Y-m-d') }}@endif">
                     </div>
                 </div>
 
@@ -233,6 +254,9 @@
                 <input type="hidden" name="id_invoice_margin" id="id_invoice_margin" value="{{ $invoice_margin->id }}">
                 <input type="hidden" name="id_invoice_element" id="id_invoice_element" value="0">
                 <input type="hidden" name="is_an_article" id="is_an_article" value="1"> 
+
+                <input type="hidden" class="customer_session" name="id_customer_session_art" id="id_customer_session_art" value="0">
+                <input type="hidden" class="contact_session" name="id_contact_session_art" id="id_contact_session_art" value="0">
 
                 <div class="mb-4 row">
                     <label for="article_sales_invoice" class="col-sm-4 col-form-label">{{ __('invoice.article') }}*</label>
@@ -344,6 +368,9 @@
                 <input type="hidden" name="id_invoice_margin" id="id_invoice_margin" value="{{ $invoice_margin->id }}">
                 <input type="hidden" name="id_invoice_element" id="id_invoice_element" value="0">
                 <input type="hidden" name="is_an_article" id="is_an_article" value="0"> 
+
+                <input type="hidden" class="customer_session" name="id_customer_session_art" id="id_customer_session_art" value="0">
+                <input type="hidden" class="contact_session" name="id_contact_session_art" id="id_contact_session_art" value="0">
 
                 <div class="mb-4 row">
                     <label for="service_sales_invoice" class="col-sm-4 col-form-label">{{ __('invoice.service') }}*</label>

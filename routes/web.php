@@ -388,6 +388,7 @@ Route::controller(SalesInvoiceController::class)->group(function(){
         Route::post('/save_record_payment', 'saveRecordPayment')->name('app_save_record_payment');
 
         Route::post('/transform_invoice_simple', 'transformInvoiceSimple')->name('app_transform_invoice_simple');
+        Route::post('/get_contact_client_invoice', 'getContactClientinvoice')->name('app_get_contact_client_invoice');
     });
 });
 

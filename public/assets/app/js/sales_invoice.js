@@ -382,3 +382,50 @@ $('#record_payment_invoice').click(function(){
         $('#payment_methods_invoice_record').addClass('is-invalid');
     }
 });
+
+$('#client_sales_invoice').change(function(){
+    var value = $(this).val();
+    var url = $(this).attr('url');
+    var token = $(this).attr('token');
+
+    var contacts = $('#client_contact_sales_invoice');
+    contacts.html("");
+
+    //console.log(value);
+
+    if(value != 0)
+    {
+        $.ajax({
+            type: 'post',
+            url: url,
+            data: {
+                '_token' : token,
+                'id_client' : value,
+            },
+            success:function(response) {
+                //console.log(response);
+
+                var data = response.contacts;
+                var data_first = response.contact_first.id;
+
+                var listitems = "";
+                $.each(data, function(index, data){
+                    listitems += "<option value=" + data.id + ">" + data.fullname_cl + "</option>";
+                });
+                contacts.append(listitems);
+
+                $('.customer_session').val(value); //id_client pour enregistrer dans session
+                $('.contact_session').val(data_first); //id_contact pour enregistrer dans session
+            }
+        });
+    }
+    else
+    {
+        contacts.html("<option value=''>" + $('#client_select_a_contact').val() + "</option>");
+    }
+});
+
+$('#client_contact_sales_invoice').change(function(){
+    var value = $(this).val();
+    $('.contact_session').val(value); //id_contact pour enregistrer dans session
+});

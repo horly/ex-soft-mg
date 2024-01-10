@@ -132,19 +132,23 @@
     <div class="box small-text">
         <div class="key"></div>
         <div class="content"></div>
+        <div class="right"> 
+            {{ $contact->fullname_cl }}
+        </div>
+    </div>
+
+    <div class="box small-text">
+        <div class="key"></div>
+        <div class="content"></div>
         <div class="right">
-            @if ($customer->entreprise_name_cl == "-" || $customer->entreprise_name_cl == "")
-                {{ $customer->contact_name_cl }}
-            @else
-                {{ $customer->entreprise_name_cl }}
-            @endif
+            {{ $customer->entreprise_name_cl }}
         </div>
     </div>
 
     <div class="box mb-3 small-text">
         <div class="key"></div>
         <div class="content"></div>
-        <div class="right">{{ $customer->address_cl }}</div>
+        <div class="right">{{ $contact->address_cl }}</div>
     </div>
 
     <table class="table mb-3 small-text">

@@ -96,4 +96,6 @@
         'convert_to_simple_invoice' => "Convert to simple invoice",
         'add_a_new_contact' => "Add a new contact",
         'edit_contact' => "Edit contact",
+
+        'please_include_at_least_one_item_in_the_invoice' => "Please include at least one item in the invoice",
 ];

@@ -70,14 +70,14 @@
                                         </td>
                                         <td>{{ date('Y-m-d', strtotime($invoice->created_at)) }}</td>
                                         <td>
-                                            {{-- 
                                             @if ($invoice->entreprise_name_cl == "-" || $invoice->entreprise_name_cl == "")
-                                                {{ $invoice->contact_name_cl }}
+                                                @php
+                                                    $contact = DB::table('customer_contacts')->where('id', $invoice->id_contact)->first();
+                                                @endphp
+                                                {{ $contact->fullname_cl }}
                                             @else
                                                 {{ $invoice->entreprise_name_cl }}
                                             @endif
-                                            --}}
-                                            {{ $invoice->entreprise_name_cl }}
                                         </td>
                                         <td>{{ date('Y-m-d', strtotime($invoice->due_date)) }}</td>
                                         <td class="text-end">

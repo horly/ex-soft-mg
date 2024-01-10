@@ -65,34 +65,7 @@
                             {{ __('client.contact_name') }}
                         </div>
                         <div class="col-md-8 text-primary fw-bold">
-                            {{ $customer->contact_name_cl }}
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            {{ __('main.phone_number') }}
-                        </div>
-                        <div class="col-md-8 text-primary fw-bold">
-                            {{ $customer->phone_number_cl }}
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            {{ __('main.email_address') }}
-                        </div>
-                        <div class="col-md-8 text-primary fw-bold">
-                            {{ $customer->email_adress_cl }}
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            {{ __('main.address') }}
-                        </div>
-                        <div class="col-md-8 text-primary fw-bold">
-                            {{ $customer->address_cl }}
+                            {{ $contact->fullname_cl }}
                         </div>
                     </div>
 
