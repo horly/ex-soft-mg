@@ -163,13 +163,18 @@ class PaymentMethodesController extends Controller
                             ->where([
                                 'id_pay_meth' => $paymentMethod->id,
                             ])->sum('amount');
+        
+        $encaissement_exit = DB::table('encaissements')->where('id_pay_meth', $paymentMethod->id)->first();
+        //$decaissement_exit = DB::table('encaissements')->where('id_pay_meth', $paymentMethod->id)->first();
 
         return view('payment_methods.info_payment_methods', compact(
             'entreprise', 
             'functionalUnit', 
             'deviseGest',
             'paymentMethod',
-            'paymentReceived'
+            'paymentReceived',
+            'encaissement_exit',
+            //'decaissement_exit'
         ));
     }
 
@@ -215,12 +220,16 @@ class PaymentMethodesController extends Controller
                             ->where('devise_gestion_ufs.id', $paymentMethod->id_currency)
                             ->first();
 
+        $encaissement_exit = DB::table('encaissements')->where('id_pay_meth', $paymentMethod->id)->first();
+        //$decaissement_exit = DB::table('encaissements')->where('id_pay_meth', $paymentMethod->id)->first();
+
         return view('payment_methods.update_payment_methods', compact(
             'entreprise', 
             'functionalUnit', 
             'deviseGests',
             'paymentMethod',
-            'devisePaymethod'
+            'devisePaymethod',
+            'encaissement_exit'
         ));
     }
 }

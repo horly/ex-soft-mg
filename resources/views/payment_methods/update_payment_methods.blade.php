@@ -87,20 +87,32 @@
                             <div class="mb-4 row">
                                 <label for="devise_pay_meth" class="col-sm-4 col-form-label">{{ __('dashboard.currency') }}</label>
                                 <div class="col-sm-5">
-                                    <select class="form-select" name="devise_pay_meth" id="devise_pay_meth" name="devise_pay_meth">
-                                        @if (Config::get('app.locale') == 'en')
-                                            <option value="{{ $devisePaymethod->id }}" selected>{{ $devisePaymethod->iso_code }} - {{ $devisePaymethod->motto_en }}</option>
-                                            @foreach ($deviseGests as $devise)
-                                                <option value="{{ $devise->id }}">{{ $devise->iso_code }} - {{ $devise->motto_en }}</option>
-                                            @endforeach
-                                        @else
-                                            <option value="{{ $devisePaymethod->id }}" selected>{{ $devisePaymethod->iso_code }} - {{ $devisePaymethod->motto }}</option>
-                                            @foreach ($deviseGests as $devise)
-                                                <option value="{{ $devise->id }}">{{ $devise->iso_code }} - {{ $devise->motto }}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
+
+                                    @if ($encaissement_exit)
+                                        <select class="form-select" name="" id="" name="" disabled>
+                                            @if (Config::get('app.locale') == 'en')
+                                                <option value="{{ $devisePaymethod->id }}" selected>{{ $devisePaymethod->iso_code }} - {{ $devisePaymethod->motto_en }}</option>
+                                            @else
+                                                <option value="{{ $devisePaymethod->id }}" selected>{{ $devisePaymethod->iso_code }} - {{ $devisePaymethod->motto }}</option>
+                                            @endif
+                                        </select>
+                                    @else
+                                        <select class="form-select" name="devise_pay_meth" id="devise_pay_meth" name="devise_pay_meth">
+                                            @if (Config::get('app.locale') == 'en')
+                                                <option value="{{ $devisePaymethod->id }}" selected>{{ $devisePaymethod->iso_code }} - {{ $devisePaymethod->motto_en }}</option>
+                                                @foreach ($deviseGests as $devise)
+                                                    <option value="{{ $devise->id }}">{{ $devise->iso_code }} - {{ $devise->motto_en }}</option>
+                                                @endforeach
+                                            @else
+                                                <option value="{{ $devisePaymethod->id }}" selected>{{ $devisePaymethod->iso_code }} - {{ $devisePaymethod->motto }}</option>
+                                                @foreach ($deviseGests as $devise)
+                                                    <option value="{{ $devise->id }}">{{ $devise->iso_code }} - {{ $devise->motto }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    @endif
                                     <small class="text-danger">@error('devise_pay_meth') {{ $message }} @enderror</small>
+
                                 </div>
                                 <div class="col-sm-3 d-grid gap-2">
                                     <a href="{{ route('app_create_currency', ['id' => $entreprise->id, 'id2' => $functionalUnit->id ]) }}" class="btn btn-primary mb-3" role="button">

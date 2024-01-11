@@ -110,46 +110,54 @@
                                 </div>
                             </div>
 
-                            <div class="border-bottom mb-4 fw-bold">
+                            {{--<div class="border-bottom mb-4 fw-bold">
                                 {{ __('client.customer_contact_details') }}
-                            </div>
+                            </div>--}}
 
-                            <div class="mb-4 row">
+                            <div class="mb-4 row" hidden>
                                 <label for="full_name_cl" class="col-sm-4 col-form-label">{{ __('client.full_name') }}*</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control @error('full_name_cl') is-invalid @enderror" id="full_name_cl" name="full_name_cl" placeholder="{{ __('client.customers_full_name') }}" value="{{ $client->contact_name_cl }}">
+                                    <input type="text" class="form-control @error('full_name_cl') is-invalid @enderror" id="" name="full_name_cl" placeholder="{{ __('client.customers_full_name') }}" value="full name">
                                     <small class="text-danger">@error('full_name_cl') {{ $message }} @enderror</small>
                                 </div>
                             </div>
 
-                            <div class="mb-4 row">
+                            <div class="mb-4 row" hidden>
                                 <label for="grade_cl" class="col-sm-4 col-form-label">{{ __('client.grade') }}*</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control @error('grade_cl') is-invalid @enderror" id="grade_cl" name="grade_cl" placeholder="{{ __('client.customer_grade') }}" value="{{ $client->fonction_contact_cl }}">
+                                    <input type="text" class="form-control @error('grade_cl') is-invalid @enderror" id="" name="grade_cl" placeholder="{{ __('client.customer_grade') }}" value="grade_cl">
                                     <small class="text-danger">@error('grade_cl') {{ $message }} @enderror</small>
                                 </div>
                             </div>
 
-                            <div class="mb-4 row">
+                            <div class="mb-4 row" hidden>
+                                <label for="department_cl" class="col-sm-4 col-form-label">{{ __('client.department') }}*</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control @error('department_cl') is-invalid @enderror" id="" name="department_cl" placeholder="{{ __('client.contact_department') }}" value="department_cl">
+                                    <small class="text-danger">@error('department_cl') {{ $message }} @enderror</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-4 row" hidden>
                                 <label for="email_cl" class="col-sm-4 col-form-label">{{ __('main.email_address') }}*</label>
                                 <div class="col-sm-8">
-                                    <input type="email" class="form-control @error('email_cl') is-invalid @enderror" id="email_cl" name="email_cl" placeholder="{{ __('client.enter_the_customers_email_address') }}" value="{{ $client->email_adress_cl }}">
+                                    <input type="email" class="form-control @error('email_cl') is-invalid @enderror" id="" name="email_cl" placeholder="{{ __('client.enter_the_customers_email_address') }}" value="email_cl@exaample.com">
                                     <small class="text-danger">@error('email_cl') {{ $message }} @enderror</small>
                                 </div>
                             </div>
 
-                            <div class="mb-4 row">
+                            <div class="mb-4 row" hidden>
                                 <label for="phone_number_cl" class="col-sm-4 col-form-label">{{ __('main.phone_number') }}*</label>
                                 <div class="col-sm-8">
-                                    <input type="number" class="form-control @error('phone_number_cl') is-invalid @enderror" id="phone_number_cl" name="phone_number_cl" placeholder="{{ __('client.enter_the_customers_phone_number') }}" value="{{ $client->phone_number_cl }}">
+                                    <input type="number" class="form-control @error('phone_number_cl') is-invalid @enderror" id="" name="phone_number_cl" placeholder="{{ __('client.enter_the_customers_phone_number') }}" value="089876765">
                                     <small class="text-danger">@error('phone_number_cl') {{ $message }} @enderror</small>
                                 </div>
                             </div>
 
-                            <div class="mb-4 row">
+                            <div class="mb-4 row" hidden>
                                 <label for="address_cl" class="col-sm-4 col-form-label">{{ __('main.address') }}*</label>
                                 <div class="col-sm-8">
-                                  <textarea class="form-control  @error('address_cl') is-invalid @enderror" name="address_cl" id="address_cl" rows="4" placeholder="{{ __('client.enter_the_customers_business_address') }}">{{ $client->address_cl }}</textarea>
+                                  <textarea class="form-control  @error('address_cl') is-invalid @enderror" name="address_cl" id="" rows="4" placeholder="{{ __('client.enter_the_customers_business_address') }}">address_cl</textarea>
                                   <small class="text-danger">@error('address_cl') {{ $message }} @enderror</small>
                                 </div>
                             </div>
@@ -158,6 +166,15 @@
                             @include('button.save-button')
 
                         </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h6 class="border-bottom mb-4 fw-bold card-header">
+                        Contacts
+                    </h6>
+                    <div class="card-body">
+                        @include('client.commun.contact')
                     </div>
                 </div>
             </section>

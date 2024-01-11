@@ -154,7 +154,7 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                @if ($paymentMethod->default != 1)
+                                @if ($paymentMethod->default != 1 && !$encaissement_exit)
                                     <div class="d-grid gap-2">
                                         <button class="btn btn-danger" type="button" onclick="deleteElementThreeVal('{{ $paymentMethod->id }}', {{ $entreprise->id }}, {{ $functionalUnit->id }}, '{{ route('app_delete_payment_methods') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
                                             <i class="fa-solid fa-trash-can"></i>

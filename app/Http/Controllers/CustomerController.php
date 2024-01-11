@@ -124,37 +124,20 @@ class CustomerController extends Controller
         }
         else
         {
-            if($customer_type_cl == "company")
-            {
-                DB::table('clients')
-                ->where('id', $id_customer)
-                ->update([
-                    'type' => $customer_type_cl,
-                    'entreprise_name_cl' => $company_name_cl,
-                    'rccm_cl' => $company_rccm_cl,
-                    'id_nat_cl' => $company_id_nat_cl,
-                    'nif_cl' => $company_nif_cl,
-                    'account_num_cl' => $company_account_number_cl,
-                    'website_cl' => $company_website_cl,
-                    'updated_at' => new \DateTimeImmutable,
-                ]);
-            }
-            else
-            {
-                DB::table('clients')
-                ->where('id', $id_customer)
-                ->update([
-                    'type' => $customer_type_cl,
-                    'entreprise_name_cl' => "-",
-                    'rccm_cl' => "-",
-                    'id_nat_cl' => "-",
-                    'nif_cl' => "-",
-                    'account_num_cl' => "-",
-                    'website_cl' => "-",
-                    'updated_at' => new \DateTimeImmutable,
-                ]);
-            }
-
+            
+            DB::table('clients')
+            ->where('id', $id_customer)
+            ->update([
+                'type' => $customer_type_cl,
+                'entreprise_name_cl' => $company_name_cl,
+                'rccm_cl' => $company_rccm_cl,
+                'id_nat_cl' => $company_id_nat_cl,
+                'nif_cl' => $company_nif_cl,
+                'account_num_cl' => $company_account_number_cl,
+                'website_cl' => $company_website_cl,
+                'updated_at' => new \DateTimeImmutable,
+            ]);
+           
             //Notification
             $url = route('app_info_customer', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_customer]);
             $description = "client.updated_a_customer_from_functional_unit";
@@ -174,8 +157,42 @@ class CustomerController extends Controller
                     ->where('clients.id', $id3)->first();
 
         $contacts = DB::table('customer_contacts')->where('id_client', $client->id)->get();
+        $invoices = DB::table('clients')
+                        ->join('sales_invoices', 'clients.id', '=', 'sales_invoices.id_client')
+                        ->where([
+                            'sales_invoices.id_fu' => $functionalUnit->id,
+                            'sales_invoices.is_proforma_inv' => 0,
+                            'sales_invoices.id_client' => $client->id
+                        ])
+                        ->orderBy('sales_invoices.id', 'desc')
+                        ->get();
+                        
+        $invoices_proforma = DB::table('clients')
+                        ->join('sales_invoices', 'clients.id', '=', 'sales_invoices.id_client')
+                        ->where([
+                            'sales_invoices.id_fu' => $functionalUnit->id,
+                            'sales_invoices.is_proforma_inv' => 1,
+                            'sales_invoices.id_client' => $client->id
+                        ])
+                        ->orderBy('sales_invoices.id', 'desc')
+                        ->get();
 
-        return view('client.info_client', compact('entreprise', 'functionalUnit', 'client', 'contacts'));
+        $deviseGest = DB::table('devises')
+                        ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                        ->where([
+                            'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                            'devise_gestion_ufs.default_cur_manage' => 1,
+                ])->first();
+
+        return view('client.info_client', compact(
+            'entreprise', 
+            'functionalUnit', 
+            'client', 
+            'contacts', 
+            'invoices', 
+            'invoices_proforma',
+            'deviseGest',
+        ));
     }
 
     public function deleteClient()
@@ -201,8 +218,9 @@ class CustomerController extends Controller
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
         $client = DB::table('clients')->where('id', $id3)->first();
+        $contacts = DB::table('customer_contacts')->where('id_client', $client->id)->get();
 
-        return view('client.update_client', compact('entreprise', 'functionalUnit', 'client'));
+        return view('client.update_client', compact('entreprise', 'functionalUnit', 'client', 'contacts'));
     }
 
     public function addNewContactClient()

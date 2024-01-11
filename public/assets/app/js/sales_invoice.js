@@ -10,12 +10,14 @@ $('#service_sales_invoice').select2({
     width: '100%',
 });
 
-function setUpinvoice(id_functionalUnit, id_entreprise, token, url, is_proforma)
+function setUpinvoice(id_functionalUnit, id_entreprise, token, url, is_proforma, is_client_specific_invoice, id_client)
 {
     var inputs = '';
     inputs += '<input type="hidden" name="id_functionalUnit" value="' + id_functionalUnit + '" />' 
                 + '<input type="hidden" name="id_entreprise" value="' + id_entreprise + '" />'
                 + '<input type="hidden" name="is_proforma" value="' + is_proforma + '" />'
+                + '<input type="hidden" name="is_client_specific_invoice" value="' + is_client_specific_invoice + '" />'
+                + '<input type="hidden" name="id_client" value="' + id_client + '" />'
                 + '<input type="hidden" name="_token" value="' + token + '" />';
     
     $("body").append('<form action="' + url + '" method="POST" id="poster">' + inputs + '</form>');

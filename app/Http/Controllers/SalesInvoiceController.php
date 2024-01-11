@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-use Symfony\Component\Console\Input\Input;
 
 class SalesInvoiceController extends Controller
 {
@@ -63,7 +62,9 @@ class SalesInvoiceController extends Controller
     {
         $id_functionalUnit = $this->request->input('id_functionalUnit');
         $id_entreprise = $this->request->input('id_entreprise');
-        $is_proforma = $this->request->input('is_proforma');
+        $is_proforma = $this->request->input('is_proforma'); 
+        $is_client_specific_invoice = $this->request->input('is_client_specific_invoice');
+        $id_client = $this->request->input('id_client');
 
         if(Session::has('id_client') || 
             Session::has('entreprise_client') ||
@@ -80,6 +81,24 @@ class SalesInvoiceController extends Controller
             Session::forget('fullname_contact');
             Session::forget('date_sales_invoice');
             Session::forget('due_date_sales_invoice');
+        }
+
+        /**
+         * si la création de la facture a été declenché 
+         * à partir de la section info client
+         */
+        if($is_client_specific_invoice != 0 && $id_client != 0) 
+        {
+            $client = DB::table('clients')->where('id', $id_client)->first();
+            $contact = DB::table('customer_contacts')->where('id_client', $id_client)->first();
+
+            $this->request->session()->put('id_client', $client->id);
+            $client->type == 'particular' 
+                ? $this->request->session()->put('entreprise_client', $contact->fullname_cl)
+                : $this->request->session()->put('entreprise_client', $client->entreprise_name_cl);   
+
+            $this->request->session()->put('id_contact', $contact->id);
+            $this->request->session()->put('fullname_contact', $contact->fullname_cl); 
         }
 
         if($is_proforma == 0)
@@ -886,6 +905,7 @@ class SalesInvoiceController extends Controller
 
         $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
         $customer = DB::table('clients')->where('id', $invoice->id_client)->first();
+        $contact = DB::table('customer_contacts')->where('id', $invoice->id_contact)->first();
 
         $country = DB::table('countries')->where('id', $entreprise->id_country)->first();
 
@@ -947,7 +967,8 @@ class SalesInvoiceController extends Controller
             'encaissements',
             'paymentReceived', 
             'remainingBalance',
-            'paymentMethods'
+            'paymentMethods',
+            'contact'
         ));
     }
 

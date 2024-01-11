@@ -83,7 +83,7 @@
                                             {{ number_format(0, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
                                         </td>
                                         <td class="text-end">
-                                            {{ number_format(0, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
+                                            {{ number_format($paymentReceived - 0, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
                                         </td>
                                         <td class="text-center">
                                             <a href="{{ route('app_info_payment_methods', [

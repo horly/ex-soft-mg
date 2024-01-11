@@ -39,7 +39,7 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        <a href="#" onclick="setUpinvoice('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_invoice') }}', '{{ 1 }}')" class="btn btn-primary mb-3" role="button">
+                        <a href="#" onclick="setUpinvoice('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_invoice') }}', '{{ 1 }}', '{{ 0 }}', '{{ 0 }}')" class="btn btn-primary mb-3" role="button">
                             <i class="fa-solid fa-circle-plus"></i> 
                             &nbsp;{{ __('auth.add') }}
                         </a>
@@ -70,7 +70,10 @@
                                         <td>{{ date('Y-m-d', strtotime($invoice->created_at)) }}</td>
                                         <td>
                                             @if ($invoice->entreprise_name_cl == "-" || $invoice->entreprise_name_cl == "")
-                                                {{ $invoice->contact_name_cl }}
+                                                @php
+                                                    $contact = DB::table('customer_contacts')->where('id', $invoice->id_contact)->first();
+                                                @endphp
+                                                {{ $contact->fullname_cl }}
                                             @else
                                                 {{ $invoice->entreprise_name_cl }}
                                             @endif
