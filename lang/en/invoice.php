@@ -98,4 +98,26 @@
         'edit_contact' => "Edit contact",
 
         'please_include_at_least_one_item_in_the_invoice' => "Please include at least one item in the invoice",
+
+        'delivery_notes_list' => "delivery notes list",
+        'add_a_delivery_note' => "Add a delivery note",
+
+        'serial_number' => "Serial number",
+        'enter_a_serial_number' => "Enter a serial number",
+        'enter_a_serial_number_please' => "Enter a serial number please!",
+        'add_serial_number' => "Add serial number",
+        'update_serial_number' => "Update serial number",
+
+        'delivery_note_added_successfully' => "Delivery note added successfully!",
+        'added_a_delivery_note' => "added a delivery note",
+
+        'delivery_note_modified_successfully' => "Delivery note modified successfully",
+        'modified_a_delivery_note' => "modified a delivery note",
+
+        'delivery_note_details' => "Delivery note details",
+        'deleted_a_delivery_note' => "deleted a delivery note",
+        'delivery_note_successfully_deleted' => "Delivery note successfully deleted",
+
+        'delivery_note_MAJ' => "DELIVERY NOTE",
+        'for' => "For",
 ];

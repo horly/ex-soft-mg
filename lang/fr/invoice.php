@@ -98,4 +98,26 @@
         'edit_contact' => "Modifier le contact",
 
         'please_include_at_least_one_item_in_the_invoice' => "Veuillez inclure au moins un élément dans la facture",
+
+        'delivery_notes_list' => "Liste des bons de livraison",
+        'add_a_delivery_note' => "Ajouter un bon de livraison",
+
+        'serial_number' => "Numéro de série",
+        'enter_a_serial_number' => "Entrez un numéro de série",
+        'enter_a_serial_number_please' => "Veuillez entrez un numéro de série",
+        'add_serial_number' => "Ajouter un muméro de série",
+        'update_serial_number' => "Modifier un muméro de série",
+
+        'delivery_note_added_successfully' => "Bon de livraison ajouté avec succès!",
+        'added_a_delivery_note' => "a ajouté un bon de livraison",
+
+        'delivery_note_modified_successfully' => "Bon de livraison modifié avec succès",
+        'modified_a_delivery_note' => "a modifié un bon de livraison",
+
+        'delivery_note_details' => "Détails du bon de livraison",
+        'deleted_a_delivery_note' => "a supprimé un bon de livraison",
+        'delivery_note_successfully_deleted' => "Bon de livraison supprimé avec succès",
+
+        'delivery_note_MAJ' => "BON DE LIVRAISON",
+        'for' => "Pour",
     ];

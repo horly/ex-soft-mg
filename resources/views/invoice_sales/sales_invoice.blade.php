@@ -39,7 +39,7 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        <a href="#" onclick="setUpinvoice('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_invoice') }}', '{{ 0 }}', '{{ 0 }}', '{{ 0 }}')" class="btn btn-primary mb-3" role="button">
+                        <a href="#" onclick="setUpinvoice('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_invoice') }}', '{{ 0 }}', '{{ 0 }}', '{{ 0 }}', '{{ 0 }}')" class="btn btn-primary mb-3" role="button">
                             <i class="fa-solid fa-circle-plus"></i> 
                             &nbsp;{{ __('auth.add') }}
                         </a>

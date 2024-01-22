@@ -176,7 +176,7 @@
                                 <div class="tab-pane fade" id="proforma_invoice" role="tabpanel"
                                     aria-labelledby="profile-tab">
                                     
-                                    <a href="#" onclick="setUpinvoice('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_invoice') }}', '{{ 1 }}', '{{ 1 }}', '{{ $client->id }}')" class="btn btn-primary mb-3" role="button">
+                                    <a href="#" onclick="setUpinvoice('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_invoice') }}', '{{ 1 }}', '{{ 1 }}', '{{ 0 }}', '{{ $client->id }}')" class="btn btn-primary mb-3" role="button">
                                         <i class="fa-solid fa-circle-plus"></i> 
                                         &nbsp;{{ __('auth.add') }}
                                     </a>
@@ -243,7 +243,7 @@
                                 <div class="tab-pane fade" id="sales_invoice" role="tabpanel"
                                     aria-labelledby="profile-tab">
                                     
-                                    <a href="#" onclick="setUpinvoice('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_invoice') }}', '{{ 0 }}', '{{ 1 }}', '{{ $client->id }}')" class="btn btn-primary mb-3" role="button">
+                                    <a href="#" onclick="setUpinvoice('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_invoice') }}', '{{ 0 }}', '{{ 1 }}', '{{ 0 }}', '{{ $client->id }}')" class="btn btn-primary mb-3" role="button">
                                         <i class="fa-solid fa-circle-plus"></i> 
                                         &nbsp;{{ __('auth.add') }}
                                     </a>

@@ -40,4 +40,9 @@ class InvoiceElement extends Model
     {
         return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');
     }
+
+    public function serialnumber()
+    {
+        return $this->hasMany('App\Models\SerialNumberInvoice');
+    }
 }

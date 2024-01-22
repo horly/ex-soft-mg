@@ -372,6 +372,10 @@ Route::controller(SalesInvoiceController::class)->group(function(){
                 Route::get('/add_new_proforma/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewProforma')->name('app_add_new_proforma');
                 Route::get('/info_proforma/{id:int}/{id2:int}/{ref_invoice:string}', 'infoProforma')->name('app_info_proforma');
                 Route::get('/update_proforma/{id:int}/{id2:int}/{id3:int}', 'updateProforma')->name('app_update_proforma');
+
+                Route::get('/delivery_note/{id:int}/{id2:int}', 'deliveryNote')->name('app_delivery_note');
+                Route::get('/add_new_delivery_note/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewDeliveryNote')->name('app_add_new_delivery_note');
+                Route::get('/info_delivery_note/{id:int}/{id2:int}/{ref_invoice:string}', 'infoDeliveryNote')->name('app_info_delivery_note');
             });
         });
 
@@ -389,6 +393,8 @@ Route::controller(SalesInvoiceController::class)->group(function(){
 
         Route::post('/transform_invoice_simple', 'transformInvoiceSimple')->name('app_transform_invoice_simple');
         Route::post('/get_contact_client_invoice', 'getContactClientinvoice')->name('app_get_contact_client_invoice');
+        Route::post('/add_serial_number_invoice', 'addSerialNumberinvoice')->name('app_add_serial_number_invoice');
+        Route::post('/delete_serial_number_invoice', 'deleteSerialNumberInvoice')->name('app_delete_serial_number_invoice');
     });
 });
 
@@ -412,4 +418,5 @@ Route::controller(SalesInvoiceController::class)->group(function(){
 
 Route::controller(DomPdfController::class)->group(function(){
     Route::get('/invoice_pdf/{id:int}/{id2:int}/{ref_invoice:string}', 'invoicePdf')->name('app_invoice_pdf');
+    Route::get('/delivery_note_pdf/{id:int}/{id2:int}/{ref_invoice:string}', 'deliveryNotePdf')->name('app_delivery_note_pdf');
 });

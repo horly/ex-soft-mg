@@ -222,7 +222,11 @@
                                                 Request::route()->getName() == "app_proforma" ||
                                                 Request::route()->getName() == "app_add_new_proforma" ||
                                                 Request::route()->getName() == "app_info_proforma" ||
-                                                Request::route()->getName() == "app_update_proforma") 
+                                                Request::route()->getName() == "app_update_proforma" ||
+                                            
+                                                Request::route()->getName() == "app_delivery_note" ||  
+                                                Request::route()->getName() == "app_add_new_delivery_note" ||
+                                                Request::route()->getName() == "app_info_delivery_note")
                                                     active 
                                             @endif  has-sub">
                     <a href="#" class='sidebar-link'>
@@ -237,7 +241,11 @@
                                             Request::route()->getName() == "app_proforma" ||
                                             Request::route()->getName() == "app_add_new_proforma" ||
                                             Request::route()->getName() == "app_info_proforma" ||
-                                            Request::route()->getName() == "app_update_proforma") 
+                                            Request::route()->getName() == "app_update_proforma" ||
+                                            
+                                            Request::route()->getName() == "app_delivery_note" ||  
+                                            Request::route()->getName() == "app_add_new_delivery_note" ||
+                                            Request::route()->getName() == "app_info_delivery_note")
                                                 active 
                                         @endif">
                         <li class="submenu-item @if(Request::route()->getName() == "app_sales_invoice") active @endif">
@@ -250,14 +258,20 @@
                                 {{ __('dashboard.proforma_invoice') }}
                             </a>
                         </li>
+                        {{--
                         <li class="submenu-item ">
                             <a href="#">{{ __('dashboard.credit_invoice_sale') }}</a>
                         </li>
+                        --}}
+                        {{--
                         <li class="submenu-item ">
                             <a href="#">{{ __('dashboard.offers_quotes') }}</a>
                         </li>
-                        <li class="submenu-item ">
-                            <a href="#">{{ __('dashboard.delivery_note') }}</a>
+                        --}}
+                        <li class="submenu-item @if(Request::route()->getName() == "app_delivery_note") active @endif">
+                            <a href="{{ route('app_delivery_note', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('dashboard.delivery_note') }}
+                            </a>
                         </li>
                     </ul>
                 </li>

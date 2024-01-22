@@ -162,6 +162,7 @@ class CustomerController extends Controller
                         ->where([
                             'sales_invoices.id_fu' => $functionalUnit->id,
                             'sales_invoices.is_proforma_inv' => 0,
+                            'sales_invoices.is_delivery_note' => 0,
                             'sales_invoices.id_client' => $client->id
                         ])
                         ->orderBy('sales_invoices.id', 'desc')

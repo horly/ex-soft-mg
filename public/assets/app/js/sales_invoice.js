@@ -10,13 +10,14 @@ $('#service_sales_invoice').select2({
     width: '100%',
 });
 
-function setUpinvoice(id_functionalUnit, id_entreprise, token, url, is_proforma, is_client_specific_invoice, id_client)
+function setUpinvoice(id_functionalUnit, id_entreprise, token, url, is_proforma, is_client_specific_invoice, is_delivery_note, id_client)
 {
     var inputs = '';
     inputs += '<input type="hidden" name="id_functionalUnit" value="' + id_functionalUnit + '" />' 
                 + '<input type="hidden" name="id_entreprise" value="' + id_entreprise + '" />'
                 + '<input type="hidden" name="is_proforma" value="' + is_proforma + '" />'
                 + '<input type="hidden" name="is_client_specific_invoice" value="' + is_client_specific_invoice + '" />'
+                + '<input type="hidden" name="is_delivery_note" value="' + is_delivery_note + '" />'
                 + '<input type="hidden" name="id_client" value="' + id_client + '" />'
                 + '<input type="hidden" name="_token" value="' + token + '" />';
     
@@ -431,3 +432,68 @@ $('#client_contact_sales_invoice').change(function(){
     var value = $(this).val();
     $('.contact_session').val(value); //id_contact pour enregistrer dans session
 });
+
+function modalInsertSerialNumberInvoice(id_inv_elemnt, description, qty)
+{
+    $('.modal #insert_serial_number_invoice-modal-title').text($('#add_serial_number_title').val())
+
+    $('#modalRequest-serial_number_invoice').val('add');
+    $('#id_invoice_element_sn').val(id_inv_elemnt);
+    $('#article_serial_number_invoice').val(description);
+    $('#quantity_serial_number_invoice').val(qty);
+    $('#id_serial_number_invoice').val(0);
+    $('#serial_number_invoice').val("");
+    $('#serial_number_invoice-error').text("");
+}
+
+function modalUpdateSerialNumberInvoice(id_inv_elemnt, description, qty, id_sn, sn, loop)
+{
+    $('.modal #insert_serial_number_invoice-modal-title').text($('#update_serial_number_title').val())
+
+    $('#modalRequest-serial_number_invoice').val('edit');
+    $('#id_invoice_element_sn').val(id_inv_elemnt);
+    $('#article_serial_number_invoice').val(description);
+    $('#quantity_serial_number_invoice').val(qty);
+    $('#id_serial_number_invoice').val(id_sn);
+    $('#serial_number_invoice-iteration').text(loop + "-");
+    $('#serial_number_invoice').val(sn);
+    $('#serial_number_invoice-error').text("");
+}
+
+function addserialNumberInvoice(id) {
+    var serial_number_invoice = $('#serial_number_invoice_' + id);
+    var form = $('#serial_number_invoice-form');
+
+    console.log(serial_number_invoice.val());
+
+    if(serial_number_invoice.val() != "")
+    {
+        serial_number_invoice.removeClass('is-invalid');
+        $('#serial_number_invoice-error_' + id).text("");
+
+        form.submit();
+    }
+    else
+    {
+        serial_number_invoice.addClass('is-invalid');
+        $('#serial_number_invoice-error_' + id).text($('#serial_number_invoice-message').val());
+    }
+};
+
+$('#insert-serial-number-invoice').click(function(){
+    var serial_number_invoice = $('#serial_number_invoice');
+    var form_serial_number_invoice = $('#form_serial_number_invoice'); 
+
+    if(serial_number_invoice.val() != ""){
+        serial_number_invoice.removeClass('is-invalid');
+        $('#serial_number_invoice-error').text("");
+
+        form_serial_number_invoice.submit();
+
+    }else{
+        serial_number_invoice.addClass('is-invalid');
+        $('#serial_number_invoice-error').text($('#serial_number_invoice-message').val());
+    }
+});
+
+

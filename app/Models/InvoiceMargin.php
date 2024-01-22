@@ -15,6 +15,8 @@ class InvoiceMargin extends Model
         'ref_invoice',
         'margin',
         'is_proforma',
+        'is_delivery_note_marge',
+        'is_simple_invoice_inv',
         'invoice_saved',
         'id_user',
         'id_fu',

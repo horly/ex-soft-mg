@@ -10,6 +10,8 @@
                 <input type="hidden" name="ref_invoice" value="{{ $ref_invoice }}">
                 <input type="hidden" name="customerRequest" id="customerRequest" value="add">
                 <input type="hidden" name="is_proforma" value="{{ $invoice_margin->is_proforma }}">
+                <input type="hidden" name="is_delivery_note_marge" value="{{ $invoice_margin->is_delivery_note_marge }}">
+                <input type="hidden" name="is_simple_invoice_inv" value="{{ $invoice_margin->is_simple_invoice_inv }}">
 
                 <div class="mb-4 row">
                     <label for="client_sales_invoice" class="col-sm-2 col-form-label">{{ __('invoice.customer') }}*</label>
