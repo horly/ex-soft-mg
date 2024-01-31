@@ -223,7 +223,7 @@
                     </table>
 
                     <div class="row">
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-4 mb-3">
                             
                             @if ($paymentReceived == $invoice->total && $remainingBalance == 0 )
                                 <div class="d-grid gap-2">
@@ -243,7 +243,7 @@
                             
                         </div>
 
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-4 mb-3">
                             <div class="d-grid gap-2">
                                 <a class="btn btn-primary" role="button" href="/invoice_pdf/{{ $entreprise->id }}/{{ $functionalUnit->id }}/{{ $invoice->reference_sales_invoice }}" target="_blank">
                                     <i class="fa-solid fa-print"></i>
@@ -252,7 +252,16 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-4 mb-3">
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-primary" role="button" href="#" onclick="generateDeliveryNote('{{ $invoice->reference_sales_invoice }}', '{{ $entreprise->id }}', '{{ $functionalUnit->id }}', '{{ csrf_token() }}', '{{ route('app_generate_delivery_note') }}')">
+                                    <i class="fa-solid fa-file-invoice"></i>
+                                    {{ __('dashboard.delivery_note') }}
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
                             @if ($paymentReceived != 0 )
                                 <div class="d-grid gap-2">
                                     <button class="btn btn-success" type="button" disabled>
@@ -270,7 +279,7 @@
                             @endif
                         </div>
 
-                        <div class="col-md-3 mb-3">
+                        <div class="col-md-6 mb-3">
                             @if ($paymentReceived != 0 )
                                 <div class="d-grid gap-2">
                                     <button class="btn btn-danger" type="button" disabled>

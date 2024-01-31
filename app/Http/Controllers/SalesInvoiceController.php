@@ -110,7 +110,6 @@ class SalesInvoiceController extends Controller
             $invoice_margin_not_saved = DB::table('invoice_margins')
             ->where([
                 'invoice_saved' => 0,
-                'id_user' => Auth::user()->id,
                 'is_proforma' => 1,
                 'is_simple_invoice_inv' => 0,
                 'id_fu' => $id_functionalUnit,
@@ -137,7 +136,7 @@ class SalesInvoiceController extends Controller
                     'id' => $id_entreprise, 
                     'id2' => $id_functionalUnit,
                     'ref_invoice' => $refInvoice,
-            ]); 
+                ]); 
             }
             else
             {
@@ -153,7 +152,6 @@ class SalesInvoiceController extends Controller
             $invoice_margin_not_saved = DB::table('invoice_margins')
             ->where([
                 'invoice_saved' => 0,
-                'id_user' => Auth::user()->id,
                 'is_delivery_note_marge' => 1,
                 'is_simple_invoice_inv' => 0,
                 'id_fu' => $id_functionalUnit,
@@ -197,7 +195,6 @@ class SalesInvoiceController extends Controller
             $invoice_margin_not_saved = DB::table('invoice_margins')
             ->where([
                 'invoice_saved' => 0,
-                'id_user' => Auth::user()->id,
                 'is_proforma' => 0,
                 'is_delivery_note_marge' => 0,
                 'is_simple_invoice_inv' => 1,
@@ -260,7 +257,6 @@ class SalesInvoiceController extends Controller
         $invoice_margin = DB::table('invoice_margins')
                         ->where([
                             'ref_invoice' => $ref_invoice,
-                            'is_proforma' => 0,
                             'id_fu' => $id2,
                         ])->first();
         
@@ -1320,5 +1316,25 @@ class SalesInvoiceController extends Controller
             'paymentMethods',
             'contact'
         ));
+    }
+
+    public function generateDeliveryNote()
+    {
+        $ref_invoice = $this->request->input('ref_invoice'); 
+        $id_functionalUnit = $this->request->input('id_functionalUnit');
+        $id_entreprise = $this->request->input('id_entreprise');
+
+        DB::table('sales_invoices')
+            ->where('reference_sales_invoice', $ref_invoice)
+            ->update([
+                'is_delivery_note' => 1,
+                'updated_at' => new \DateTimeImmutable,
+        ]);
+
+        return redirect()->route('app_info_delivery_note', [
+            'id' => $id_entreprise,
+            'id2' => $id_functionalUnit,
+            'ref_invoice' => $ref_invoice
+        ]);
     }
 }

@@ -192,4 +192,14 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Encaissement');
     }
+
+    public function purchase()
+    {
+        return $this->hasMany('App\Models\Purchase');
+    }
+
+    public function purchaseMargin()
+    {
+        return $this->hasMany('App\Models\PurchaseMargin');
+    }
 }

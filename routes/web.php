@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DebtorController;
 use App\Http\Controllers\DomPdfController;
 use App\Http\Controllers\EntrepriseController;
+use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\FpdfController;
 use App\Http\Controllers\FunctionalUnitController;
 use App\Http\Controllers\HomeController;
@@ -395,6 +396,7 @@ Route::controller(SalesInvoiceController::class)->group(function(){
         Route::post('/get_contact_client_invoice', 'getContactClientinvoice')->name('app_get_contact_client_invoice');
         Route::post('/add_serial_number_invoice', 'addSerialNumberinvoice')->name('app_add_serial_number_invoice');
         Route::post('/delete_serial_number_invoice', 'deleteSerialNumberInvoice')->name('app_delete_serial_number_invoice');
+        Route::post('/generate_delivery_note', 'generateDeliveryNote')->name('app_generate_delivery_note');
     });
 });
 
@@ -419,4 +421,18 @@ Route::controller(SalesInvoiceController::class)->group(function(){
 Route::controller(DomPdfController::class)->group(function(){
     Route::get('/invoice_pdf/{id:int}/{id2:int}/{ref_invoice:string}', 'invoicePdf')->name('app_invoice_pdf');
     Route::get('/delivery_note_pdf/{id:int}/{id2:int}/{ref_invoice:string}', 'deliveryNotePdf')->name('app_delivery_note_pdf');
+});
+
+Route::controller(ExpensesController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                Route::get('/purchases/{id:int}/{id2:int}', 'purchases')->name('app_purchases');
+                Route::get('/add_new_purchase/{id:int}/{id2:int}/{ref_purchase:string}', 'addNewPurchase')->name('app_add_new_purchase');
+            });
+        });
+
+        Route::post('/setup_purchase', 'setUpPurchase')->name('app_setup_purchase');
+        Route::post('/upload_purchase_pdf', 'uploadPurchasePdf')->name('app_upload_purchase_pdf');
+    });
 });

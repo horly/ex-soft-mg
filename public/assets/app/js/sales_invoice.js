@@ -496,4 +496,15 @@ $('#insert-serial-number-invoice').click(function(){
     }
 });
 
+function generateDeliveryNote(ref_invoice, id_entreprise, id_functionalUnit, token, url){
+    var inputs = '';
+    inputs += '<input type="hidden" name="_token" value="' + token + '" />' 
+                + '<input type="hidden" name="id_functionalUnit" value="' + id_functionalUnit + '" />' 
+                + '<input type="hidden" name="id_entreprise" value="' + id_entreprise + '" />'
+                + '<input type="hidden" name="ref_invoice" value="' + ref_invoice + '" />';
+    
+    $("body").append('<form action="' + url + '" method="POST" id="poster">' + inputs + '</form>');
+    $("#poster").submit();
+}
+
 

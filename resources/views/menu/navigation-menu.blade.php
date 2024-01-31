@@ -276,18 +276,28 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item  @if(Request::route()->getName() == "app_purchases" || 
+                                                Request::route()->getName() == "app_add_new_purchase")
+                                                    active 
+                                            @endif has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-file-invoice"></i>
                         <span>{{ __('dashboard.expenses') }}</span>
                     </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="#">{{ __('dashboard.purchases') }}</a>
+                    <ul class="submenu @if(Request::route()->getName() == "app_purchases" || 
+                                             Request::route()->getName() == "app_add_new_purchase") 
+                                                active 
+                                        @endif">
+                        <li class="submenu-item @if(Request::route()->getName() == "app_purchases") active @endif">
+                            <a href="{{ route('app_purchases', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('dashboard.purchases') }}
+                            </a>
                         </li>
+                        {{--
                         <li class="submenu-item ">
                             <a href="#">{{ __('dashboard.credit_invoice_purchases') }}</a>
                         </li>
+                        --}}
                         <li class="submenu-item ">
                             <a href="#">{{ __('dashboard.order') }}</a>
                         </li>

@@ -40,4 +40,9 @@ class Supplier extends Model
     {
         return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');
     }
+
+    public function purchase()
+    {
+        return $this->hasMany('App\Models\Purchase');
+    }
 }
