@@ -35,7 +35,10 @@ class EntrepriseController extends Controller
             ? $functionalUnits = DB::table('functional_units')->where('id_entreprise', $entreprise->id)->get() 
             : $functionalUnits = DB::table('manage_f_u_s')
                                     ->join('functional_units', 'manage_f_u_s.id_fu', '=', 'functional_units.id')
-                                    ->where('functional_units.id_entreprise', $entreprise->id)
+                                    ->where([
+                                        'functional_units.id_entreprise' => $entreprise->id, 
+                                        'manage_f_u_s.id_user' => $user->id
+                                    ])
                                     ->get();
 
         return view('entreprise.entreprise', compact('entreprise', 'functionalUnits'));
