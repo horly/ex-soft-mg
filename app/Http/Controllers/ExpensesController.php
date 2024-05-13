@@ -228,6 +228,8 @@ class ExpensesController extends Controller
         $ref_purchase =  $this->request->input('ref_purchase');
         $file = $ref_purchase . '.' . $this->request->file_purchase->getClientOriginalExtension();
 
+        //$this->request->file_purchase->move(base_path() . '/public_html/assets/img/purchase/', $file);
+
         $this->request->file_purchase->move(public_path('/assets/img/purchase/'), $file);
 
         return response()->json([

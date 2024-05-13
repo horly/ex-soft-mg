@@ -50,7 +50,7 @@ class ProfileController extends Controller
         {
             //on hashe uplodad_profile + le md5 uniqid + l'id de l'utilisateur
             $image_hash = 'upload_profile' . md5(uniqid()) . $id_entreprise;
-            //$folderPath = base_path() . '/public_html/images/profile/';
+            //$folderPath = base_path() . '/public_html/assets/img/logo/entreprise/';
             $folderPath = public_path() . '/assets/img/logo/entreprise/';
 
             $image_parts = explode(";base64,", $image);
@@ -76,7 +76,7 @@ class ProfileController extends Controller
         {
             //on hashe uplodad_profile + le md5 uniqid + l'id de l'utilisateur
             $image_hash = 'upload_profile' . md5(uniqid()) . $id_user;
-            //$folderPath = base_path() . '/public_html/images/profile/';
+            //$folderPath = base_path() . '/public_html/assets/img/profile/';
             $folderPath = public_path() . '/assets/img/profile/';
 
             $image_parts = explode(";base64,", $image);
@@ -88,7 +88,7 @@ class ProfileController extends Controller
                 ->where('id', $id_user)
                 ->update([
                 'photo_profile_url' => $image_hash,
-                'photo_profile_url' => $image,
+                'photo_profile_base64' => $image,
                 'updated_at' => new \DateTimeImmutable
             ]);
 

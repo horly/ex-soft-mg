@@ -15,6 +15,7 @@ class FunctionalUnit extends Model
         'name',
         'address',
         'id_entreprise',
+        'sub_id',
     ];
 
     /** Une entreprise appartient à un subscription */
