@@ -14,6 +14,7 @@ class SalesInvoice extends Model
     protected $fillable = [
         'reference_sales_invoice',
         'reference_number',
+        'concern_invoice',
         'sub_total',
         'total',
         'vat_amount',
@@ -42,7 +43,7 @@ class SalesInvoice extends Model
     {
         return $this->belongsTo('App\Models\User', 'id_user');
     }
- 
+
     function functionalUit()
     {
         return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');

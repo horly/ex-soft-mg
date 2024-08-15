@@ -55,6 +55,14 @@
                     </div>
                 </div>
 
+                <div class="row mb-4">
+                    <label for="" class="col-sm-2 col-form-label">{{ __('invoice.concern') }}*</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="invoice_concern_sales" id="invoice_concern_sales" class="form-control @error('invoice_concern_sales') is-invalid @enderror" placeholder="{{ __('invoice.enter_the_invoice_subject') }}" value="@if(Session::has('invoice_concern_sales')){{ Session::get('invoice_concern_sales') }}@endif">
+                        <small class="text-danger">@error('invoice_concern_sales') {{ $message }} @enderror</small>
+                    </div>
+                </div>
+
                 <table class="table border table-striped">
                     <thead>
                       <tr>
@@ -96,7 +104,7 @@
                             </div>
                         @endforeach
                     </tbody>
-                    
+
                 </table>
 
                 <table class="table border mb-4">
@@ -104,11 +112,11 @@
                         <tr>
                             <td>
                                 <button class="btn btn-primary" type="button" onclick="modalInsertArticleInvoice();" data-bs-toggle="modal" data-bs-target="#new_article_invoice">
-                                    <i class="fa-solid fa-circle-plus"></i> 
+                                    <i class="fa-solid fa-circle-plus"></i>
                                     &nbsp;{{ __('invoice.insert_an_article') }}
                                 </button>
                                 <button class="btn btn-primary" type="button" onclick="modalInsertServiceInvoice();" data-bs-toggle="modal" data-bs-target="#new_service_invoice">
-                                    <i class="fa-solid fa-circle-plus"></i> 
+                                    <i class="fa-solid fa-circle-plus"></i>
                                     &nbsp;{{ __('invoice.insert_a_service') }}
                                 </button>
                             </td>
@@ -211,7 +219,7 @@
                             <input type="hidden" name="discount_apply_input" id="discount_apply_input" value="0">
                             <input type="hidden" name="vat_apply_input" id="vat_apply_input" value="0">
                             <input type="hidden" name="tot_incl_tax_input" id="tot_incl_tax_input" value="{{ $tot_excl_tax }}">
-                            <input type="hidden" name="amount_received" id="amount_received" value="0"> 
+                            <input type="hidden" name="amount_received" id="amount_received" value="0">
                         </div>
                     </tbody>
                 </table>
@@ -230,8 +238,8 @@
                     </div>
                 </div>
 
-                 {{-- button de sauvegarde --}}
-                 @include('button.save-button')
+                {{-- button de sauvegarde --}}
+                @include('button.save-button')
 
             </form>
         </div>
@@ -255,7 +263,7 @@
                 <input type="hidden" name="descrption_saved_art" id="descrption_saved_art" value="">
                 <input type="hidden" name="id_invoice_margin" id="id_invoice_margin" value="{{ $invoice_margin->id }}">
                 <input type="hidden" name="id_invoice_element" id="id_invoice_element" value="0">
-                <input type="hidden" name="is_an_article" id="is_an_article" value="1"> 
+                <input type="hidden" name="is_an_article" id="is_an_article" value="1">
 
                 <input type="hidden" class="customer_session" name="id_customer_session_art" id="id_customer_session_art" value="0">
                 <input type="hidden" class="contact_session" name="id_contact_session_art" id="id_contact_session_art" value="0">
@@ -301,7 +309,7 @@
                     <label for="article_purchase_price_invoice" class="col-sm-4 col-form-label">{{ __('invoice.purchase_price') }}*</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <input type="number" step="0.01" name="article_purchase_price_invoice" id="article_purchase_price_invoice" class="form-control text-end" min="0" value="0.00" readonly>
+                            <input type="number" step="0.01" name="article_purchase_price_invoice" id="article_purchase_price_invoice" class="form-control text-end" min="0" value="0.00" onkeyup="calculateMargin('{{ route('app_calculate_margin') }}', '{{ csrf_token() }}');" onchange="calculateMargin('{{ route('app_calculate_margin') }}', '{{ csrf_token() }}');" url="{{ route('app_calculate_margin') }}" token="{{ csrf_token() }}">
                             <span class="input-group-text" id="basic-addon2">{{ $deviseGest->iso_code }}</span>
                         </div>
                         <small class="text-danger"></small>
@@ -335,7 +343,7 @@
             <div class="modal-footer">
                 {{-- button de fermeture modale --}}
                 @include('button.close-button')
-                
+
                 <div class="d-grid gap-2">
                     <button class="btn btn-primary saveP" type="button" id="insert_article_invoice">
                         <i class="fa-solid fa-floppy-disk"></i>
@@ -345,7 +353,7 @@
                       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                       {{ __('auth.loading') }}
                     </button>
-                </div> 
+                </div>
             </div>
         </form>
     </div>
@@ -369,7 +377,7 @@
                 <input type="hidden" name="descrption_saved_art" id="descrption_saved_serv" value="">
                 <input type="hidden" name="id_invoice_margin" id="id_invoice_margin" value="{{ $invoice_margin->id }}">
                 <input type="hidden" name="id_invoice_element" id="id_invoice_element" value="0">
-                <input type="hidden" name="is_an_article" id="is_an_article" value="0"> 
+                <input type="hidden" name="is_an_article" id="is_an_article" value="0">
 
                 <input type="hidden" class="customer_session" name="id_customer_session_art" id="id_customer_session_art" value="0">
                 <input type="hidden" class="contact_session" name="id_contact_session_art" id="id_contact_session_art" value="0">
@@ -437,7 +445,7 @@
                     <label for="service_total_price_invoice" class="col-sm-4 col-form-label">{{ __('service.unit_price') }}*</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <input type="number" step="0.01" name="article_total_price_invoice" id="service_total_price_invoice" class="form-control text-end" min="0" value="0.00" readonly>
+                            <input type="number" step="0.01" name="article_total_price_invoice" id="service_total_price_invoice" class="form-control text-end" min="0" value="0.00">
                             <span class="input-group-text" id="basic-addon2">{{ $deviseGest->iso_code }}</span>
                         </div>
                         <small class="text-danger"></small>
@@ -449,7 +457,7 @@
             <div class="modal-footer">
                 {{-- button de fermeture modale --}}
                 @include('button.close-button')
-                
+
                 <div class="d-grid gap-2">
                     <button class="btn btn-primary saveP" type="button" id="insert_service_invoice">
                         <i class="fa-solid fa-floppy-disk"></i>
@@ -459,7 +467,7 @@
                       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                       {{ __('auth.loading') }}
                     </button>
-                </div> 
+                </div>
             </div>
         </form>
     </div>
@@ -467,7 +475,7 @@
 
 <form action="#">
     <input type="hidden" id="article_sales_invoice-message" value="{{ __('invoice.select_an_article_please') }}">
-    <input type="hidden" id="article_qty_invoice-message" value="{{ __('invoice.quantity_cannot_be_empty') }}"> 
+    <input type="hidden" id="article_qty_invoice-message" value="{{ __('invoice.quantity_cannot_be_empty') }}">
     <input type="hidden" id="article_margin_invoice-message" value="{{ __('invoice.margin_cannot_be_empty') }}">
     <input type="hidden" id="service_sales_invoice-message" value="{{ __('invoice.select_a_service_please') }}">
 </form>

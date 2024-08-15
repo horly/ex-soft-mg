@@ -79,7 +79,7 @@
         /**
          * Proforma invoice
          */
-        'proforma_invoice_list' => "Liste des factures proforma", 
+        'proforma_invoice_list' => "Liste des factures proforma",
         'add_a_proforma_invoice' => "Ajouter une facture proforma",
         'added_a_new_proforma_invoice_in_the_functional_unit' => "a ajouté une nouvelle facture proforma dans l'unité fonctionnelle",
         'proforma_invoice_added_successfully' => "Facture proforma ajoutée avec succès!",
@@ -120,4 +120,7 @@
 
         'delivery_note_MAJ' => "BON DE LIVRAISON",
         'for' => "Pour",
+        'concern' => "Concerne",
+        'enter_the_invoice_subject' => "Saisir l'objet de la facture",
+        'please_enter_the_invoice_subject' => "Veuillez saisir l'objet de la facture",
     ];

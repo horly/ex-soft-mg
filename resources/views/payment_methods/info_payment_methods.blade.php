@@ -20,7 +20,7 @@
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
                         <h3>{{ __('payment_methods.payment_method_details') }}</h3>
-                        <p class="text-subtitle text-muted"></p> 
+                        <p class="text-subtitle text-muted"></p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav class="float-start float-lg-end" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
@@ -67,7 +67,7 @@
                                 {{ __('payment_methods.disbursements') }}
                             </div>
                             <div class="col-md-8 text-primary fw-bold">
-                                {{ number_format(0, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
+                                {{ number_format($paymentMade, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
                             </div>
                         </div>
 
@@ -76,7 +76,7 @@
                                 {{ __('payment_methods.balance') }}
                             </div>
                             <div class="col-md-8 text-primary fw-bold">
-                                {{ number_format($paymentReceived - 0, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
+                                {{ number_format($paymentReceived - $paymentMade, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
                             </div>
                         </div>
 
@@ -129,13 +129,104 @@
                             </div>
                         </div>
 
+                        <div class="border-bottom mb-4 fw-bold">
+                            {{ __('payment_methods.operation_list') }}
+                        </div>
+
+                        <div>
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#collections"
+                                        role="tab" aria-controls="home" aria-selected="true">{{ __('payment_methods.collections') }}</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#disbursements"
+                                        role="tab" aria-controls="profile" aria-selected="false">{{ __('payment_methods.disbursements') }}</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content p-4" id="myTabContent">
+                                <div class="tab-pane fade show active" id="collections" role="tabpanel"
+                                    aria-labelledby="home-tab">
+
+                                    <table class="table table-striped table-hover border bootstrap-datatable">
+                                        <thead>
+                                            <th>N°</th>
+                                            <th>Date</th>
+                                            <th>{{ __('client.reference') }}</th>
+                                            <th>{{ __('article.description') }}</th>
+                                            <th class="text-end">{{ __('dashboard.amount') }} {{ $paymentMethod->iso_code }}</th>
+                                            <th>{{ __('client.manager') }}</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($encaissements as $encaissement)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($encaissement->created_at)) }}</td>
+                                                    <td>{{ $encaissement->reference_enc }}</td>
+                                                    <td>{{ __($encaissement->description) }}</td>
+                                                    <td class="text-end">
+                                                        {{ number_format($encaissement->amount, 2, '.', ' ') }}
+                                                    </td>
+                                                    <td>
+                                                        @php
+                                                            $managerEn = DB::table('users')->where('id', $encaissement->id_user)->first();
+                                                        @endphp
+                                                        {{ $managerEn->name }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+
+                                <div class="tab-pane fade" id="disbursements" role="tabpanel"
+                                    aria-labelledby="profile-tab">
+
+
+                                    <table class="table table-striped table-hover border bootstrap-datatable" style="width: 100%">
+                                        <thead>
+                                            <th>N°</th>
+                                            <th>Date</th>
+                                            <th>{{ __('client.reference') }}</th>
+                                            <th>{{ __('article.description') }}</th>
+                                            <th class="text-end">{{ __('dashboard.amount') }} {{ $paymentMethod->iso_code }}</th>
+                                            <th>{{ __('client.manager') }}</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($decaissements as $decaissement)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ date('Y-m-d', strtotime($decaissement->created_at)) }}</td>
+                                                    <td>{{ $decaissement->reference_dec }}</td>
+                                                    <td>{{ __($decaissement->description) }}</td>
+                                                    <td class="text-end">
+                                                        {{ number_format($decaissement->amount, 2, '.', ' ') }}
+                                                    </td>
+                                                    <td>
+                                                        @php
+                                                            $managerDec = DB::table('users')->where('id', $decaissement->id_user)->first();
+                                                        @endphp
+                                                        {{ $managerDec->name }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+                        </div>
+
                         <div class="row">
 
                             <div class="col-md-6 mb-3">
                                 @if ($paymentMethod->default != 1)
                                     <div class="d-grid gap-2">
                                         <a class="btn btn-success" role="button" href="{{ route('app_update_payment_methods', [
-                                            'id' => $entreprise->id, 
+                                            'id' => $entreprise->id,
                                             'id2' => $functionalUnit->id,
                                             'id3' => $paymentMethod->id
                                             ]) }}">

@@ -24,6 +24,7 @@ class SaveSaleInvoiceForm extends FormRequest
         return [
             //
             'client_sales_invoice' => 'required',
+            'invoice_concern_sales' => 'required',
         ];
     }
 
@@ -32,6 +33,7 @@ class SaveSaleInvoiceForm extends FormRequest
         return [
             //
             'client_sales_invoice.required' => __('invoice.select_customer_please'),
+            'invoice_concern_sales.required' => __('invoice.please_enter_the_invoice_subject'),
         ];
     }
 }

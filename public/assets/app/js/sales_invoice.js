@@ -13,14 +13,14 @@ $('#service_sales_invoice').select2({
 function setUpinvoice(id_functionalUnit, id_entreprise, token, url, is_proforma, is_client_specific_invoice, is_delivery_note, id_client)
 {
     var inputs = '';
-    inputs += '<input type="hidden" name="id_functionalUnit" value="' + id_functionalUnit + '" />' 
+    inputs += '<input type="hidden" name="id_functionalUnit" value="' + id_functionalUnit + '" />'
                 + '<input type="hidden" name="id_entreprise" value="' + id_entreprise + '" />'
                 + '<input type="hidden" name="is_proforma" value="' + is_proforma + '" />'
                 + '<input type="hidden" name="is_client_specific_invoice" value="' + is_client_specific_invoice + '" />'
                 + '<input type="hidden" name="is_delivery_note" value="' + is_delivery_note + '" />'
                 + '<input type="hidden" name="id_client" value="' + id_client + '" />'
                 + '<input type="hidden" name="_token" value="' + token + '" />';
-    
+
     $("body").append('<form action="' + url + '" method="POST" id="poster">' + inputs + '</form>');
     $("#poster").submit();
 }
@@ -95,13 +95,13 @@ function calculateMargin(url, token)
             '_token' : token,
             'margin' : article_margin_invoice,
             'purchase_price' : article_purchase_price_invoice,
-        }, 
+        },
         success:function(response){
             //var value = (article_purchase_price_invoice * article_margin_invoice) / 100;
             //var final_sale_price = article_purchase_price_invoice + value;
 
             $('#article_sale_price_invoice').val(response.final_price.toFixed(2));
-            
+
             pu = response.final_price;
             pt = pu * quantity
             $('#article_total_price_invoice').val(pt.toFixed(2));
@@ -116,7 +116,7 @@ function changeTotalPrice()
     var article_sale_price_invoice = $('#article_sale_price_invoice').val();
     var quantity = $('#article_qty_invoice').val();
 
-    var pt = article_sale_price_invoice * quantity; 
+    var pt = article_sale_price_invoice * quantity;
 
     $('#article_total_price_invoice').val(pt.toFixed(2));
 }
@@ -163,20 +163,20 @@ $('#insert_article_invoice').click(function(){
 });
 
 $('#insert_service_invoice').click(function(){
-    
+
     var service_sales_invoice = $('#service_sales_invoice').val();
 
     if(service_sales_invoice != "")
     {
         $('#service_sales_invoice').removeClass('is-invalid');
-        $('#service_sales_invoice-error').text(""); 
+        $('#service_sales_invoice-error').text("");
 
         $('#form_insert_service_invoice').submit();
     }
     else
     {
         $('#service_sales_invoice').addClass('is-invalid');
-        $('#service_sales_invoice-error').text($('#service_sales_invoice-message').val()); 
+        $('#service_sales_invoice-error').text($('#service_sales_invoice-message').val());
     }
 });
 
@@ -263,7 +263,7 @@ function changeVat(url, token)
 
     $.ajax({
         type : 'post',
-        url : url, 
+        url : url,
         data : {
             '_token' : token,
             'vat_purcentage' : vat_purcentage,
@@ -300,7 +300,7 @@ function changeDiscountValue(url, token)
 
     $.ajax({
         type : 'post',
-        url : url, 
+        url : url,
         data : {
             '_token' : token,
             'discount_value' : discount_value,
@@ -311,7 +311,7 @@ function changeDiscountValue(url, token)
         success:function(response){
             //console.log(response.vat_value.toFixed(2));
             $('#vat_apply_td').text(response.vat_value_format_double);
-            $('#vat_apply_input').val(response.vat_value); 
+            $('#vat_apply_input').val(response.vat_value);
 
             $('#discount_apply_td').text(response.sub_total_format_number);
             $('#discount_apply_input').val(response.sub_total);
@@ -322,69 +322,6 @@ function changeDiscountValue(url, token)
     });
 }
 
-
-/**
- * record payment
- */
-
-$('#record_payment_invoice').click(function(){
-    var amount = $('#amount_invoice_record').val();
-    var payment_methods = $('#payment_methods_invoice_record').val();
-    var ref_invoice = $('#ref_invoice').val();
-    var id_fu = $('#id_fu').val();
-    var url = $('#record_payment_invoice').attr('url');
-    var token = $('#record_payment_invoice').attr('token');
-
-    //console.log('Montant : ' + amount + '\nSolde restant : ' + remainingBalance);
-
-    if(payment_methods != "")
-    {
-        $('#payment_methods_invoice_record-error').text("");
-        $('#payment_methods_invoice_record').removeClass('is-invalid');
-
-        if(amount != "" && amount != 0)
-        {
-            $('#amount_invoice_record-error').text("");
-            $('#amount_invoice_record').removeClass('is-invalid');
-
-            $.ajax({
-                type: 'post',
-                url: url,
-                data: {
-                    '_token': token,
-                    'amount': amount,
-                    'ref_invoice': ref_invoice,
-                    'id_fu': id_fu
-                },
-                success:function(response){
-
-                    //console.log(response);
-
-                    if(response.result == "success"){
-                        $('#amount_invoice_record-error').text("");
-                        $('#amount_invoice_record').removeClass('is-invalid');
-        
-                        $('#record_payment_invoice_form').submit();
-                    }
-                    else{
-                        $('#amount_invoice_record-error').text($('#amount_invoice_record-error-message').val());
-                        $('#amount_invoice_record').addClass('is-invalid');
-                    }
-                }
-            });
-        }
-        else
-        {
-            $('#amount_invoice_record-error').text($('#amount_invoice_record-error-message-empty').val());
-            $('#amount_invoice_record').addClass('is-invalid');
-        }
-    }
-    else{
-
-        $('#payment_methods_invoice_record-error').text($('#payment_methods_invoice_record-error-message').val());
-        $('#payment_methods_invoice_record').addClass('is-invalid');
-    }
-});
 
 $('#client_sales_invoice').change(function(){
     var value = $(this).val();
@@ -482,7 +419,7 @@ function addserialNumberInvoice(id) {
 
 $('#insert-serial-number-invoice').click(function(){
     var serial_number_invoice = $('#serial_number_invoice');
-    var form_serial_number_invoice = $('#form_serial_number_invoice'); 
+    var form_serial_number_invoice = $('#form_serial_number_invoice');
 
     if(serial_number_invoice.val() != ""){
         serial_number_invoice.removeClass('is-invalid');
@@ -498,11 +435,11 @@ $('#insert-serial-number-invoice').click(function(){
 
 function generateDeliveryNote(ref_invoice, id_entreprise, id_functionalUnit, token, url){
     var inputs = '';
-    inputs += '<input type="hidden" name="_token" value="' + token + '" />' 
-                + '<input type="hidden" name="id_functionalUnit" value="' + id_functionalUnit + '" />' 
+    inputs += '<input type="hidden" name="_token" value="' + token + '" />'
+                + '<input type="hidden" name="id_functionalUnit" value="' + id_functionalUnit + '" />'
                 + '<input type="hidden" name="id_entreprise" value="' + id_entreprise + '" />'
                 + '<input type="hidden" name="ref_invoice" value="' + ref_invoice + '" />';
-    
+
     $("body").append('<form action="' + url + '" method="POST" id="poster">' + inputs + '</form>');
     $("#poster").submit();
 }

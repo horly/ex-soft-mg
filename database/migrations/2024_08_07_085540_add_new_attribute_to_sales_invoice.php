@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('sales_invoices', function (Blueprint $table) {
             //
-            $table->string('photo_profile_url', 255)->after('matricule')->default("0");
+            $table->string('concern_invoice', 255)->nullable()->after('reference_number');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('sales_invoices', function (Blueprint $table) {
             //
         });
     }

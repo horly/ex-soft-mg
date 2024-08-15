@@ -52,7 +52,7 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
-    
+
     /*
     protected $casts = [
         'email_verified_at' => 'datetime',
@@ -74,7 +74,7 @@ class User extends Authenticatable
     /** Un user contient plusieurs historique */
     public function connectionHistory()
     {
-        return $this->hasMany('App\Models\History');
+        return $this->hasMany('App\Models\ConnectionHistory');
     }
 
     /** Une user appartient à un abonnement */
@@ -112,7 +112,7 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Notification');
     }
-    
+
     public function read()
     {
         return $this->hasMany('App\Models\ReadNotif');
@@ -193,6 +193,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Encaissement');
     }
 
+    public function decaissement()
+    {
+        return $this->hasMany('App\Models\Decaissement');
+    }
+
     public function purchase()
     {
         return $this->hasMany('App\Models\Purchase');
@@ -201,5 +206,10 @@ class User extends Authenticatable
     public function purchaseMargin()
     {
         return $this->hasMany('App\Models\PurchaseMargin');
+    }
+
+    public function expense()
+    {
+        return $this->hasMany('App\Models\DecaisExpensessement');
     }
 }

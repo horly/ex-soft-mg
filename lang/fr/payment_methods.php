@@ -28,4 +28,6 @@
         'payment_method_deleted_successfully' => "Mode de paiement supprimé avec succès!",
 
         'update_a_payment_method' => "Mettre à jour un mode de paiement",
+
+        'operation_list' => "Liste des opérations",
     ];

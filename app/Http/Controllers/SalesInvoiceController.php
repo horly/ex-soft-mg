@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SaveSaleInvoiceForm;
+use App\Models\Decaissement;
 use App\Models\Encaissement;
 use App\Models\InvoiceElement;
 use App\Models\InvoiceMargin;
@@ -24,9 +25,9 @@ class SalesInvoiceController extends Controller
     protected $notificationRepo;
     protected $generateReferenceNumber;
 
-    function __construct(Request $request, 
-                            EntrepriseRepo $entrepriseRepo, 
-                            NotificationRepo $notificationRepo, 
+    function __construct(Request $request,
+                            EntrepriseRepo $entrepriseRepo,
+                            NotificationRepo $notificationRepo,
                             GenerateRefenceNumber $generateReferenceNumber)
     {
         $this->request = $request;
@@ -63,16 +64,16 @@ class SalesInvoiceController extends Controller
     {
         $id_functionalUnit = $this->request->input('id_functionalUnit');
         $id_entreprise = $this->request->input('id_entreprise');
-        $is_proforma = $this->request->input('is_proforma'); 
-        $is_client_specific_invoice = $this->request->input('is_client_specific_invoice'); 
+        $is_proforma = $this->request->input('is_proforma');
+        $is_client_specific_invoice = $this->request->input('is_client_specific_invoice');
         $is_delivery_note = $this->request->input('is_delivery_note');
         $id_client = $this->request->input('id_client');
 
-        if(Session::has('id_client') || 
+        if(Session::has('id_client') ||
             Session::has('entreprise_client') ||
             Session::has('id_contact') ||
             Session::has('fullname_contact') ||
-            
+
             Session::has('date_sales_invoice') ||
             Session::has('due_date_sales_invoice')
         )
@@ -83,24 +84,25 @@ class SalesInvoiceController extends Controller
             Session::forget('fullname_contact');
             Session::forget('date_sales_invoice');
             Session::forget('due_date_sales_invoice');
+            Session::forget('invoice_concern_sales');
         }
 
         /**
-         * si la création de la facture a été declenché 
+         * si la création de la facture a été declenché
          * à partir de la section info client
          */
-        if($is_client_specific_invoice != 0 && $id_client != 0) 
+        if($is_client_specific_invoice != 0 && $id_client != 0)
         {
             $client = DB::table('clients')->where('id', $id_client)->first();
             $contact = DB::table('customer_contacts')->where('id_client', $id_client)->first();
 
             $this->request->session()->put('id_client', $client->id);
-            $client->type == 'particular' 
+            $client->type == 'particular'
                 ? $this->request->session()->put('entreprise_client', $contact->fullname_cl)
-                : $this->request->session()->put('entreprise_client', $client->entreprise_name_cl);   
+                : $this->request->session()->put('entreprise_client', $client->entreprise_name_cl);
 
             $this->request->session()->put('id_contact', $contact->id);
-            $this->request->session()->put('fullname_contact', $contact->fullname_cl); 
+            $this->request->session()->put('fullname_contact', $contact->fullname_cl);
         }
 
 
@@ -118,7 +120,7 @@ class SalesInvoiceController extends Controller
             if(!$invoice_margin_not_saved)
             {
                 /**
-                 * Format N° de référence de la facture :  
+                 * Format N° de référence de la facture :
                  * INV année mois jour heure minute seconde id_user
                  * INV2023121509093023
                  */
@@ -133,15 +135,15 @@ class SalesInvoiceController extends Controller
                 ]);
 
                 return redirect()->route('app_add_new_proforma', [
-                    'id' => $id_entreprise, 
+                    'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_invoice' => $refInvoice,
-                ]); 
+                ]);
             }
             else
             {
                 return redirect()->route('app_add_new_proforma', [
-                    'id' => $id_entreprise, 
+                    'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_invoice' => $invoice_margin_not_saved->ref_invoice,
                 ]);
@@ -156,11 +158,11 @@ class SalesInvoiceController extends Controller
                 'is_simple_invoice_inv' => 0,
                 'id_fu' => $id_functionalUnit,
             ])->first();
-            
+
             if(!$invoice_margin_not_saved)
             {
                 /**
-                 * Format N° de référence de la facture :  
+                 * Format N° de référence de la facture :
                  * INV année mois jour heure minute seconde id_user
                  * INV2023121509093023
                  */
@@ -175,15 +177,15 @@ class SalesInvoiceController extends Controller
                 ]);
 
                 return redirect()->route('app_add_new_delivery_note', [
-                    'id' => $id_entreprise, 
+                    'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_invoice' => $refInvoice,
-            ]); 
+            ]);
             }
             else
             {
                 return redirect()->route('app_add_new_delivery_note', [
-                    'id' => $id_entreprise, 
+                    'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_invoice' => $invoice_margin_not_saved->ref_invoice,
                 ]);
@@ -204,7 +206,7 @@ class SalesInvoiceController extends Controller
             if(!$invoice_margin_not_saved)
             {
                 /**
-                 * Format N° de référence de la facture :  
+                 * Format N° de référence de la facture :
                  * INV année mois jour heure minute seconde id_user
                  * INV2023121509093023
                  */
@@ -220,21 +222,21 @@ class SalesInvoiceController extends Controller
                 ]);
 
                 return redirect()->route('app_add_new_sales_invoice', [
-                    'id' => $id_entreprise, 
+                    'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_invoice' => $refInvoice,
-            ]); 
+            ]);
             }
             else
             {
                 return redirect()->route('app_add_new_sales_invoice', [
-                    'id' => $id_entreprise, 
+                    'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_invoice' => $invoice_margin_not_saved->ref_invoice,
                 ]);
-            }  
+            }
         }
-       
+
     }
 
     public function addNewSalesInvoice($id, $id2, $ref_invoice)
@@ -259,13 +261,13 @@ class SalesInvoiceController extends Controller
                             'ref_invoice' => $ref_invoice,
                             'id_fu' => $id2,
                         ])->first();
-        
+
         $invoice_elements = DB::table('invoice_elements')
                             ->where([
                                 'ref_invoice' => $ref_invoice,
                                 'id_fu' => $id2,
                             ])->get();
-        
+
         $tot_excl_tax = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->sum('total_price_inv_elmnt');
 
         $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
@@ -276,26 +278,27 @@ class SalesInvoiceController extends Controller
             $contact = DB::table('customer_contacts')->where('id', $invoice->id_contact)->first();
 
             $this->request->session()->put('id_client', $client->id);
-            $client->type == 'particular' 
+            $client->type == 'particular'
                 ? $this->request->session()->put('entreprise_client', $contact->fullname_cl)
-                : $this->request->session()->put('entreprise_client', $client->entreprise_name_cl);   
+                : $this->request->session()->put('entreprise_client', $client->entreprise_name_cl);
 
             $this->request->session()->put('id_contact', $contact->id);
-            $this->request->session()->put('fullname_contact', $contact->fullname_cl); 
+            $this->request->session()->put('fullname_contact', $contact->fullname_cl);
+            $this->request->session()->put('invoice_concern_sales', $invoice->concern_invoice);
 
             $date = $invoice->created_at;
             $due_date = $invoice->due_date;
 
             $this->request->session()->put('date_sales_invoice', date('Y-m-d', strtotime($date)));
-            $this->request->session()->put('due_date_sales_invoice', date('Y-m-d', strtotime($due_date))); 
-        }  
-        
+            $this->request->session()->put('due_date_sales_invoice', date('Y-m-d', strtotime($due_date)));
+        }
+
 
         return view('invoice_sales.add_new_sales_invoice', compact(
-            'entreprise', 
-            'functionalUnit', 
-            'clients', 
-            'deviseGest', 
+            'entreprise',
+            'functionalUnit',
+            'clients',
+            'deviseGest',
             'ref_invoice',
             'services',
             'articles',
@@ -346,7 +349,7 @@ class SalesInvoiceController extends Controller
         $tot_excl_tax = $this->request->input('tot_excl_tax');
         $vat_purcentage = $this->request->input('vat_purcentage');
         $type = $this->request->input('type');
-        
+
         $sub_total = 0;
         $total_val = 0;
         $vat_value = 0;
@@ -364,10 +367,10 @@ class SalesInvoiceController extends Controller
         {
             $sub_total = $tot_excl_tax - $discount_value;
             $vat_value = ($sub_total * $vat_purcentage) / 100;
-            
+
             $total_val = $sub_total + $vat_value;
         }
-        
+
         return response()->json([
             'code' => 200,
             'vat_value' => $vat_value,
@@ -387,7 +390,7 @@ class SalesInvoiceController extends Controller
         $modalRequest = $this->request->input('modalRequest');
         $ref_invoice = $this->request->input('ref_invoice');
         $descrption_saved_art = $this->request->input('descrption_saved_art');
-        $id_invoice_margin = $this->request->input('id_invoice_margin'); 
+        $id_invoice_margin = $this->request->input('id_invoice_margin');
         $margin_invoice = $this->request->input('article_margin_invoice');
 
         $article_sales_invoice = $this->request->input('article_sales_invoice');
@@ -408,8 +411,8 @@ class SalesInvoiceController extends Controller
 
             $this->request->session()->put('id_client', $client->id);
 
-            $client->type == "particular" 
-                ? $this->request->session()->put('entreprise_client', $contact->fullname_cl) 
+            $client->type == "particular"
+                ? $this->request->session()->put('entreprise_client', $contact->fullname_cl)
                 : $this->request->session()->put('entreprise_client', $client->entreprise_name_cl);
 
             $this->request->session()->put('id_contact', $contact->id);
@@ -513,7 +516,7 @@ class SalesInvoiceController extends Controller
                     return redirect()->back()->with('danger', __('invoice.this_item_has_already_been_inserted'));
                 }
             }
-            
+
             return redirect()->back();
         }
         else
@@ -571,17 +574,20 @@ class SalesInvoiceController extends Controller
         $amount_received = $requestF->input('amount_received');
         $date_sales_invoice = $requestF->input('date_sales_invoice');
         $due_date_sales_invoice = $requestF->input('due_date_sales_invoice');
-        $is_proforma = $requestF->input('is_proforma'); 
+        $is_proforma = $requestF->input('is_proforma');
         $client_contact_sales_invoice = $requestF->input('client_contact_sales_invoice');
-        $is_delivery_note_marge = $requestF->input('is_delivery_note_marge'); 
+        $is_delivery_note_marge = $requestF->input('is_delivery_note_marge');
         $is_simple_invoice_inv = $requestF->input('is_simple_invoice_inv');
+
+        $invoice_concern_sales = $requestF->input('invoice_concern_sales');
+
 
         $time = date('H:i:s');
 
         $choise_dist = 0;
-        $discount_choise == "yes" ? $choise_dist = 1 : $choise_dist = 0; 
+        $discount_choise == "yes" ? $choise_dist = 1 : $choise_dist = 0;
 
-        $date_invoice = date('Y-m-d H:i:s',strtotime($date_sales_invoice.' '.$time)); 
+        $date_invoice = date('Y-m-d H:i:s',strtotime($date_sales_invoice.' '.$time));
         $due_date = date('Y-m-d H:i:s',strtotime($due_date_sales_invoice.' '.$time));
 
         //dd($requestF->all());
@@ -590,9 +596,10 @@ class SalesInvoiceController extends Controller
 
         $invoice_elmnt = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->first();
 
-        //variable de session 
+        //variable de session
         $this->request->session()->put('date_sales_invoice', $date_sales_invoice);
         $this->request->session()->put('due_date_sales_invoice', $due_date_sales_invoice);
+        $this->request->session()->put('invoice_concern_sales', $invoice_concern_sales);
 
         if($invoice_elmnt) //si au moins un element est inséré dans la facture
         {
@@ -601,6 +608,7 @@ class SalesInvoiceController extends Controller
                 SalesInvoice::create([
                     'reference_sales_invoice' => $ref_invoice,
                     'reference_number' => 0,
+                    'concern_invoice' => $invoice_concern_sales,
                     'discount_choice' => $choise_dist,
                     'discount_type' => $discount_set,
                     'discount_value' => $discount_value,
@@ -610,7 +618,7 @@ class SalesInvoiceController extends Controller
                     'amount_received' => $amount_received,
                     'vat' => $vat_apply_change,
                     'discount_apply_amount' => $discount_apply_input,
-                    'id_client' => $client_sales_invoice, 
+                    'id_client' => $client_sales_invoice,
                     'id_user' => Auth::user()->id,
                     'id_fu' => $id_fu,
                     'id_contact' => $client_contact_sales_invoice,
@@ -665,6 +673,7 @@ class SalesInvoiceController extends Controller
                     ->where('reference_sales_invoice', $ref_invoice)
                     ->update([
                         'discount_choice' => $choise_dist,
+                        'concern_invoice' => $invoice_concern_sales,
                         'discount_type' => $discount_set,
                         'discount_value' => $discount_value,
                         'sub_total' => $tot_excl_tax,
@@ -673,7 +682,7 @@ class SalesInvoiceController extends Controller
                         'amount_received' => $amount_received,
                         'vat' => $vat_apply_change,
                         'discount_apply_amount' => $discount_apply_input,
-                        'id_client' => $client_sales_invoice, 
+                        'id_client' => $client_sales_invoice,
                         'id_fu' => $id_fu,
                         'id_contact' => $client_contact_sales_invoice,
                         'created_at' => $date_invoice,
@@ -694,7 +703,7 @@ class SalesInvoiceController extends Controller
                     return redirect()->route('app_proforma', ['id' => $id_entreprise, 'id2' => $id_fu ])
                         ->with('success', __('invoice.the_proforma_invoice_has_been_successfully_modified'));
 
-                    
+
                 }
                 else if($is_delivery_note_marge == 1 && $is_proforma == 0)
                 {
@@ -760,15 +769,14 @@ class SalesInvoiceController extends Controller
 
 
         $remainingBalance = $invoice->total - $paymentReceived;
-        
+
 
         $encaissements = DB::table('devises')
                         ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
                         ->join('payment_methods', 'payment_methods.id_currency', '=', 'devise_gestion_ufs.id')
                         ->join('encaissements', 'encaissements.id_pay_meth', '=', 'payment_methods.id')
                         ->where([
-                            'encaissements.reference_enc' => $ref_invoice, 
-                            'encaissements.id_user' => Auth::user()->id,
+                            'encaissements.reference_enc' => $ref_invoice,
                             'encaissements.id_fu' => $id2,
                         ])->get();
 
@@ -782,9 +790,11 @@ class SalesInvoiceController extends Controller
 
         //dd($paymentMethods);
 
+        $purchases = null;
+
         return view('invoice_sales.info_sales_invoice', compact(
-            'entreprise', 
-            'functionalUnit', 
+            'entreprise',
+            'functionalUnit',
             'invoice',
             'ref_invoice',
             'customer',
@@ -793,10 +803,11 @@ class SalesInvoiceController extends Controller
             'deviseGest',
             'tot_excl_tax',
             'encaissements',
-            'paymentReceived', 
+            'paymentReceived',
             'remainingBalance',
             'paymentMethods',
-            'contact'
+            'contact',
+            'purchases'
         ));
     }
 
@@ -805,27 +816,53 @@ class SalesInvoiceController extends Controller
         $ref_invoice = $this->request->input('ref_invoice');
         $amount = $this->request->input('amount');
         $id_fu = $this->request->input('id_fu');
+        $type_record = $this->request->input('type_record');
 
-        $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
-
-        $paymentReceived = DB::table('encaissements')
-                            ->where([
-                                'reference_enc' => $ref_invoice, 
-                                'id_user' => Auth::user()->id,
-                                'id_fu' => $id_fu,
-                            ])->sum('amount');
-
-        $remainingBalance = $invoice->total - $paymentReceived;
-
+        $remainingBalance = 0;
         $result = "";
 
-        if($amount <= $remainingBalance)
+        if($type_record == "cash_in") //encaissement
         {
-            $result = "success";
+            $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
+
+            $paymentReceived = DB::table('encaissements')
+                                ->where([
+                                    'reference_enc' => $ref_invoice,
+                                    'id_fu' => $id_fu,
+                                ])->sum('amount');
+
+            $remainingBalance = $invoice->total - $paymentReceived;
+
+            if($amount <= $remainingBalance)
+            {
+                $result = "success";
+            }
+            else
+            {
+                $result = "danger";
+            }
+
         }
-        else
+        else //décaissement
         {
-            $result = "danger";
+            $purchase = DB::table('purchases')->where('reference_purch', $ref_invoice)->first();
+
+            $paymentReceived = DB::table('decaissements')
+                                ->where([
+                                    'reference_dec' => $ref_invoice,
+                                    'id_fu' => $id_fu,
+                                ])->sum('amount');
+
+            $remainingBalance = $purchase->amount - $paymentReceived;
+
+            if($amount <= $remainingBalance)
+            {
+                $result = "success";
+            }
+            else
+            {
+                $result = "danger";
+            }
         }
 
         return response()->json([
@@ -842,23 +879,44 @@ class SalesInvoiceController extends Controller
         $amount = $this->request->input('amount_invoice_record');
         $payment_method = $this->request->input('payment_methods_invoice_record');
         $id_fu = $this->request->input('id_fu');
-        $id_entreprise = $this->request->input('id_entreprise'); 
+        $id_entreprise = $this->request->input('id_entreprise');
+        $type_record = $this->request->input('type_record');
 
+        if($type_record == "cash_in")
+        {
+            Encaissement::create([
+                'description' => 'invoice.collection_of_the_invoice',
+                'reference_enc' => $ref_invoice,
+                'is_invoice' => 1,
+                'amount' => $amount,
+                'id_pay_meth' => $payment_method,
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id_fu,
+            ]);
 
-        Encaissement::create([
-            'description' => 'invoice.collection_of_the_invoice',
-            'reference_enc' => $ref_invoice,
-            'is_invoice' => 1,
-            'amount' => $amount,
-            'id_pay_meth' => $payment_method,
-            'id_user' => Auth::user()->id,
-            'id_fu' => $id_fu,
-        ]);
+            //Notification
+            $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+            $description = "invoice.recorded_an_invoice_payment";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+        }
+        else
+        {
+            Decaissement::create([
+                'description' => 'expenses.supplier_payment_expense',
+                'reference_dec' => $ref_invoice,
+                'is_purchase' => 1,
+                'amount' => $amount,
+                'id_pay_meth' => $payment_method,
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id_fu,
+            ]);
 
-         //Notification
-         $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
-         $description = "invoice.recorded_an_invoice_payment";
-         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+            //Notification
+            $url = route('app_update_purchase', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_purchase' => $ref_invoice]);
+            $description = "expenses.recorded_a_supplier_payment";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+        }
+
 
         return redirect()->back()
             ->with('success', __('invoice.payment_registered_successfully'));
@@ -870,7 +928,7 @@ class SalesInvoiceController extends Controller
         $id_entreprise = $this->request->input('id_element2');
         $id_fu = $this->request->input('id_element3');
 
-        $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first(); 
+        $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
         $is_proforma = $invoice->is_proforma_inv;
         $is_delivery_note = $invoice->is_delivery_note;
         $is_simple_invoice = $invoice->is_simple_invoice;
@@ -885,7 +943,7 @@ class SalesInvoiceController extends Controller
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
             return redirect()->route('app_proforma', [
-                'id' => $id_entreprise, 
+                'id' => $id_entreprise,
                 'id2' => $id_fu ])->with('success', __('invoice.proforma_invoice_successfully_deleted'));
         }
         else if($is_delivery_note == 1)
@@ -896,7 +954,7 @@ class SalesInvoiceController extends Controller
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
             return redirect()->route('app_delivery_note', [
-                'id' => $id_entreprise, 
+                'id' => $id_entreprise,
                 'id2' => $id_fu ])->with('success', __('invoice.delivery_note_successfully_deleted'));
         }
         else
@@ -907,10 +965,10 @@ class SalesInvoiceController extends Controller
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
             return redirect()->route('app_sales_invoice', [
-                'id' => $id_entreprise, 
+                'id' => $id_entreprise,
                 'id2' => $id_fu ])->with('success', __('invoice.invoice_deleted_successfully'));
         }
-        
+
     }
 
     public function proforma($id, $id2)
@@ -964,20 +1022,20 @@ class SalesInvoiceController extends Controller
                             'is_proforma' => 1,
                             'id_fu' => $id2,
                         ])->first();
-        
+
         $invoice_elements = DB::table('invoice_elements')
                             ->where([
                                 'ref_invoice' => $ref_invoice,
                                 'id_fu' => $id2,
                             ])->get();
-        
+
         $tot_excl_tax = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->sum('total_price_inv_elmnt');
 
         return view('invoice_sales.proforma.add_new_proforma', compact(
-            'entreprise', 
-            'functionalUnit', 
-            'clients', 
-            'deviseGest', 
+            'entreprise',
+            'functionalUnit',
+            'clients',
+            'deviseGest',
             'ref_invoice',
             'services',
             'articles',
@@ -1022,14 +1080,14 @@ class SalesInvoiceController extends Controller
 
 
         $remainingBalance = $invoice->total - $paymentReceived;
-        
+
 
         $encaissements = DB::table('devises')
                         ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
                         ->join('payment_methods', 'payment_methods.id_currency', '=', 'devise_gestion_ufs.id')
                         ->join('encaissements', 'encaissements.id_pay_meth', '=', 'payment_methods.id')
                         ->where([
-                            'encaissements.reference_enc' => $ref_invoice, 
+                            'encaissements.reference_enc' => $ref_invoice,
                             'encaissements.id_user' => Auth::user()->id,
                             'encaissements.id_fu' => $id2,
                         ])->get();
@@ -1045,8 +1103,8 @@ class SalesInvoiceController extends Controller
         //dd($paymentMethods);
 
         return view('invoice_sales.proforma.info_proforma', compact(
-            'entreprise', 
-            'functionalUnit', 
+            'entreprise',
+            'functionalUnit',
             'invoice',
             'ref_invoice',
             'customer',
@@ -1055,7 +1113,7 @@ class SalesInvoiceController extends Controller
             'deviseGest',
             'tot_excl_tax',
             'encaissements',
-            'paymentReceived', 
+            'paymentReceived',
             'remainingBalance',
             'paymentMethods',
             'contact'
@@ -1099,7 +1157,7 @@ class SalesInvoiceController extends Controller
         $contact_first = DB::table('customer_contacts')->where('id_client', $id_client)->first();
 
         return response()->json([
-            'code' => 200, 
+            'code' => 200,
             'status' => "success",
             'contacts' => $contacts,
             'contact_first' => $contact_first,
@@ -1155,10 +1213,10 @@ class SalesInvoiceController extends Controller
         $invoice_margin = DB::table('invoice_margins')
                         ->where([
                             'ref_invoice' => $ref_invoice,
-                            'is_delivery_note_marge' => 1,
+                            //'is_delivery_note_marge' => 1,
                             'id_fu' => $id2,
                         ])->first();
-                    
+
         $invoice_elements = DB::table('invoice_elements')
                         ->where([
                             'ref_invoice' => $ref_invoice,
@@ -1175,25 +1233,27 @@ class SalesInvoiceController extends Controller
             $contact = DB::table('customer_contacts')->where('id', $invoice->id_contact)->first();
 
             $this->request->session()->put('id_client', $client->id);
-            $client->type == 'particular' 
+            $client->type == 'particular'
                 ? $this->request->session()->put('entreprise_client', $contact->fullname_cl)
-                : $this->request->session()->put('entreprise_client', $client->entreprise_name_cl);   
+                : $this->request->session()->put('entreprise_client', $client->entreprise_name_cl);
 
             $this->request->session()->put('id_contact', $contact->id);
-            $this->request->session()->put('fullname_contact', $contact->fullname_cl); 
+            $this->request->session()->put('fullname_contact', $contact->fullname_cl);
 
             $date = $invoice->created_at;
             $due_date = $invoice->due_date;
 
             $this->request->session()->put('date_sales_invoice', date('Y-m-d', strtotime($date)));
-            $this->request->session()->put('due_date_sales_invoice', date('Y-m-d', strtotime($due_date))); 
-        } 
+            $this->request->session()->put('due_date_sales_invoice', date('Y-m-d', strtotime($due_date)));
+        }
+
+        //dd($invoice_margin);
 
         return view('delivery_note.add_new_delivery_note', compact(
-            'entreprise', 
-            'functionalUnit', 
-            'clients', 
-            'deviseGest', 
+            'entreprise',
+            'functionalUnit',
+            'clients',
+            'deviseGest',
             'ref_invoice',
             'services',
             'articles',
@@ -1278,14 +1338,14 @@ class SalesInvoiceController extends Controller
 
 
         $remainingBalance = $invoice->total - $paymentReceived;
-        
+
 
         $encaissements = DB::table('devises')
                         ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
                         ->join('payment_methods', 'payment_methods.id_currency', '=', 'devise_gestion_ufs.id')
                         ->join('encaissements', 'encaissements.id_pay_meth', '=', 'payment_methods.id')
                         ->where([
-                            'encaissements.reference_enc' => $ref_invoice, 
+                            'encaissements.reference_enc' => $ref_invoice,
                             'encaissements.id_user' => Auth::user()->id,
                             'encaissements.id_fu' => $id2,
                         ])->get();
@@ -1301,8 +1361,8 @@ class SalesInvoiceController extends Controller
         //dd($paymentMethods);
 
         return view('delivery_note.info_delivery_note', compact(
-            'entreprise', 
-            'functionalUnit', 
+            'entreprise',
+            'functionalUnit',
             'invoice',
             'ref_invoice',
             'customer',
@@ -1311,7 +1371,7 @@ class SalesInvoiceController extends Controller
             'deviseGest',
             'tot_excl_tax',
             'encaissements',
-            'paymentReceived', 
+            'paymentReceived',
             'remainingBalance',
             'paymentMethods',
             'contact'
@@ -1320,7 +1380,7 @@ class SalesInvoiceController extends Controller
 
     public function generateDeliveryNote()
     {
-        $ref_invoice = $this->request->input('ref_invoice'); 
+        $ref_invoice = $this->request->input('ref_invoice');
         $id_functionalUnit = $this->request->input('id_functionalUnit');
         $id_entreprise = $this->request->input('id_entreprise');
 

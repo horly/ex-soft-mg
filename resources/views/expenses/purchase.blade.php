@@ -40,10 +40,10 @@
                 <div class="card">
                     <div class="card-body">
                         <a href="#" onclick="setPurchase('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_purchase') }}', '{{ 1 }}', '{{ 0 }}', '{{ 0 }}', '{{ 0 }}')" class="btn btn-primary mb-3" role="button">
-                            <i class="fa-solid fa-circle-plus"></i> 
+                            <i class="fa-solid fa-circle-plus"></i>
                             &nbsp;{{ __('auth.add') }}
                         </a>
-                        
+
                         <table class="table table-striped table-hover border bootstrap-datatable">
                             <thead>
                                 <th>N°</th>
@@ -61,7 +61,10 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
-                                            <a href="#">
+                                            <a href="{{ route('app_update_purchase', [
+                                                'id' => $entreprise->id,
+                                                'id2' => $functionalUnit->id,
+                                                'ref_purchase' => $purchase->reference_purch ]) }}">
                                                 {{ $purchase->reference_purch }}
                                             </a>
                                         </td>
@@ -78,19 +81,29 @@
                                         </td>
                                         <td>{{ date('Y-m-d', strtotime($purchase->due_date)) }}</td>
                                         <td class="text-end">
-                                            {{ number_format($supplier->amount, 2, '.', ' ') }} 
+                                            {{ number_format($purchase->amount, 2, '.', ' ') }}
                                         </td>
                                         <td class="text-end">
-                                            {{ number_format(0, 2, '.', ' ') }} 
+                                            @php
+                                                $paymentReceived = DB::table('decaissements')
+                                                    ->where([
+                                                        'reference_dec' => $purchase->reference_purch,
+                                                        'id_fu' => $functionalUnit->id,
+                                                    ])->sum('amount');
+                                            @endphp
+                                            {{ number_format($paymentReceived, 2, '.', ' ') }}
                                         </td>
                                         <td>
                                             @php
-                                                $user = DB::table('users')->where('id', $supplier->id_user)->first();
+                                                $user = DB::table('users')->where('id', $purchase->id_user)->first();
                                             @endphp
                                             {{ $user->name }}
                                         </td>
                                         <td class="text-center">
-                                            <a href="#">
+                                            <a href="{{ route('app_update_purchase', [
+                                                'id' => $entreprise->id,
+                                                'id2' => $functionalUnit->id,
+                                                'ref_purchase' => $purchase->reference_purch ]) }}">
                                                 {{ __('main.show') }}
                                             </a>
                                         </td>

@@ -19,9 +19,9 @@ class PaymentMethodesController extends Controller
     protected $notificationRepo;
     protected $generateReferenceNumber;
 
-    function __construct(Request $request, 
-                            EntrepriseRepo $entrepriseRepo, 
-                            NotificationRepo $notificationRepo, 
+    function __construct(Request $request,
+                            EntrepriseRepo $entrepriseRepo,
+                            NotificationRepo $notificationRepo,
                             GenerateRefenceNumber $generateReferenceNumber)
     {
         $this->request = $request;
@@ -50,9 +50,9 @@ class PaymentMethodesController extends Controller
                             ->get();
 
         return view('payment_methods.payment_methods', compact(
-            'entreprise', 
-            'functionalUnit', 
-            'deviseGest', 
+            'entreprise',
+            'functionalUnit',
+            'deviseGest',
             'paymentMethods'
         ));
     }
@@ -66,7 +66,7 @@ class PaymentMethodesController extends Controller
             'id_fu' => $functionalUnit->id,
             'default_cur_manage' => 1,
         ])->first();
-        
+
         $deviseDefault = DB::table('devises')
             ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
             ->where('devises.id', $deviseGest->id_devise)
@@ -79,7 +79,7 @@ class PaymentMethodesController extends Controller
             ])
             ->orderBy('devise_gestion_ufs.id', 'desc')
             ->get();
-        
+
         return view('payment_methods.add_new_payment_methods', compact('entreprise', 'functionalUnit', 'deviseGests', 'deviseDefault'));
     }
 
@@ -163,17 +163,28 @@ class PaymentMethodesController extends Controller
                             ->where([
                                 'id_pay_meth' => $paymentMethod->id,
                             ])->sum('amount');
-        
+
+        $paymentMade = DB::table('decaissements')
+                            ->where([
+                                'id_pay_meth' => $paymentMethod->id,
+                            ])->sum('amount');
+
         $encaissement_exit = DB::table('encaissements')->where('id_pay_meth', $paymentMethod->id)->first();
         //$decaissement_exit = DB::table('encaissements')->where('id_pay_meth', $paymentMethod->id)->first();
 
+        $encaissements = DB::table('encaissements')->where('id_pay_meth', $paymentMethod->id)->orderBy('id', 'desc')->get();
+        $decaissements = DB::table('decaissements')->where('id_pay_meth', $paymentMethod->id)->orderBy('id', 'desc')->get();
+
         return view('payment_methods.info_payment_methods', compact(
-            'entreprise', 
-            'functionalUnit', 
+            'entreprise',
+            'functionalUnit',
             'deviseGest',
             'paymentMethod',
             'paymentReceived',
             'encaissement_exit',
+            'paymentMade',
+            'encaissements',
+            'decaissements'
             //'decaissement_exit'
         ));
     }
@@ -192,8 +203,8 @@ class PaymentMethodesController extends Controller
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_payment_methods', [
-            'id' => $id_entreprise, 
-            'id2' => $id_fu ])->with('success', __('payment_methods.payment_method_deleted_successfully')); 
+            'id' => $id_entreprise,
+            'id2' => $id_fu ])->with('success', __('payment_methods.payment_method_deleted_successfully'));
     }
 
     public function upDatePaymentMethods($id, $id2, $id3)
@@ -214,7 +225,7 @@ class PaymentMethodesController extends Controller
                             ->join('payment_methods', 'devise_gestion_ufs.id', '=', 'payment_methods.id_currency')
                             ->where('payment_methods.id', $id3)
                             ->first();
-        
+
         $devisePaymethod = DB::table('devises')
                             ->join('devise_gestion_ufs', 'devises.id' , '=', 'devise_gestion_ufs.id_devise')
                             ->where('devise_gestion_ufs.id', $paymentMethod->id_currency)
@@ -224,8 +235,8 @@ class PaymentMethodesController extends Controller
         //$decaissement_exit = DB::table('encaissements')->where('id_pay_meth', $paymentMethod->id)->first();
 
         return view('payment_methods.update_payment_methods', compact(
-            'entreprise', 
-            'functionalUnit', 
+            'entreprise',
+            'functionalUnit',
             'deviseGests',
             'paymentMethod',
             'devisePaymethod',

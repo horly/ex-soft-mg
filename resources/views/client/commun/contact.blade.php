@@ -1,6 +1,6 @@
 
 <button class="btn btn-primary mb-3" type="button" onclick="addNewcontact();" data-bs-toggle="modal" data-bs-target="#add_contact">
-    <i class="fa-solid fa-circle-plus"></i> 
+    <i class="fa-solid fa-circle-plus"></i>
     &nbsp;{{ __('auth.add') }}
 </button>
 
@@ -38,7 +38,7 @@
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     @endif
-                    
+
                 </td>
             </tr>
         @endforeach
@@ -70,7 +70,7 @@
                 <input type="hidden" name="id_fu" value="{{ $functionalUnit->id }}">
                 <input type="hidden" name="id_client" value="{{ $client->id }}">
                 <input type="hidden" name="modalRequest" id="modalRequest" value="add"> {{-- Default is add but can be edit also --}}
-                <input type="hidden" name="id_contact" id="id_contact" value="0"> 
+                <input type="hidden" name="id_contact" id="id_contact" value="0">
 
                 <div class="mb-4 row">
                     <label for="full_name_cl" class="col-sm-4 col-form-label">{{ __('client.full_name') }}*</label>
@@ -119,12 +119,12 @@
                       <small class="text-danger" id="address_cl-error"></small>
                     </div>
                 </div>
-            
+
             </div>
             <div class="modal-footer">
                 {{-- button de fermeture modale --}}
                 @include('button.close-button')
-                
+
                 <div class="d-grid gap-2">
                     <button class="btn btn-primary saveP" type="button" id="save_contact_client">
                         <i class="fa-solid fa-floppy-disk"></i>
@@ -134,7 +134,7 @@
                       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                       {{ __('auth.loading') }}
                     </button>
-                </div> 
+                </div>
             </div>
         </form>
     </div>

@@ -20,7 +20,7 @@
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
                         <h3>{{ __('client.customer_details') }}</h3>
-                        <p class="text-subtitle text-muted"></p> 
+                        <p class="text-subtitle text-muted"></p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav class="float-start float-lg-end" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
@@ -134,7 +134,7 @@
                                 {{ __('client.creation_date') }}
                             </div>
                             <div class="col-md-8 text-primary fw-bold">
-                                {{ $client->created_at }} 
+                                {{ $client->created_at }}
                             </div>
                         </div>
 
@@ -143,7 +143,7 @@
                                 {{ __('client.last_modification_date') }}
                             </div>
                             <div class="col-md-8 text-primary fw-bold">
-                                {{ $client->updated_at }} 
+                                {{ $client->updated_at }}
                             </div>
                         </div>
 
@@ -168,16 +168,16 @@
                             <div class="tab-content p-4" id="myTabContent">
                                 <div class="tab-pane fade show active" id="contact" role="tabpanel"
                                     aria-labelledby="home-tab">
-                                    
+
                                     @include('client.commun.contact')
-                                    
+
                                 </div>
 
                                 <div class="tab-pane fade" id="proforma_invoice" role="tabpanel"
                                     aria-labelledby="profile-tab">
-                                    
+
                                     <a href="#" onclick="setUpinvoice('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_invoice') }}', '{{ 1 }}', '{{ 1 }}', '{{ 0 }}', '{{ $client->id }}')" class="btn btn-primary mb-3" role="button">
-                                        <i class="fa-solid fa-circle-plus"></i> 
+                                        <i class="fa-solid fa-circle-plus"></i>
                                         &nbsp;{{ __('auth.add') }}
                                     </a>
 
@@ -198,8 +198,8 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>
                                                         <a href="{{ route('app_info_proforma', [
-                                                            'id' => $entreprise->id, 
-                                                            'id2' => $functionalUnit->id, 
+                                                            'id' => $entreprise->id,
+                                                            'id2' => $functionalUnit->id,
                                                             'ref_invoice' => $invoice->reference_sales_invoice ]) }}">
                                                             {{ $invoice->reference_sales_invoice }}
                                                         </a>
@@ -217,7 +217,7 @@
                                                     </td>
                                                     <td>{{ date('Y-m-d', strtotime($invoice->due_date)) }}</td>
                                                     <td class="text-end">
-                                                        {{ number_format($invoice->total, 2, '.', ' ') }} 
+                                                        {{ number_format($invoice->total, 2, '.', ' ') }}
                                                     </td>
                                                     <td>
                                                         @php
@@ -227,8 +227,8 @@
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('app_info_proforma', [
-                                                            'id' => $entreprise->id, 
-                                                            'id2' => $functionalUnit->id, 
+                                                            'id' => $entreprise->id,
+                                                            'id2' => $functionalUnit->id,
                                                             'ref_invoice' => $invoice->reference_sales_invoice ]) }}">
                                                             {{ __('main.show') }}
                                                         </a>
@@ -237,14 +237,14 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-            
+
                                 </div>
 
                                 <div class="tab-pane fade" id="sales_invoice" role="tabpanel"
                                     aria-labelledby="profile-tab">
-                                    
+
                                     <a href="#" onclick="setUpinvoice('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_invoice') }}', '{{ 0 }}', '{{ 1 }}', '{{ 0 }}', '{{ $client->id }}')" class="btn btn-primary mb-3" role="button">
-                                        <i class="fa-solid fa-circle-plus"></i> 
+                                        <i class="fa-solid fa-circle-plus"></i>
                                         &nbsp;{{ __('auth.add') }}
                                     </a>
 
@@ -266,8 +266,8 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>
                                                         <a href="{{ route('app_info_sales_invoice', [
-                                                            'id' => $entreprise->id, 
-                                                            'id2' => $functionalUnit->id, 
+                                                            'id' => $entreprise->id,
+                                                            'id2' => $functionalUnit->id,
                                                             'ref_invoice' => $invoice->reference_sales_invoice ]) }}">
                                                             {{ $invoice->reference_sales_invoice }}
                                                         </a>
@@ -285,7 +285,7 @@
                                                     </td>
                                                     <td>{{ date('Y-m-d', strtotime($invoice->due_date)) }}</td>
                                                     <td class="text-end">
-                                                        {{ number_format($invoice->total, 2, '.', ' ') }} 
+                                                        {{ number_format($invoice->total, 2, '.', ' ') }}
                                                     </td>
                                                     <td class="text-end">
                                                         @php
@@ -305,8 +305,8 @@
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('app_info_sales_invoice', [
-                                                            'id' => $entreprise->id, 
-                                                            'id2' => $functionalUnit->id, 
+                                                            'id' => $entreprise->id,
+                                                            'id2' => $functionalUnit->id,
                                                             'ref_invoice' => $invoice->reference_sales_invoice ]) }}">
                                                             {{ __('main.show') }}
                                                         </a>
@@ -315,19 +315,19 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-            
+
                                 </div>
                             </div>
                         </div>
 
-                        
+
 
                         <div class="row">
 
                             <div class="col-md-6 mb-3">
                                 <div class="d-grid gap-2">
                                     <a class="btn btn-success" role="button" href="{{ route('app_update_customer', [
-                                        'id' => $entreprise->id, 
+                                        'id' => $entreprise->id,
                                         'id2' => $functionalUnit->id,
                                         'id3' => $client->id
                                         ]) }}">
@@ -339,7 +339,7 @@
 
                             <div class="col-md-6 mb-3">
                                 @php
-                                    $invoice_exst = DB::table('sales_invoices')->where('id_client', $client->id)->first();        
+                                    $invoice_exst = DB::table('sales_invoices')->where('id_client', $client->id)->first();
                                 @endphp
                                 @if ($invoice_exst)
                                     <div class="d-grid gap-2">

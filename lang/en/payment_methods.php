@@ -21,11 +21,13 @@
         'payment_method_added_successfully' => "Payment method added successfully!",
 
         'has_updated_a_payment_method_in_the_functional_unit' => "has updated a payment method in the functional unit",
-        'payment_method_updated_successfully' => "Payment method updated successfully!", 
+        'payment_method_updated_successfully' => "Payment method updated successfully!",
 
         'payment_method_details' => "Payment method details",
         'has_removed_a_payment_method' => "has removed a payment method",
         'payment_method_deleted_successfully' => "Payment method deleted successfully!",
 
         'update_a_payment_method' => "Update a payment method",
+
+        'operation_list' => "Operation list",
     ];

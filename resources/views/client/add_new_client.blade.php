@@ -47,7 +47,7 @@
                             <input type="hidden" name="customerRequest" id="customerRequest" value="add">
 
                             <div class="mb-4 row">
-                                <label for="customer_type_cl" class="col-sm-4 col-form-label">{{ __('client.customer_type') }}*</label> 
+                                <label for="customer_type_cl" class="col-sm-4 col-form-label">{{ __('client.customer_type') }}*</label>
                                 <div class="col-sm-8">
                                   <select name="customer_type_cl" id="customer_type_cl" class="form-select type_contact @error('customer_type_cl') is-invalid @enderror">
                                       <option value="" selected>{{ __('client.select_customer_type') }}</option>

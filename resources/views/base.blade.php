@@ -45,7 +45,7 @@
 
         <script src="{{ asset('assets/lib/theme/js/main.js') }}"></script>
 
-    
+
 
         {{-- Les pages --}}
         <script src="{{ asset('assets/app/js/script.js') }}"></script>

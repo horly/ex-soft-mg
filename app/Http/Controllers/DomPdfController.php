@@ -42,7 +42,7 @@ class DomPdfController extends Controller
 
         $tot_excl_tax = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->sum('total_price_inv_elmnt');
 
-            
+
         $pdf = Pdf::loadView('pdf.invoice_pdf', compact(
             'entreprise',
             'functionalUnit',
@@ -81,7 +81,7 @@ class DomPdfController extends Controller
 
         $tot_excl_tax = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->sum('total_price_inv_elmnt');
 
-            
+
         $pdf = Pdf::loadView('pdf.delivery_note_pdf', compact(
             'entreprise',
             'functionalUnit',

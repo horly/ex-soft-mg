@@ -2,6 +2,9 @@
 
 return [
     'suppliers' => "Fournisseurs",
+    'supplier' => "Fournisseur",
+    'select_a_supplier' => "Sélectionnez un fournisseur",
+    'select_a_supplier_please' => "Sélectionnez un fournisseur s'il vous plaît",
     'supplier_list' => "Liste des forunisseurs",
     'supplier_type' => "Type de fournisseur",
     'add_new_supplier' => "Ajouter un nouveau fournisseur",

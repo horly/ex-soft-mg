@@ -133,7 +133,7 @@ class ProfileController extends Controller
                 'address' => $address_profile,
                 'updated_at' => new \DateTimeImmutable
             ]);
-        
+
         return redirect()->route('app_profile')->with('success', __('profile.information_updated_successfully'));
     }
 
@@ -171,11 +171,11 @@ class ProfileController extends Controller
         $user = DB::table('users')
                     ->where('two_factor_secret', $token)
                     ->first();
-        
+
         $email = $user->email;
         $password = $user->password;
         $id = $user->id;
-        
+
         if($current_email == $email)
         {
             if($new_email != $current_email)
@@ -221,7 +221,7 @@ class ProfileController extends Controller
         $user = DB::table('users')
                 ->where('two_factor_secret', $token)
                 ->first();
-        
+
         $this->email->changePasswordRequest($user);
 
         return redirect()->back()->with('success', __('profile.your_password_change_request_has_been'));
@@ -248,7 +248,7 @@ class ProfileController extends Controller
         $user = DB::table('users')
                     ->where('two_factor_secret', $token)
                     ->first();
-        
+
         $id = $user->id;
 
         DB::table('users')

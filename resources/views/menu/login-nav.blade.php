@@ -6,7 +6,7 @@
         </div>
     </div>
 
-    <div>
+    <div class="d-flex align-items-center">
         <div class="dropdown-personal-menu me-2">
             <button class="dropbtn">
                 <i class="fa-solid fa-language"></i> Lang
@@ -71,11 +71,11 @@
                 //$notifCount = $notifs->count();
 
         @endphp
-        
+
         <div class="dropdown-personal-menu me-4">
             <button class="dropbtn">
-                <i class="fas fa-bell fa-2x" 
-                    @if ($notifCount != 0)    
+                <i class="fas fa-bell fa-2x"
+                    @if ($notifCount != 0)
                         data-count="
                             @if ($notifCount <= 99)
                                 {{ $notifCount }}
@@ -87,19 +87,19 @@
             </button>
             <div class="dropdown-content nav-login-dropdown" style="left:0;">
                 @foreach ($notifs as $notif)
-                    <a href="#" class="d-flex flex-row 
+                    <a href="#" class="d-flex flex-row
 
-                            @if($notif->read == 0) 
-                                bg-light-theme   
-                            @endif 
-                            link-secondary link-offset-2 link-underline link-underline-opacity-0 p-3" 
+                            @if($notif->read == 0)
+                                bg-light-theme
+                            @endif
+                            link-secondary link-offset-2 link-underline link-underline-opacity-0 p-3"
                             onclick="readNotification('{{ $notif->id }}', '{{ route('app_read_notification') }}', '{{ csrf_token() }}');">
-                        
+
                         @php
                             $user = DB::table('users')->where('id', $notif->id_sender)->first();
                             $entreprise = DB::table('entreprises')->where('id', $notif->id_entreprise)->first();
                         @endphp
-                        
+
                         <img src="{{ asset('assets/img/profile') }}/{{ $user->photo_profile_url }}.png" class="rounded-circle border me-2" alt="..." height="35">
                         <small>
                             <b>{{ $user->name }}</b>
@@ -122,7 +122,7 @@
 
         <div class="dropdown-personal-menu" style="float:right;">
             <button class="dropbtn user">
-                <img src="{{ asset('assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png" class="rounded-circle border me-2" alt="..." width="40"> 
+                <img src="{{ asset('assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png" class="rounded-circle border me-2" alt="..." width="40">
                 {{ Auth::user()->name }}
                 <i class="fa-solid fa-caret-down ms-2"></i>
             </button>

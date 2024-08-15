@@ -44,4 +44,10 @@ class PaymentMethod extends Model
     {
         return $this->hasMany('App\Models\Encaissement');
     }
+
+    public function decaissement()
+    {
+        return $this->hasMany('App\Models\Decaissement');
+    }
+
 }

@@ -101,7 +101,7 @@ Route::controller(EntrepriseController::class)->group(function(){
                 Route::get('/functional_unit/{id:int}', 'entreprise')->name('app_entreprise');
                 Route::get('/infos/{id:int}', 'entrepriseInfo')->name('app_entreprise_info_page');
             });
-            
+
             Route::post('/save_entreprise', 'saveEntreprise')->name('app_save_entreprise');
             Route::post('/delete_entreprise', 'deleteEntreprise')->name('app_delete_entreprise');
 
@@ -118,7 +118,7 @@ Route::controller(ProfileController::class)->group(function(){
         Route::get('/profile', 'profile')->name('app_profile');
         //Route::get('/email_password', 'emailPassword')->name('app_email_password');
         Route::get('/edit_profile_info', 'editProfileInfo')->name('app_edit_profile_info');
-        
+
         Route::post('/save_photo', 'savePhoto')->name('app_save_photo');
         Route::post('/save_profile_info', 'saveProfileInfo')->name('app_save_profile_info');
     });
@@ -154,7 +154,7 @@ Route::controller(FunctionalUnitController::class)->group(function(){
 
                 Route::post('/add_new_phone_number_entreprise', 'addNewPhoneNumber')->name('app_add_new_phone_number_entreprise');
                 Route::post('/add_new_email_entreprise', 'addNewEmail')->name('app_add_new_email_entreprise');
-                
+
                 Route::post('/delete_phone_number_entreprise', 'deletePhoneNumberEntr')->name('app_delete_phone_number_entreprise');
                 Route::post('/delete_email_entreprise', 'deleteEmailAddress')->name('app_delete_email_entreprise');
             });
@@ -205,7 +205,7 @@ Route::controller(CustomerController::class)->group(function(){
         //
         Route::post('/create_client', 'createClient')->name('app_create_client');
         Route::post('/delete_client', 'deleteClient')->name('app_delete_client');
-        
+
         Route::post('/add_new_contact_client', 'addNewContactClient')->name('app_add_new_contact_client');
     });
 });
@@ -368,7 +368,7 @@ Route::controller(SalesInvoiceController::class)->group(function(){
                 Route::get('/add_new_sales_invoice/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewSalesInvoice')->name('app_add_new_sales_invoice');
                 Route::get('/info_sales_invoice/{id:int}/{id2:int}/{ref_invoice:string}', 'infoSalesInvoice')->name('app_info_sales_invoice');
                 Route::get('/update_sales_invoice/{id:int}/{id2:int}/{id3:int}', 'upDateSalesInvoice')->name('app_update_sales_invoice');
-                
+
                 Route::get('/proforma/{id:int}/{id2:int}', 'proforma')->name('app_proforma');
                 Route::get('/add_new_proforma/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewProforma')->name('app_add_new_proforma');
                 Route::get('/info_proforma/{id:int}/{id2:int}/{ref_invoice:string}', 'infoProforma')->name('app_info_proforma');
@@ -406,15 +406,15 @@ Route::controller(SalesInvoiceController::class)->group(function(){
 
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
-        
+
         $fpdf->AddPage();
         $fpdf->SetFont('Courier', 'B', 18);
 
-        
+
         $fpdf->Cell(50, 25, 'Hello World!');
         $fpdf->Output();
         exit;
-    
+
     });
 });*/
 
@@ -429,10 +429,19 @@ Route::controller(ExpensesController::class)->group(function(){
             Route::middleware('funcUnit')->group(function(){
                 Route::get('/purchases/{id:int}/{id2:int}', 'purchases')->name('app_purchases');
                 Route::get('/add_new_purchase/{id:int}/{id2:int}/{ref_purchase:string}', 'addNewPurchase')->name('app_add_new_purchase');
+                Route::get('/update_purchase/{id:int}/{id2:int}/{ref_purchase:string}', 'updatePurchase')->name('app_update_purchase');
+
+                Route::get('/expenses/{id:int}/{id2:int}', 'expenses')->name('app_expenses');
+                Route::get('/add_new_expense/{id:int}/{id2:int}/{ref_expense:string}', 'addNewExpense')->name('app_add_new_expense');
             });
         });
 
         Route::post('/setup_purchase', 'setUpPurchase')->name('app_setup_purchase');
         Route::post('/upload_purchase_pdf', 'uploadPurchasePdf')->name('app_upload_purchase_pdf');
+        Route::post('/save_purchase', 'savePurchase')->name('app_save_purchase');
+        Route::post('/delete_purchase', 'deletePurchase')->name('app_delete_purchase');
+
+        Route::post('/setup_expense', 'setUpExpense')->name('app_setup_expense');
+        Route::post('/save_expense', 'saveExpense')->name('app_save_expense');
     });
 });

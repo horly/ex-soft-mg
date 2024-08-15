@@ -8,7 +8,7 @@
 </head>
 <body>
     <style>
-        
+
         .small-text {
             font-size: 13px;
         }
@@ -69,7 +69,7 @@
             width: 100%;
             border: 1px solid #bfcce6;
         }
-        
+
         .table th, td {
             border: 1px solid #bfcce6;
             padding: 5px;
@@ -93,9 +93,9 @@
         }
 
         .footer {
-            position: fixed; 
-            bottom: 0cm; 
-            left: 0cm; 
+            position: fixed;
+            bottom: 0cm;
+            left: 0cm;
             right: 0cm;
             height: 2cm;
 
@@ -137,21 +137,23 @@
         <div class="right">{{ __('client.reference') }} {{ $customer->reference_cl }}</div>
     </div>
 
-    <div class="box small-text">
-        <div class="key"></div>
-        <div class="content"></div>
-        <div class="right"> 
-            {{ $contact->fullname_cl }}
+    @if ($customer->type == "company")
+        <div class="box small-text">
+            <div class="key"></div>
+            <div class="content"></div>
+            <div class="right">
+                {{ $customer->entreprise_name_cl }}
+            </div>
         </div>
-    </div>
-
-    <div class="box small-text">
-        <div class="key"></div>
-        <div class="content"></div>
-        <div class="right">
-            {{ $customer->entreprise_name_cl }}
+    @else
+        <div class="box small-text">
+            <div class="key"></div>
+            <div class="content"></div>
+            <div class="right">
+                {{ $contact->fullname_cl }}
+            </div>
         </div>
-    </div>
+    @endif
 
     <div class="box mb-3 small-text">
         <div class="key"></div>
@@ -251,7 +253,7 @@
             {{ $entreprise->name }} {{ $entreprise->slogan }}
         </div>
         <div>RCCM : {{ $entreprise->rccm }} - IDNAT : {{ $entreprise->id_nat }} - IDNAT : {{ $entreprise->nif }}</div>
-        <div>Contact : 
+        <div>Contact :
             @foreach ($phones as $phone)
                 {{ '+' . $country->telephone_code }}
                 {{ chunk_split($phone->phone_number, 3, ' ') }}
@@ -264,7 +266,7 @@
             - Web : <a href="https://{{ $entreprise->website }}" target="_blank">{{ $entreprise->website }}</a>
         </div>
         <div>
-            {{ __('main.address') }} : {{ $functionalUnit->address }} - 
+            {{ __('main.address') }} : {{ $functionalUnit->address }} -
             {{ Config::get('app.locale') == 'en' ? $user->name_gb : $user->name_fr }}
         </div>
         <div>
@@ -274,8 +276,8 @@
                 @endphp
                 <div>
                     {{ $bank->bank_name }} /
-                    {{ $bank->account_number }} - 
-                    {{ $devise->iso_code }} - 
+                    {{ $bank->account_number }} -
+                    {{ $devise->iso_code }} -
                     {{ $bank->account_title }}
                 </div>
             @endforeach
@@ -284,8 +286,8 @@
         <div class="citation">
             {{ __('invoice.invoice_generated_by_EXADERP') }}
         </div>
-        
+
     </div>
-    
+
 </body>
 </html>

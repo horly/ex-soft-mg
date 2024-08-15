@@ -50,7 +50,7 @@ class LoginController extends Controller
                 'two_factor_secret' => $verification_code_secret,
                 'two_factor_recovery_codes' => $verification_code,
         ]);
-        
+
         $mail = new Email;
         $mail->sendVerifactionCode($user, $verification_code, $verification_code_secret);
 
@@ -146,7 +146,7 @@ class LoginController extends Controller
         if(!$userExit)
         {
             /**
-             * on génère un mot de passe de 8 caratère 
+             * on génère un mot de passe de 8 caratère
              */
             $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
             $pass = array(); //remember to declare $pass as an array

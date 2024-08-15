@@ -32,17 +32,17 @@
                                             Request::route()->getName() == "app_add_new_supplier" ||
                                             Request::route()->getName() == "app_info_supplier" ||
                                             Request::route()->getName() == "app_update_supplier" ||
-                                            
+
                                             Request::route()->getName() == "app_creditor" ||
                                             Request::route()->getName() == "app_add_new_creditor" ||
                                             Request::route()->getName() == "app_info_creditor" ||
                                             Request::route()->getName() == "app_update_creditor" ||
-                                            
+
                                             Request::route()->getName() == "app_debtor" ||
                                             Request::route()->getName() == "app_add_new_debtor" ||
                                             Request::route()->getName() == "app_info_debtor" ||
-                                            Request::route()->getName() == "app_update_debtor") 
-                                            active 
+                                            Request::route()->getName() == "app_update_debtor")
+                                            active
                                         @endif has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-circle-user"></i>
@@ -52,22 +52,22 @@
                                             Request::route()->getName() == "app_add_new_client" ||
                                             Request::route()->getName() == "app_info_customer" ||
                                             Request::route()->getName() == "app_update_customer" ||
-                                            
+
                                             Request::route()->getName() == "app_supplier" ||
                                             Request::route()->getName() == "app_add_new_supplier" ||
                                             Request::route()->getName() == "app_info_supplier" ||
                                             Request::route()->getName() == "app_update_supplier" ||
-                                            
+
                                             Request::route()->getName() == "app_creditor" ||
                                             Request::route()->getName() == "app_add_new_creditor" ||
                                             Request::route()->getName() == "app_info_creditor" ||
                                             Request::route()->getName() == "app_update_creditor" ||
-                                            
-                                            Request::route()->getName() == "app_debtor" || 
+
+                                            Request::route()->getName() == "app_debtor" ||
                                             Request::route()->getName() == "app_add_new_debtor" ||
                                             Request::route()->getName() == "app_info_debtor" ||
                                             Request::route()->getName() == "app_update_debtor")
-                                            active 
+                                            active
                                         @endif">
                         <li class="submenu-item @if(Request::route()->getName() == "app_customer") active @endif">
                             <a href="{{ route('app_customer', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
@@ -106,13 +106,13 @@
                                             Request::route()->getName() == "app_add_new_subcategory_article" ||
                                             Request::route()->getName() == "app_info_article_subcategory" ||
                                             Request::route()->getName() == "app_update_article_subcategory" ||
-                                            
+
                                             Request::route()->getName() == "app_article" ||
                                             Request::route()->getName() == "app_add_new_article" ||
                                             Request::route()->getName() == "app_info_article" ||
-                                            Request::route()->getName() == "app_update_article") 
-                                                active 
-                                        @endif 
+                                            Request::route()->getName() == "app_update_article")
+                                                active
+                                        @endif
                     has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-box-archive"></i>
@@ -127,12 +127,12 @@
                                             Request::route()->getName() == "app_add_new_subcategory_article" ||
                                             Request::route()->getName() == "app_info_article_subcategory" ||
                                             Request::route()->getName() == "app_update_article_subcategory" ||
-                                            
+
                                             Request::route()->getName() == "app_article" ||
                                             Request::route()->getName() == "app_add_new_article" ||
                                             Request::route()->getName() == "app_info_article" ||
-                                            Request::route()->getName() == "app_update_article") 
-                                                active 
+                                            Request::route()->getName() == "app_update_article")
+                                                active
                         @endif">
                         <li class="submenu-item @if(Request::route()->getName() == "app_article") active @endif">
                             <a href="{{ route('app_article', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
@@ -160,9 +160,9 @@
                                             Request::route()->getName() == "app_service" ||
                                             Request::route()->getName() == "app_add_new_service" ||
                                             Request::route()->getName() == "app_info_service" ||
-                                            Request::route()->getName() == "app_update_service") 
-                                                active 
-                                        @endif  
+                                            Request::route()->getName() == "app_update_service")
+                                                active
+                                        @endif
                     has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-toolbox"></i>
@@ -176,8 +176,8 @@
                                             Request::route()->getName() == "app_service" ||
                                             Request::route()->getName() == "app_add_new_service" ||
                                             Request::route()->getName() == "app_info_service" ||
-                                            Request::route()->getName() == "app_update_service") 
-                                                active 
+                                            Request::route()->getName() == "app_update_service")
+                                                active
                                         @endif">
                         <li class="submenu-item @if(Request::route()->getName() == "app_service") active @endif">
                             <a href="{{ route('app_service', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
@@ -218,16 +218,16 @@
                                                 Request::route()->getName() == "app_add_new_sales_invoice" ||
                                                 Request::route()->getName() == "app_info_sales_invoice" ||
                                                 Request::route()->getName() == "app_update_sales_invoice" ||
-                                                
+
                                                 Request::route()->getName() == "app_proforma" ||
                                                 Request::route()->getName() == "app_add_new_proforma" ||
                                                 Request::route()->getName() == "app_info_proforma" ||
                                                 Request::route()->getName() == "app_update_proforma" ||
-                                            
-                                                Request::route()->getName() == "app_delivery_note" ||  
+
+                                                Request::route()->getName() == "app_delivery_note" ||
                                                 Request::route()->getName() == "app_add_new_delivery_note" ||
                                                 Request::route()->getName() == "app_info_delivery_note")
-                                                    active 
+                                                    active
                                             @endif  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-file-invoice-dollar"></i>
@@ -236,17 +236,17 @@
                     <ul class="submenu @if(Request::route()->getName() == "app_sales_invoice" ||
                                             Request::route()->getName() == "app_add_new_sales_invoice" ||
                                             Request::route()->getName() == "app_info_sales_invoice" ||
-                                            Request::route()->getName() == "app_update_sales_invoice" || 
-                                            
+                                            Request::route()->getName() == "app_update_sales_invoice" ||
+
                                             Request::route()->getName() == "app_proforma" ||
                                             Request::route()->getName() == "app_add_new_proforma" ||
                                             Request::route()->getName() == "app_info_proforma" ||
                                             Request::route()->getName() == "app_update_proforma" ||
-                                            
-                                            Request::route()->getName() == "app_delivery_note" ||  
+
+                                            Request::route()->getName() == "app_delivery_note" ||
                                             Request::route()->getName() == "app_add_new_delivery_note" ||
                                             Request::route()->getName() == "app_info_delivery_note")
-                                                active 
+                                                active
                                         @endif">
                         <li class="submenu-item @if(Request::route()->getName() == "app_sales_invoice") active @endif">
                             <a href="{{ route('app_sales_invoice', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
@@ -276,17 +276,25 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  @if(Request::route()->getName() == "app_purchases" || 
-                                                Request::route()->getName() == "app_add_new_purchase")
-                                                    active 
+                <li class="sidebar-item  @if(Request::route()->getName() == "app_purchases" ||
+                                                Request::route()->getName() == "app_add_new_purchase" ||
+                                                Request::route()->getName() == "app_update_purchase" ||
+
+                                                Request::route()->getName() == "app_expenses" ||
+                                                Request::route()->getName() == "app_add_new_expense")
+                                                    active
                                             @endif has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="fa-solid fa-file-invoice"></i>
                         <span>{{ __('dashboard.expenses') }}</span>
                     </a>
-                    <ul class="submenu @if(Request::route()->getName() == "app_purchases" || 
-                                             Request::route()->getName() == "app_add_new_purchase") 
-                                                active 
+                    <ul class="submenu @if(Request::route()->getName() == "app_purchases" ||
+                                             Request::route()->getName() == "app_add_new_purchase" ||
+                                             Request::route()->getName() == "app_update_purchase" ||
+
+                                             Request::route()->getName() == "app_expenses" ||
+                                             Request::route()->getName() == "app_add_new_expense")
+                                                active
                                         @endif">
                         <li class="submenu-item @if(Request::route()->getName() == "app_purchases") active @endif">
                             <a href="{{ route('app_purchases', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
@@ -298,11 +306,11 @@
                             <a href="#">{{ __('dashboard.credit_invoice_purchases') }}</a>
                         </li>
                         --}}
-                        <li class="submenu-item ">
+                        <li class="submenu-item">
                             <a href="#">{{ __('dashboard.order') }}</a>
                         </li>
-                        <li class="submenu-item ">
-                            <a href="#">{{ __('dashboard.expenses') }}</a>
+                        <li class="submenu-item @if(Request::route()->getName() == "app_expenses") active @endif">
+                            <a href="{{ route('app_expenses', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.expenses') }}</a>
                         </li>
                     </ul>
                 </li>

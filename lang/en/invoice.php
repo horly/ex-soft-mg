@@ -29,7 +29,7 @@
         'insert_a_service' => "Insert a service",
         'article' => "Article",
         'service' => "Service",
-        
+
         'select_an_article' => "Select an article",
         'select_a_service' => "Select a service",
 
@@ -45,7 +45,7 @@
         'apply_discount' => "Apply discount",
 
         'select_customer_please' => "Select customer please!",
-        
+
         'added_an_invoice_in_the_functional_unit' => "added an invoice in the functional unit",
         'the_invoice_was_added_successfully' => "The invoice was added successfully!",
 
@@ -79,7 +79,7 @@
         /**
          * Proforma invoice
          */
-        'proforma_invoice_list' => "Proforma invoice list", 
+        'proforma_invoice_list' => "Proforma invoice list",
         'add_a_proforma_invoice' => "Add a proforma invoice",
         'added_a_new_proforma_invoice_in_the_functional_unit' => "added a new proforma invoice in the functional unit",
         'proforma_invoice_added_successfully' => "Proforma invoice added successfully!",
@@ -120,4 +120,7 @@
 
         'delivery_note_MAJ' => "DELIVERY NOTE",
         'for' => "For",
+        'concern' => "Concern",
+        'enter_the_invoice_subject' => "Enter the invoice subject",
+        'please_enter_the_invoice_subject' => "Please enter the invoice subject",
 ];

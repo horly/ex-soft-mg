@@ -117,6 +117,11 @@ class FunctionalUnit extends Model
         return $this->hasMany('App\Models\Encaissement');
     }
 
+    public function decaissement()
+    {
+        return $this->hasMany('App\Models\Decaissement');
+    }
+
     public function purchase()
     {
         return $this->hasMany('App\Models\Purchase');
@@ -125,6 +130,11 @@ class FunctionalUnit extends Model
     public function purchaseMargin()
     {
         return $this->hasMany('App\Models\PurchaseMargin');
+    }
+
+    public function expense()
+    {
+        return $this->hasMany('App\Models\DecaisExpensessement');
     }
 }
 

@@ -40,10 +40,10 @@
                 <div class="card">
                     <div class="card-body">
                         <a href="{{ route('app_add_new_payment_methods', ['id' => $entreprise->id, 'id2' => $functionalUnit->id ]) }}" class="btn btn-primary mb-3" role="button">
-                            <i class="fa-solid fa-circle-plus"></i> 
+                            <i class="fa-solid fa-circle-plus"></i>
                             &nbsp;{{ __('auth.add') }}
                         </a>
-                        
+
                         <table class="table table-striped table-hover border bootstrap-datatable">
                             <thead>
                                 <th>N°</th>
@@ -59,7 +59,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <a href="{{ route('app_info_payment_methods', [
-                                                'id' => $entreprise->id, 
+                                                'id' => $entreprise->id,
                                                 'id2' => $functionalUnit->id,
                                                 'id3' => $paymentMethod->id
                                             ]) }}">
@@ -80,14 +80,20 @@
                                             {{ number_format($paymentReceived, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
                                         </td>
                                         <td class="text-end">
-                                            {{ number_format(0, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
+                                            @php
+                                                $paymentMade = DB::table('decaissements')
+                                                                    ->where([
+                                                                        'id_pay_meth' => $paymentMethod->id,
+                                                                    ])->sum('amount');
+                                            @endphp
+                                            {{ number_format($paymentMade, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
                                         </td>
                                         <td class="text-end">
-                                            {{ number_format($paymentReceived - 0, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
+                                            {{ number_format($paymentReceived - $paymentMade, 2, '.', ' ') }} {{ $paymentMethod->iso_code }}
                                         </td>
                                         <td class="text-center">
                                             <a href="{{ route('app_info_payment_methods', [
-                                                'id' => $entreprise->id, 
+                                                'id' => $entreprise->id,
                                                 'id2' => $functionalUnit->id,
                                                 'id3' => $paymentMethod->id
                                             ]) }}">

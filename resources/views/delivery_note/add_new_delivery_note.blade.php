@@ -62,7 +62,7 @@
                                                 {{ __('invoice.select_a_customer') }}
                                             @endif
                                         </option>
-            
+
                                         @foreach ($clients as $client)
                                             <option value="{{ $client->id }}">
                                                 @if ($client->type == "particular")
@@ -90,6 +90,14 @@
                                         </option>
                                     </select>
                                     <input type="hidden" id="client_select_a_contact" name="client_select_a_contact" value="{{ __('client.select_a_contact') }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <label for="" class="col-sm-2 col-form-label">{{ __('invoice.concern') }}*</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="invoice_concern_sales" id="invoice_concern_sales" class="form-control @error('invoice_concern_sales') is-invalid @enderror" placeholder="{{ __('invoice.enter_the_invoice_subject') }}">
+                                    <small class="text-danger">@error('invoice_concern_sales') {{ $message }} @enderror</small>
                                 </div>
                             </div>
 
@@ -123,7 +131,7 @@
                                                     $serial_numbers = DB::table('serial_number_invoices')->where('id_invoice_element', $invoice_element->id)->get();
                                                     $count_serial_numbers = DB::table('serial_number_invoices')->where('id_invoice_element', $invoice_element->id)->count();
                                                 @endphp
-                                                
+
                                                 <ul class="list-group mb-2">
                                                     @foreach ($serial_numbers as $serial_number)
                                                         <li class="list-group-item">
@@ -144,7 +152,7 @@
 
                                                 @if ($count_serial_numbers < $invoice_element->quantity)
                                                     <button class="btn btn-primary" type="button" id="add-serial-number-invoice" onclick="modalInsertSerialNumberInvoice('{{ $invoice_element->id }}', '{{ $invoice_element->description_inv_elmnt }}', '{{ $invoice_element->quantity }}');" data-bs-toggle="modal" data-bs-target="#insert_serial_number_invoice">
-                                                        <i class="fa-solid fa-circle-plus"></i> 
+                                                        <i class="fa-solid fa-circle-plus"></i>
                                                         &nbsp;{{ __('auth.add') }}
                                                     </button>
                                                 @endif
@@ -167,12 +175,12 @@
                                     <tr>
                                         <td>
                                             <button class="btn btn-primary" type="button" onclick="modalInsertArticleInvoice();" data-bs-toggle="modal" data-bs-target="#new_article_invoice">
-                                                <i class="fa-solid fa-circle-plus"></i> 
+                                                <i class="fa-solid fa-circle-plus"></i>
                                                 &nbsp;{{ __('invoice.insert_an_article') }}
                                             </button>
                                             {{--
                                             <button class="btn btn-primary" type="button" onclick="modalInsertServiceInvoice();" data-bs-toggle="modal" data-bs-target="#new_service_invoice">
-                                                <i class="fa-solid fa-circle-plus"></i> 
+                                                <i class="fa-solid fa-circle-plus"></i>
                                                 &nbsp;{{ __('invoice.insert_a_service') }}
                                             </button>
                                             --}}
@@ -185,7 +193,7 @@
                             <input type="hidden" name="discount_apply_input" id="discount_apply_input" value="0">
                             <input type="hidden" name="vat_apply_input" id="vat_apply_input" value="0">
                             <input type="hidden" name="tot_incl_tax_input" id="tot_incl_tax_input" value="{{ $tot_excl_tax }}">
-                            <input type="hidden" name="amount_received" id="amount_received" value="0"> 
+                            <input type="hidden" name="amount_received" id="amount_received" value="0">
 
                             @php
                                 $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
@@ -248,7 +256,7 @@
                 <input type="hidden" name="descrption_saved_art" id="descrption_saved_art" value="">
                 <input type="hidden" name="id_invoice_margin" id="id_invoice_margin" value="{{ $invoice_margin->id }}">
                 <input type="hidden" name="id_invoice_element" id="id_invoice_element" value="0">
-                <input type="hidden" name="is_an_article" id="is_an_article" value="1"> 
+                <input type="hidden" name="is_an_article" id="is_an_article" value="1">
 
                 <input type="hidden" class="customer_session" name="id_customer_session_art" id="id_customer_session_art" value="0">
                 <input type="hidden" class="contact_session" name="id_contact_session_art" id="id_contact_session_art" value="0">
@@ -328,7 +336,7 @@
             <div class="modal-footer">
                 {{-- button de fermeture modale --}}
                 @include('button.close-button')
-                
+
                 <div class="d-grid gap-2">
                     <button class="btn btn-primary saveP" type="button" id="insert_article_invoice">
                         <i class="fa-solid fa-floppy-disk"></i>
@@ -338,7 +346,7 @@
                       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                       {{ __('auth.loading') }}
                     </button>
-                </div> 
+                </div>
             </div>
         </form>
     </div>
@@ -357,7 +365,7 @@
                 <input type="hidden" name="serial_number_invoice-message" id="serial_number_invoice-message" value="{{ __('invoice.enter_a_serial_number_please') }}">
                 <input type="hidden" name="id_invoice_element_sn" id="id_invoice_element_sn">
                 <input type="hidden" name="id_serial_number_invoice" id="id_serial_number_invoice" value="0">
-                <input type="hidden" name="modalRequest" id="modalRequest-serial_number_invoice" value="add"> 
+                <input type="hidden" name="modalRequest" id="modalRequest-serial_number_invoice" value="add">
 
                 <input type="hidden" name="add_serial_number_title" id="add_serial_number_title" value="{{ __('invoice.add_serial_number') }}">
                 <input type="hidden" name="update_serial_number_title" id="update_serial_number_title" value="{{ __('invoice.update_serial_number') }}">
@@ -392,7 +400,7 @@
             <div class="modal-footer">
                 {{-- button de fermeture modale --}}
                 @include('button.close-button')
-                
+
                 <div class="d-grid gap-2">
                     <button class="btn btn-primary saveP" type="button" id="insert-serial-number-invoice">
                         <i class="fa-solid fa-floppy-disk"></i>
@@ -402,7 +410,7 @@
                       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                       {{ __('auth.loading') }}
                     </button>
-                </div> 
+                </div>
             </div>
         </form>
     </div>
@@ -410,7 +418,7 @@
 
 <form action="#">
     <input type="hidden" id="article_sales_invoice-message" value="{{ __('invoice.select_an_article_please') }}">
-    <input type="hidden" id="article_qty_invoice-message" value="{{ __('invoice.quantity_cannot_be_empty') }}"> 
+    <input type="hidden" id="article_qty_invoice-message" value="{{ __('invoice.quantity_cannot_be_empty') }}">
     <input type="hidden" id="article_margin_invoice-message" value="{{ __('invoice.margin_cannot_be_empty') }}">
     <input type="hidden" id="service_sales_invoice-message" value="{{ __('invoice.select_a_service_please') }}">
 </form>

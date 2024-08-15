@@ -39,52 +39,10 @@
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="p-4 border rounded">
-                                    <div class="border-bottom mb-4 fw-bold">
-                                        {{ __('expenses.preview') }}
-                                    </div>
 
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="p-4 border rounded">
+                        {{-- le contenu de l'achat --}}
+                        @include('expenses.purchase_detail_content')
 
-                                    <form class="mb-3 row" id="purchase_upload_pdf_form" method="POST" action="{{ route('app_upload_purchase_pdf') }}" token="{{ csrf_token() }}" enctype="multipart/form-data">
-                                        @csrf
-                                        <input type="hidden" name="ref_purchase" value="{{ $ref_purchase }}">
-                                        <input type="hidden" name="file_purchase-message" id="file_purchase-message" value="{{ __('expenses.please_select_a_file') }}">
-                                        <input type="hidden" name="file_purchase-size" id="file_purchase-size" value="{{ __('expenses.file_must_not_exceed') }}">
-
-                                        <label for="file_purchase" class="col-sm-3 col-form-label">{{ __('expenses.add_a_file') }}</label>
-                                        <div class="col-sm-9">
-                                            <div class="input-group">
-                                                <input class="form-control" type="file" id="file_purchase" name="file_purchase" accept=".pdf">
-                                                <button class="btn btn-primary" type="submit" id="button-addon2">
-                                                    <i class="fa-solid fa-floppy-disk"></i>
-                                                    &nbsp;{{ __('main.save') }}
-                                                </button>
-                                            </div>
-                                            <small class="text-danger" id="file_purchase-error"></small>
-
-                                            <div class="progress mt-3" id="zone-progress-bar-purchase" hidden>
-                                                <div class="progress-bar bg-success" role="progressbar" id="progress-bar-purchase" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    
-                                    <div class="border-bottom mb-4 fw-bold">
-                                        {{ __('expenses.preview') }}
-                                    </div>
-                                    <object data="{{ asset('assets/img/purchase') }}/{{ $ref_purchase }}.pdf" type="application/pdf" width="100%" height="500px">
-                                        <div class="alert alert-warning text-center" role="alert">
-                                            <i class="fa-regular fa-file"></i> {{ __('expenses.no_preview_available') }}
-                                        </div>
-                                    </object> 
-                                </div> 
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
