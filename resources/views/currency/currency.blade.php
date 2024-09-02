@@ -40,7 +40,7 @@
                 <div class="card">
                     <div class="card-body">
                         <a href="{{ route('app_create_currency', ['id' => $entreprise->id, $functionalUnit->id]) }}" class="btn btn-primary mb-3" role="button">
-                            <i class="fa-solid fa-circle-plus"></i> 
+                            <i class="fa-solid fa-circle-plus"></i>
                             &nbsp;{{ __('auth.add') }}
                         </a>
 
@@ -49,7 +49,7 @@
                             <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
                             <input type="hidden" name="id_fu" value="{{ $functionalUnit->id }}">
 
-                            <label for="main_currency" class="col-sm-3 col-form-label">{{ __('dashboard.main_currency') }}*</label> 
+                            <label for="main_currency" class="col-sm-3 col-form-label">{{ __('dashboard.main_currency') }}*</label>
                             <div class="col-sm-6 mb-3">
                                 <select name="main_currency" id="main_currency" class="form-select @error('main_currency') is-invalid @enderror">
                                     @if (Config::get('app.locale') == 'en')
@@ -90,14 +90,14 @@
                                         <td>
                                             @if (Config::get('app.locale') == 'en')
                                                 <a href="{{ route('app_info_currency', [
-                                                    'id' => $entreprise->id, 
+                                                    'id' => $entreprise->id,
                                                     'id2' => $functionalUnit->id,
                                                     'id3' => $devise->id]) }}">
                                                     {{ $devise->iso_code }} - {{ $devise->motto_en }}
                                                 </a>
                                             @else
                                                 <a href="{{ route('app_info_currency', [
-                                                    'id' => $entreprise->id, 
+                                                    'id' => $entreprise->id,
                                                     'id2' => $functionalUnit->id,
                                                     'id3' => $devise->id]) }}">{{ $devise->iso_code }} - {{ $devise->motto }}</a>
                                             @endif
@@ -105,7 +105,7 @@
                                         <td>{{ $devise->taux }} {{ $devise->iso_code }}</td>
                                         <td>
                                             <a href="{{ route('app_info_currency', [
-                                                'id' => $entreprise->id, 
+                                                'id' => $entreprise->id,
                                                 'id2' => $functionalUnit->id,
                                                 'id3' => $devise->id]) }}">
                                                 {{ __('main.show') }}
@@ -126,7 +126,7 @@
 
         </div>
     </div>
-    
+
 
 </div>
 

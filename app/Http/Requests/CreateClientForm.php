@@ -24,7 +24,7 @@ class CreateClientForm extends FormRequest
         return [
             //
             'customer_type_cl' => 'required',
-            
+
             'full_name_cl' => 'required|regex:/^[a-zA-Z ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ]+$/',
             'grade_cl' => 'required',
 
@@ -48,7 +48,7 @@ class CreateClientForm extends FormRequest
 
             'email_cl.required' => __('client.enter_the_customers_email_address_please'),
 
-            'phone_number_cl.required' => __('client.enter_the_customers_phone_number_please'), 
+            'phone_number_cl.required' => __('client.enter_the_customers_phone_number_please'),
             'phone_number_cl.numeric' => __('client.enter_a_valid_customers_phone_number_please'),
 
             'address_cl.required' => __('client.enter_the_customers_business_address_please'),

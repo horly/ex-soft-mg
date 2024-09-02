@@ -28,7 +28,7 @@ class CategoryArticle extends Model
     {
         return $this->belongsTo('App\Models\User', 'id_user');
     }
- 
+
     function functionalUit()
     {
         return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');

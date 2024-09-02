@@ -134,7 +134,12 @@ class FunctionalUnit extends Model
 
     public function expense()
     {
-        return $this->hasMany('App\Models\DecaisExpensessement');
+        return $this->hasMany('App\Models\Expense');
+    }
+
+    public function entrance()
+    {
+        return $this->hasMany('App\Models\Entrance');
     }
 }
 

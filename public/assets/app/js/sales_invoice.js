@@ -444,4 +444,59 @@ function generateDeliveryNote(ref_invoice, id_entreprise, id_functionalUnit, tok
     $("#poster").submit();
 }
 
+function setEntrance(id_functionalUnit, id_entreprise, token, url)
+{
+    var inputs = '';
+    inputs += '<input type="hidden" name="id_functionalUnit" value="' + id_functionalUnit + '" />'
+                + '<input type="hidden" name="id_entreprise" value="' + id_entreprise + '" />'
+                + '<input type="hidden" name="_token" value="' + token + '" />';
+
+    $("body").append('<form action="' + url + '" method="POST" id="poster1">' + inputs + '</form>');
+    $("#poster1").submit();
+}
+
+$('#save-entrance-btn').click(function(){
+    var description_entr = $('#description_entr');
+    var amount_entrance = $('#amount_entrance');
+    var pay_method_entr = $('#pay_method_entr');
+
+    var currency_exp_iso_code= $('#currency_exp option:selected').attr('iso_code');
+    var pay_method_exp_iso_code= $('#pay_method_entr option:selected').attr('iso_code');
+
+    if(description_entr.val() != ""){
+        description_entr.removeClass('is-invalid');
+        $('#description_entr-error').addClass('d-none');
+
+        if(amount_entrance.val() != ""){
+            amount_entrance.removeClass('is-invalid');
+            $('#amount_entrance-error').addClass('d-none');
+
+            /** console.log("Payment methode iso_code : " + pay_method_exp_iso_code + "\n" +
+              *  "Currency selected iso_code : " + currency_exp_iso_code);
+              */
+
+            if(currency_exp_iso_code == pay_method_exp_iso_code){
+                pay_method_entr.removeClass('is-invalid');
+                $('#pay_method_entr-error').addClass('d-none');
+
+                $('.saveP').addClass('d-none');
+                $('.btn-loadingP').removeClass('d-none');
+
+                $('#save-entrance-form').submit();
+
+
+            }else{
+                pay_method_entr.addClass('is-invalid');
+                $('#pay_method_entr-error').removeClass('d-none');
+            }
+        }else{
+            amount_entrance.addClass('is-invalid');
+            $('#amount_entrance-error').removeClass('d-none');
+        }
+    }else{
+        description_entr.addClass('is-invalid');
+        $('#description_entr-error').removeClass('d-none');
+    }
+});
+
 

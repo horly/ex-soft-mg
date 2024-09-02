@@ -24,6 +24,7 @@ return [
     'mail_port' => env('MAIL_PORT', ''),
     'mail_host' => env('MAIL_HOST', ''),
     'company_name' => env('APP_COMPANY_NAME', ''),
+    'mail_from_address' => env('MAIL_FROM_ADDRESS', ''),
 
 
     /*

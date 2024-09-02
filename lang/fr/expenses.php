@@ -41,4 +41,7 @@
         'expense_payment' => "Paiement des dépenses",
         'recorded_an_expense' => "a enregistré une dépense",
         'expense_recorded_successfully' => "Dépense enregistrée avec succès!",
+
+        'expense_updated_successfully' => "Dépense modifiée avec succès!",
+        'updated_an_expense' => "a modifié une dépense",
     ];

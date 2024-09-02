@@ -226,7 +226,9 @@
 
                                                 Request::route()->getName() == "app_delivery_note" ||
                                                 Request::route()->getName() == "app_add_new_delivery_note" ||
-                                                Request::route()->getName() == "app_info_delivery_note")
+                                                Request::route()->getName() == "app_info_delivery_note" ||
+                                                Request::route()->getName() == "app_entrances" ||
+                                                Request::route()->getName() == "app_add_new_entrance")
                                                     active
                                             @endif  has-sub">
                     <a href="#" class='sidebar-link'>
@@ -245,7 +247,9 @@
 
                                             Request::route()->getName() == "app_delivery_note" ||
                                             Request::route()->getName() == "app_add_new_delivery_note" ||
-                                            Request::route()->getName() == "app_info_delivery_note")
+                                            Request::route()->getName() == "app_info_delivery_note" ||
+                                            Request::route()->getName() == "app_entrances" ||
+                                            Request::route()->getName() == "app_add_new_entrance")
                                                 active
                                         @endif">
                         <li class="submenu-item @if(Request::route()->getName() == "app_sales_invoice") active @endif">
@@ -271,6 +275,12 @@
                         <li class="submenu-item @if(Request::route()->getName() == "app_delivery_note") active @endif">
                             <a href="{{ route('app_delivery_note', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
                                 {{ __('dashboard.delivery_note') }}
+                            </a>
+                        </li>
+
+                        <li class="submenu-item @if(Request::route()->getName() == "app_entrances") active @endif">
+                            <a href="{{ route('app_entrances', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">
+                                {{ __('invoice.entrance') }}
                             </a>
                         </li>
                     </ul>

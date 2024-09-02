@@ -123,4 +123,18 @@
         'concern' => "Concerne",
         'enter_the_invoice_subject' => "Saisir l'objet de la facture",
         'please_enter_the_invoice_subject' => "Veuillez saisir l'objet de la facture",
+
+        'entrance' => "Entrées",
+        'entrance_list' => "Liste des entrées",
+
+        'record_an_entrance' => "Enregistrer une entrée",
+        'enter_the_entrance_description' => "Entrer la description de l'entrée",
+        'enter_the_entrance_description_please' => "Veuillez entrer la description de l'entrée!",
+        'please_enter_the_entrance_amount' => "Veuillez saisir le montant de l'entrée!",
+
+        'collection' => "Encaissement",
+        'recorded_an_entrance' => "a enragistré une entrée",
+        'entrance_recorded_successfully' => "Entrée enregistrée avec succès!",
+        'updated_an_entrance' => "a modifié une entrée",
+        'entrance_updated_successfully' => "Entrée modifiée avec succès!",
     ];

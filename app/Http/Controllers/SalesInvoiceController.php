@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SaveSaleInvoiceForm;
 use App\Models\Decaissement;
 use App\Models\Encaissement;
+use App\Models\Entrance;
 use App\Models\InvoiceElement;
 use App\Models\InvoiceMargin;
 use App\Models\SalesInvoice;
@@ -1396,5 +1397,171 @@ class SalesInvoiceController extends Controller
             'id2' => $id_functionalUnit,
             'ref_invoice' => $ref_invoice
         ]);
+    }
+
+    public function entrances($id, $id2)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        $entrances = DB::table('entrances')->where('id_fu', $functionalUnit->id)->orderBy('id', 'desc')->get();
+        $deviseGest = DB::table('devises')
+                    ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                    ->where([
+                        'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                        'devise_gestion_ufs.default_cur_manage' => 1,
+        ])->first();
+
+        return view('invoice_sales.entrances', compact(
+            'entreprise',
+            'functionalUnit',
+            'entrances',
+            'deviseGest',
+        ));
+    }
+
+    public function setup_enrance()
+    {
+        $id_functionalUnit = $this->request->input('id_functionalUnit');
+        $id_entreprise = $this->request->input('id_entreprise');
+
+        $reference_entrance = "ENTR" . date('Y') . date('m') . date('d') . date('H') . date('i') . date('s') . Auth::user()->id;
+
+        return redirect()->route('app_add_new_entrance', [
+            'id' => $id_entreprise,
+            'id2' => $id_functionalUnit,
+            'ref_entrance' => $reference_entrance,
+        ]);
+    }
+
+    public function add_new_entrance($id, $id2, $ref_entrance)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        $deviseGest = DB::table('devises')
+                    ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                    ->where([
+                        'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                        'devise_gestion_ufs.default_cur_manage' => 1,
+        ])->first();
+
+        $deviseGestUfs = DB::table('devises')
+                    ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                    ->where([
+                        'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+        ])->get();
+
+        $paymentMethods = DB::table('devises')
+                            ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                            ->join('payment_methods', 'payment_methods.id_currency', '=', 'devise_gestion_ufs.id')
+                            ->where([
+                                'payment_methods.id_fu' => $functionalUnit->id,
+                            ])->get();
+
+        $entrance = DB::table('entrances')->where('reference_entr', $ref_entrance)->first();
+
+        $encaissement = DB::table('encaissements')->where('reference_enc', $ref_entrance)->first();
+
+        $paymentMeth = null;
+
+        if($encaissement)
+        {
+            $paymentMeth = DB::table('devises')
+                    ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                    ->join('payment_methods', 'payment_methods.id_currency', '=', 'devise_gestion_ufs.id')
+                    ->where([
+                        'payment_methods.id' => $encaissement->id_pay_meth,
+                    ])->first();
+        }
+
+        return view('invoice_sales.add_new_entrance', compact(
+            'entreprise',
+            'functionalUnit',
+            'deviseGest',
+            'deviseGestUfs',
+            'paymentMethods',
+            'entrance',
+            'ref_entrance',
+            'encaissement',
+            'paymentMeth'
+        ));
+    }
+
+
+    public function save_entrance()
+    {
+        $id_entreprise = $this->request->input('id_entreprise');
+        $id_fu = $this->request->input('id_fu');
+        $reference_entr = $this->request->input('reference_entrance');
+        $customerRequest = $this->request->input('customerRequest');
+        $description_entr = $this->request->input('description_entr');
+        $currency_exp = $this->request->input('currency_exp');
+        $amount_entrance = $this->request->input('amount_entrance');
+        $pay_method_entr = $this->request->input('pay_method_entr');
+        $date_entrance = $this->request->input('date_entrance');
+
+        if($customerRequest != "edit")
+        {
+            Entrance::create([
+                'description' => $description_entr,
+                'reference_entr' => $reference_entr,
+                'amount' => $amount_entrance,
+                'created_at' => $date_entrance,
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id_fu,
+            ]);
+
+            Encaissement::create([
+                'description' => 'invoice.collection',
+                'reference_enc' => $reference_entr,
+                'is_invoice' => 0,
+                'amount' => $amount_entrance,
+                'id_pay_meth' => $pay_method_entr,
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id_fu,
+            ]);
+
+            //Notification
+            $url = route('app_entrances', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $description = "invoice.recorded_an_entrance";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+            return redirect()->route('app_entrances', [
+                'id' => $id_entreprise,
+                'id2' => $id_fu,
+            ])->with('success', __('invoice.entrance_recorded_successfully'));
+        }
+        else
+        {
+            DB::table('entrances')
+                ->where('reference_entr', $reference_entr)
+                ->update([
+                    'description' => $description_entr,
+                    'amount' => $amount_entrance,
+                    'created_at' => $date_entrance,
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id_fu,
+                ]);
+
+            DB::table('encaissements')
+                ->where('reference_enc', $reference_entr)
+                ->update([
+                    'amount' => $amount_entrance,
+                    'id_pay_meth' => $pay_method_entr,
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id_fu,
+                ]);
+
+            //Notification
+            $url = route('app_entrances', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $description = "invoice.updated_an_entrance";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+            return redirect()->route('app_entrances', [
+                'id' => $id_entreprise,
+                'id2' => $id_fu,
+            ])->with('success', __('invoice.entrance_updated_successfully'));
+        }
     }
 }

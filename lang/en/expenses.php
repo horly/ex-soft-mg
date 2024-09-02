@@ -41,4 +41,7 @@
         'expense_payment' => "Expense payment",
         'recorded_an_expense' => "recorded an expense",
         'expense_recorded_successfully' => "Expense recorded successfully!",
+
+        'expense_updated_successfully' => "Expense updated successfully!",
+        'updated_an_expense' => "updated an expense",
     ];

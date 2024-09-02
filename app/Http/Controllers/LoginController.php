@@ -32,7 +32,8 @@ class LoginController extends Controller
 
     public function userChecker()
     {
-        $user = Auth::user();
+        return redirect()->route('app_main');
+        /*$user = Auth::user();
 
         //on génère de nombre aleotoire de 6 chiffres si l'utilisateur choisie de copier coller le code
         $verification_code = "";
@@ -58,7 +59,7 @@ class LoginController extends Controller
 
         return redirect()->route('app_user_authentication', [
             'secret' => $verification_code_secret,
-        ]);
+        ]);*/
     }
 
     public function userAuthentication($secret)

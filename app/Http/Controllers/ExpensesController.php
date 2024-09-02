@@ -437,6 +437,20 @@ class ExpensesController extends Controller
 
         $expense = DB::table('expenses')->where('reference_exp', $ref_expense)->first();
 
+        $decaissement = DB::table('decaissements')->where('reference_dec', $ref_expense)->first();
+
+        $paymentMeth = null;
+
+        if($decaissement)
+        {
+            $paymentMeth = DB::table('devises')
+                    ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                    ->join('payment_methods', 'payment_methods.id_currency', '=', 'devise_gestion_ufs.id')
+                    ->where([
+                        'payment_methods.id' => $decaissement->id_pay_meth,
+                    ])->first();
+        }
+
         return view('expenses.add_new_expense', compact(
             'entreprise',
             'functionalUnit',
@@ -444,7 +458,9 @@ class ExpensesController extends Controller
             'deviseGestUfs',
             'paymentMethods',
             'expense',
-            'ref_expense'
+            'ref_expense',
+            'decaissement',
+            'paymentMeth'
         ));
     }
 
@@ -481,19 +497,46 @@ class ExpensesController extends Controller
                 'id_fu' => $id_fu,
             ]);
 
-             //Notification
-             $url = route('app_expenses', ['id' => $id_entreprise, 'id2' => $id_fu]);
-             $description = "expenses.recorded_an_expense";
-             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+            //Notification
+            $url = route('app_expenses', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $description = "expenses.recorded_an_expense";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-             return redirect()->route('app_expenses', [
-                 'id' => $id_entreprise,
-                 'id2' => $id_fu,
-             ])->with('success', __('expenses.expense_recorded_successfully'));
+            return redirect()->route('app_expenses', [
+                'id' => $id_entreprise,
+                'id2' => $id_fu,
+            ])->with('success', __('expenses.expense_recorded_successfully'));
         }
         else
         {
+            DB::table('expenses')
+                ->where('reference_exp', $reference_exp)
+                ->update([
+                    'description' => $description_exp,
+                    'amount' => $amount_expense,
+                    'created_at' => $date_expense,
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id_fu,
+                ]);
 
+            DB::table('decaissements')
+                ->where('reference_dec', $reference_exp)
+                ->update([
+                    'amount' => $amount_expense,
+                    'id_pay_meth' => $pay_method_exp,
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id_fu,
+                ]);
+
+            //Notification
+            $url = route('app_expenses', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $description = "expenses.updated_an_expense";
+            $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+            return redirect()->route('app_expenses', [
+                'id' => $id_entreprise,
+                'id2' => $id_fu,
+            ])->with('success', __('expenses.expense_updated_successfully'));
         }
     }
 

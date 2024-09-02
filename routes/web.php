@@ -377,6 +377,9 @@ Route::controller(SalesInvoiceController::class)->group(function(){
                 Route::get('/delivery_note/{id:int}/{id2:int}', 'deliveryNote')->name('app_delivery_note');
                 Route::get('/add_new_delivery_note/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewDeliveryNote')->name('app_add_new_delivery_note');
                 Route::get('/info_delivery_note/{id:int}/{id2:int}/{ref_invoice:string}', 'infoDeliveryNote')->name('app_info_delivery_note');
+
+                Route::get('/entrances/{id:int}/{id2:int}', 'entrances')->name('app_entrances');
+                Route::get('/add_new_entrance/{id:int}/{id2:int}/{ref_entrance:string}', 'add_new_entrance')->name('app_add_new_entrance');
             });
         });
 
@@ -397,6 +400,9 @@ Route::controller(SalesInvoiceController::class)->group(function(){
         Route::post('/add_serial_number_invoice', 'addSerialNumberinvoice')->name('app_add_serial_number_invoice');
         Route::post('/delete_serial_number_invoice', 'deleteSerialNumberInvoice')->name('app_delete_serial_number_invoice');
         Route::post('/generate_delivery_note', 'generateDeliveryNote')->name('app_generate_delivery_note');
+
+        Route::post('/setup_enrance', 'setup_enrance')->name('app_setup_enrance');
+        Route::post('/save_entrance', 'save_entrance')->name('app_save_entrance');
     });
 });
 

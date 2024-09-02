@@ -34,7 +34,7 @@ class CurrencyController extends Controller
             'id_fu' => $functionalUnit->id,
             'default_cur_manage' => 1,
         ])->first();
-        
+
         $deviseDefault = DB::table('devise_gestion_ufs')
             ->join('devises', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
             ->where('devises.id', $deviseGest->id_devise)
@@ -47,8 +47,8 @@ class CurrencyController extends Controller
             ])
             ->orderBy('devise_gestion_ufs.id', 'desc')
             ->get();
-        
-        
+
+
         return view('currency.currency', compact('entreprise', 'functionalUnit', 'devises', 'deviseGest', 'deviseDefault', 'deviseFU'));
     }
 
@@ -79,7 +79,7 @@ class CurrencyController extends Controller
 
         if($fuRequest != "edit")
         {
-            $existDevise = DB::table('devise_gestion_ufs') 
+            $existDevise = DB::table('devise_gestion_ufs')
                             ->where([
                                 'id_devise' => $currency_name_dev,
                                 'id_fu' => $id_fu,
@@ -92,14 +92,14 @@ class CurrencyController extends Controller
                     'id_devise' => $currency_name_dev,
                     'id_fu' => $id_fu
                 ]);
-    
+
                 //Notification
                 $url = route('app_info_currency', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $currecy_saved->id]);
                 $description = "dashboard.added_a_new_currency_in_the_functional_unit";
                 $this->notificationRepo->setNotification($id_entreprise, $description, $url);
-    
+
                 return redirect()->route('app_currency', ['id' => $id_entreprise, 'id2' => $id_fu])
-                            ->with('success', __('dashboard.currency_added_successfully'));   
+                            ->with('success', __('dashboard.currency_added_successfully'));
             }
             else
             {
@@ -168,7 +168,7 @@ class CurrencyController extends Controller
             'id_fu' => $functionalUnit->id,
             'default_cur_manage' => 1,
         ])->first();
-        
+
         $deviseDefault = DB::table('devise_gestion_ufs')
             ->join('devises', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
             ->where('devises.id', $deviseGest->id_devise)
@@ -199,7 +199,7 @@ class CurrencyController extends Controller
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_currency', [
-            'id' => $id_entreprise, 
+            'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('dashboard.currency_deleted_successfully'));
     }
 
@@ -212,20 +212,20 @@ class CurrencyController extends Controller
         $deviseSel = DB::table('devise_gestion_ufs')
             ->join('devises', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
             ->where('devises.id', $id3)->first();
-        
+
         $deviseGestionUfs = DB::table('devise_gestion_ufs')
             ->where([
                 'id_devise' => $id3,
                 'id_fu' => $functionalUnit->id
         ])->first();
-        
+
         $deviseGest = DB::table('devise_gestion_ufs')
             ->join('devises', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
             ->where([
                 'devise_gestion_ufs.id_fu' => $functionalUnit->id,
                 'devise_gestion_ufs.default_cur_manage' => 1,
         ])->first();
-        
+
         return view('currency.updated_currency', compact('entreprise', 'functionalUnit', 'deviseSel', 'devises', 'deviseGest', 'deviseGestionUfs'));
     }
 }

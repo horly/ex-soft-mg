@@ -16,17 +16,19 @@ class Email
     protected $mail;
     protected $app_name;
     protected $username;
+    protected $mail_from_address;
 
     function __construct()
     {
         $this->app_name = config('app.name'); //in .en file = EXADERP!
         $this->username = config('app.mail_username'); //in .en file = contact@exaderp.com
+        $this->mail_from_address = config('app.mail_from_address');
 
         $this->mail = new PHPMailer;
         $this->mail->isSMTP();
         $this->mail->SMTPDebug = 0; //pas d'afficahe de debug mais si nous voulons afficher les erreurs il faut le mettre à 2
-        $this->mail->Port = config('app.mail_port'); 
-        $this->mail->Host = config('app.mail_host'); 
+        $this->mail->Port = config('app.mail_port');
+        $this->mail->Host = config('app.mail_host');
         $this->mail->SMTPAuth = true;
         $this->mail->Username = $this->username;
         $this->mail->Password = config('app.mail_password');
@@ -78,7 +80,7 @@ class Email
     }
 
 
-    //send verification code 
+    //send verification code
     public function sendVerifactionCode($user, $code, $secret)
     {
         $email = $user->email;
@@ -100,7 +102,7 @@ class Email
                         'name' => $firstname[0],  //on passe nos variables dans la vue
                         'subject' => $subject,
                         'verification_code' => $code,
-                        'verification_code_secret' => $secret, 
+                        'verification_code_secret' => $secret,
                         'time_date' => $date,
                         'browser' => $browser,
                         'platform' => $platform
@@ -131,7 +133,7 @@ class Email
                     ->with([
                         'name' => $firstname[0],  //on passe nos variables dans la vue
                         'subject' => $subject,
-                        'verification_code_secret' => $secret, 
+                        'verification_code_secret' => $secret,
                         'time_date' => $date,
                         'browser' => $browser,
                         'platform' => $platform
@@ -162,7 +164,7 @@ class Email
                     ->with([
                         'name' => $firstname[0],  //on passe nos variables dans la vue
                         'subject' => $subject,
-                        'verification_code_secret' => $secret, 
+                        'verification_code_secret' => $secret,
                         'time_date' => $date,
                         'browser' => $browser,
                         'platform' => $platform
@@ -192,7 +194,7 @@ class Email
                         'name' => $firstname[0],  //on passe nos variables dans la vue
                         'nameExp' => $nameExp,
                         'subject' => $subject,
-                        'verification_code_secret' => $secret, 
+                        'verification_code_secret' => $secret,
                         'time_date' => $date,
                         'email' => $email,
                         'password' => $passwordClear,

@@ -1,5 +1,5 @@
 @extends('base')
-@section('title', __('expenses.record_an_expense'))
+@section('title', __('invoice.record_an_entrance'))
 @section('content')
 
 <div id="app">
@@ -18,14 +18,14 @@
             <div class="page-title">
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
-                        <h3>{{ __('expenses.record_an_expense') }}</h3>
+                        <h3>{{ __('invoice.record_an_entrance') }}</h3>
                         <p class="text-subtitle text-muted"></p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav class="float-start float-lg-end" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                              <li class="breadcrumb-item"><a href="{{ route('app_expenses', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.expenses') }}</a></li>
-                              <li class="breadcrumb-item active" aria-current="page">{{ __('expenses.record_an_expense') }}</li>
+                              <li class="breadcrumb-item"><a href="{{ route('app_entrances', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('invoice.entrance') }}</a></li>
+                              <li class="breadcrumb-item active" aria-current="page">{{ __('invoice.record_an_entrance') }}</li>
                             </ol>
                         </nav>
                     </div>
@@ -39,24 +39,24 @@
                 <div class="card">
                     <div class="card-body">
 
-                        <form method="POST" id="save-expense-form" action="{{ route('app_save_expense') }}">
+                        <form method="POST" id="save-entrance-form" action="{{ route('app_save_entrance') }}">
                             @csrf
 
                             <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
                             <input type="hidden" name="id_fu" value="{{ $functionalUnit->id }}">
-                            <input type="hidden" name="reference_exp" value="{{ $expense ? $expense->reference_exp : $ref_expense }}">
-                            <input type="hidden" name="customerRequest" id="customerRequest" value="{{ $expense ? "edit" : "add" }}">
+                            <input type="hidden" name="reference_entrance" value="{{ $entrance ? $entrance->reference_entr : $ref_entrance }}">
+                            <input type="hidden" name="customerRequest" id="customerRequest" value="{{ $entrance ? "edit" : "add" }}">
 
                             <div class="mb-4 row">
                                 <label class="col-sm-4 col-form-label">{{ __('client.reference') }}</label>
-                                <label class="col-sm-8 col-form-label">{{ $ref_expense }}</label>
+                                <label class="col-sm-8 col-form-label">{{ $ref_entrance }}</label>
                             </div>
 
                             <div class="mb-4 row">
-                                <label for="description_exp" class="col-sm-4 col-form-label">{{ __('article.description') }}*</label>
+                                <label for="description_entr" class="col-sm-4 col-form-label">{{ __('article.description') }}*</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="description_exp" name="description_exp" placeholder="{{ __('expenses.enter_the_expense_description') }}" value="{{ $expense ? $expense->description : "" }}">
-                                    <small class="text-danger d-none" id="description_exp-error">{{ __('expenses.enter_the_expense_description_please') }}</small>
+                                    <input type="text" class="form-control" id="description_entr" name="description_entr" placeholder="{{ __('invoice.enter_the_entrance_description') }}" value="{{ $entrance ? $entrance->description : "" }}">
+                                    <small class="text-danger d-none" id="description_entr-error">{{ __('invoice.enter_the_entrance_description_please') }}</small>
                                 </div>
                             </div>
 
@@ -75,28 +75,28 @@
                             </div>
 
                             <div class="mb-4 row">
-                                <label for="amount_expense" class="col-sm-4 col-form-label">{{ __('dashboard.amount') }}*</label>
+                                <label for="amount_entrance" class="col-sm-4 col-form-label">{{ __('dashboard.amount') }}*</label>
                                 <div class="col-sm-8">
                                     <div class="input-group">
-                                        <input type="number" step="0.00" class="form-control text-end" name="amount_expense" id="amount_expense" placeholder="0.00" value="{{ $expense ? $expense->amount : "" }}">
+                                        <input type="number" step="0.00" class="form-control text-end" name="amount_entrance" id="amount_entrance" placeholder="0.00" value="{{ $entrance ? $entrance->amount : "" }}">
                                         <span class="input-group-text" id="current-exp-selected">
-                                            @if ($decaissement)
+                                            @if ($encaissement)
                                                 {{ $paymentMeth->iso_code }}
                                             @else
                                                 {{ $deviseGest->iso_code }}
                                             @endif
                                         </span>
                                     </div>
-                                    <small class="text-danger d-none" id="amount_expense-error">{{ __('expenses.please_enter_the_expense_amount') }}</small>
+                                    <small class="text-danger d-none" id="amount_entrance-error">{{ __('invoice.please_enter_the_entrance_amount') }}</small>
                                 </div>
                             </div>
 
                             <div class="mb-4 row">
-                                <label for="pay_method_exp" class="col-sm-4 col-form-label">{{ __('dashboard.payment_methods') }}*</label>
+                                <label for="pay_method_entr" class="col-sm-4 col-form-label">{{ __('dashboard.payment_methods') }}*</label>
                                 <div class="col-sm-8">
-                                    <select class="form-select" id="pay_method_exp" name="pay_method_exp">
+                                    <select class="form-select" id="pay_method_entr" name="pay_method_entr">
 
-                                        @if ($decaissement)
+                                        @if ($encaissement)
                                             <option value="{{ $paymentMeth->id }}" iso_code="{{ $paymentMeth->iso_code }}" selected>
                                                 @if ($paymentMeth->default == 1)
                                                     {{ __('payment_methods.' . $paymentMeth->designation) }} ({{ $paymentMeth->iso_code }})
@@ -117,19 +117,19 @@
                                         @endforeach
 
                                     </select>
-                                    <small class="text-danger d-none" id="pay_method_exp-error">{{ __('expenses.the_chosen_currency_must_match_the_currency_of_the_payment_method') }}</small>
+                                    <small class="text-danger d-none" id="pay_method_entr-error">{{ __('expenses.the_chosen_currency_must_match_the_currency_of_the_payment_method') }}</small>
                                 </div>
                             </div>
 
                             <div class="mb-4 row">
-                                <label for="date_expense" class="col-sm-4 col-form-label">{{ __('invoice.date') }}*</label>
+                                <label for="date_entrance" class="col-sm-4 col-form-label">{{ __('invoice.date') }}*</label>
                                 <div class="col-sm-8">
-                                    <input type="date" class="form-control" id="date_expense" name="date_expense"  value="{{ $expense ? date('Y-m-d', strtotime($expense->created_at)) : date('Y-m-d') }}">
+                                    <input type="date" class="form-control" id="date_entrance" name="date_entrance"  value="{{ $entrance ? date('Y-m-d', strtotime($entrance->created_at)) : date('Y-m-d') }}">
                                 </div>
                             </div>
 
                             <div class="d-grid gap-2">
-                                <button class="btn btn-primary saveP" id="save-expense-btn" type="button">
+                                <button class="btn btn-primary saveP" id="save-entrance-btn" type="button">
                                     <i class="fa-solid fa-floppy-disk"></i>
                                   {{ __('main.save') }}
                                 </button>

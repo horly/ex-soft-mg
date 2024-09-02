@@ -123,4 +123,18 @@
         'concern' => "Concern",
         'enter_the_invoice_subject' => "Enter the invoice subject",
         'please_enter_the_invoice_subject' => "Please enter the invoice subject",
+
+        'entrance' => "Entrances",
+        'entrance_list' => "Entrances list",
+
+        'record_an_entrance' => "Record an entrance",
+        'enter_the_entrance_description' => "Enter the entrance description",
+        'enter_the_entrance_description_please' => "Enter the entrance description please!",
+        'please_enter_the_entrance_amount' => "Please enter the entrance amount!",
+
+        'collection' => "Collection",
+        'recorded_an_entrance' => "Recorded an entrance",
+        'entrance_recorded_successfully' => "Entrance recorded successfully!",
+        'updated_an_entrance' => "updated an entrance",
+        'entrance_updated_successfully' => "Entrance updated successfully!",
 ];
