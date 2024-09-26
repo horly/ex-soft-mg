@@ -25,12 +25,12 @@
 
 .mini-accordion-button-header {
     height: 40px !important;
-} 
+}
 
 .profile {
     position: relative;
 }
-  
+
 .image {
     opacity: 1;
     transition: .5s ease;
@@ -50,7 +50,7 @@
 .profile:hover .image {
     opacity: 0.3;
 }
-  
+
 .profile:hover .middle {
     opacity: 1;
   }
@@ -75,12 +75,12 @@
   .dropbtn.user {
     background-color: #5f76c8;
   }
-  
+
   .dropdown-personal-menu {
     position: relative;
     display: inline-block;
   }
-  
+
   .dropdown-content {
     display: none;
     position: absolute;
@@ -90,16 +90,16 @@
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
   }
-  
+
   .dropdown-content a {
     color: black;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
   }
-  
+
   .dropdown-content a:hover {background-color: #f1f1f1;}
-  
+
   .dropdown-personal-menu:hover .dropdown-content {
     display: block;
   }
@@ -107,7 +107,7 @@
   .modules:hover {
     background-color: #566ec4!important;
   }
-  
+
   /*.dropdown:hover .dropbtn {
     background-color: #697ecb;
   }*/
@@ -116,6 +116,10 @@
 /*
  * logo exad nav
  **/
+
+ body {
+    transform: scale('0.8') !important;
+ }
 
 
 @media only screen and (max-width: 1200px) {
