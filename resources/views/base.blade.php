@@ -40,7 +40,7 @@
         {{--<script src="{{ asset('assets/lib/theme/js/bootstrap.bundle.min.js') }}"></script>--}}
         @if (Request::route()->getName() == "app_dashboard")
             <script src="{{ asset('assets/lib/theme/vendors/apexcharts/apexcharts.js') }}"></script>
-            <script src="{{ asset('assets/lib/theme/js/pages/dashboard.js') }}"></script>
+            <script src="{{ asset('assets/app/js/dashboard.js') }}"></script>
         @endif
 
         <script src="{{ asset('assets/lib/theme/js/main.js') }}"></script>

@@ -49,7 +49,7 @@
                                 <th>N°</th>
                                 <th>{{ __('client.reference') }}</th>
                                 <th>{{ __('invoice.date') }}</th>
-                                <th>{{ __('supplier.add_new_supplier') }}</th>
+                                <th>{{ __('expenses.supplier') }}</th>
                                 <th>{{ __('invoice.due_date') }}</th>
                                 <th class="text-end">{{ __('dashboard.amount') }} {{ $deviseGest->iso_code }}</th>
                                 <th class="text-end">{{ __('expenses.payment_made') }} {{ $deviseGest->iso_code }}</th>

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('reference_art', 255);
             $table->integer('reference_number');
-            $table->string('description_art', 255);
+            $table->string('description_art', 1500);
             $table->double('purchase_price');
             $table->integer('number_in_stock')->default(0);
 

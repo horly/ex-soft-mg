@@ -27,12 +27,15 @@ class Email
         $this->mail = new PHPMailer;
         $this->mail->isSMTP();
         $this->mail->SMTPDebug = 0; //pas d'afficahe de debug mais si nous voulons afficher les erreurs il faut le mettre à 2
-        $this->mail->Port = config('app.mail_port');
-        $this->mail->Host = config('app.mail_host');
+        $this->mail->Port = config('app.mail_port'); //587
+        $this->mail->Host = config('app.mail_host'); //https://mail17.lwspanel.com
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = $this->username;
-        $this->mail->Password = config('app.mail_password');
+        $this->mail->Username = config('app.mail_username'); //webmaster@exadgroup.org
+        $this->mail->Password = config('app.mail_password'); //hG9-vTunHvb3a5U
         $this->mail->CharSet  = "UTF-8";
+        $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+
+
     }
 
     //pour l'envoie du mail

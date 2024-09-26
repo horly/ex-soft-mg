@@ -5,11 +5,11 @@
 
 
 <div id="app">
-    
+
     @include('menu.navigation-menu')
 
     @include('menu.login-nav')
-    
+
     <div id="main">
         <header class="mb-3">
             <a href="#" class="burger-btn d-block d-xl-none">
@@ -32,7 +32,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-sm-3">
                 <div class="card">
                     <div class="card-body">
@@ -48,7 +48,7 @@
                 <div class="card">
                     <div class="card-body">
                         <p>
-                            <i class="fa-solid fa-calendar-days"></i>&nbsp;&nbsp;&nbsp;{{ __('dashboard.period') }} 
+                            <i class="fa-solid fa-calendar-days"></i>&nbsp;&nbsp;&nbsp;{{ __('dashboard.period') }}
                         </p>
                         <p class="fw-bold h6">
                             {{ __('dashboard.from') }} {{ $first_day_this_month }} {{ __('dashboard.to') }} {{ $last_day_this_month }}
@@ -63,7 +63,7 @@
                         <label class="form-label">
                             <i class="fa-solid fa-calendar-days"></i>&nbsp;&nbsp;&nbsp;{{ __('dashboard.currency') }} :
                         </label>
-                        <select class="form-select" name="" id="">
+                        <select class="form-select" name="devise-global" onchange="changeDeviseDashboard();" id="devise-global" token="{{ csrf_token() }}" url="{{ route('app_change_devise_view_global') }}">
                             @if (Config::get('app.locale') == 'en')
                                 <option value="{{ $deviseGest->id }}" selected>{{ $deviseGest->iso_code }} - {{ $deviseGest->motto_en }}</option>
                                 @foreach ($deviseGestAll as $devise)
@@ -81,10 +81,10 @@
                 </div>
             </div>
         </div>
-        
+
 
         <div class="page-content">
-                
+
             <div class="row">
                 <div class="col-6 col-lg-3 col-md-6">
                     <div class="card">
@@ -132,7 +132,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <h6 class="text-muted font-semibold">{{ __('dashboard.recipes') }}</h6>
-                                    <h6 class="font-extrabold mb-0">0</h6>
+                                    <h6 class="font-extrabold mb-0" id="recettes-global">{{ $recettes }} {{ $deviseGest->iso_code }}</h6>
                                 </div>
                             </div>
                         </div>
@@ -149,7 +149,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <h6 class="text-muted font-semibold">{{ __('dashboard.expenses') }}</h6>
-                                    <h6 class="font-extrabold mb-0">0</h6>
+                                    <h6 class="font-extrabold mb-0" id="depenses-global">{{ $depenses }} {{ $deviseGest->iso_code }}</h6>
                                 </div>
                             </div>
                         </div>
@@ -159,12 +159,35 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h4>{{ __('dashboard.evolution_of_income_and_expenses_over_the_last_12_months')}}</h4>
+                    <h4 class="mb-3">{{ __('dashboard.evolution_of_income_and_expenses_for_the_year')}} <span id="evolution-year">{{ $year }}</span></h4>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form class="input-group" action="{{ route('app_set_year_evolution') }}" method="POST">
+                                @csrf
+                                <span class="input-group-text">{{ __('dashboard.year') }}</span>
+                                <input type="number" class="form-control text-end" id="year-evolution" name="year-evolution" aria-label="Recipient's username" aria-describedby="button-addon2" value="{{ $year }}">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="card-body">
-                    <div id="chart-evolution-income"></div>
+                    <div id="chart-evolution-income" id_fu="{{ $functionalUnit->id }}" id_devise="{{ $deviseGest->id }}" token="{{ csrf_token() }}" url="{{ route('app_income_global') }}" year="{{ $year }}" recipes="{{ __('dashboard.recipes') }}" expenses="{{ __('dashboard.expenses') }}" results="{{ __('dashboard.results') }}" iscode="{{ $deviseGest->iso_code }}"></div>
                 </div>
             </div>
+
+            @php
+                $devise_gest = DB::table('devises')
+                            ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
+                            ->where([
+                                'devise_gestion_ufs.id_fu' => $functionalUnit->id,
+                                'devise_gestion_ufs.default_cur_manage' => 1,
+                        ])->first();
+            @endphp
 
             <div class="row">
                 <div class="col-md-8">
@@ -177,29 +200,16 @@
                             <table class="table table-striped">
                                 <thead>
                                     <th>{{ __('dashboard.designation') }}</th>
-                                    <th class="text-end">{{ __('dashboard.number') }}</th>
-                                    <th class="text-end">{{ __('dashboard.amount') }}</th>
+                                    <th class="text-end">{{ __('dashboard.amount') }} {{ $devise_gest->iso_code }}</th>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>{{ __('dashboard.my_customers_owe_me') }}</td>
-                                        <td class="text-end">0</td>
-                                        <td class="text-end">0</td>
+                                        <td class="text-end">{{ number_format($amount_from_client_to_be_paied, 2, '.', ' ') }}</td>
                                     </tr>
                                     <tr>
                                         <td>{{ __('dashboard.i_owe_my_suppliers') }}</td>
-                                        <td class="text-end">0</td>
-                                        <td class="text-end">0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{ __('dashboard.customers_to_follow_up') }}</td>
-                                        <td class="text-end">0</td>
-                                        <td class="text-end">0</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{ __('dashboard.supplier_invoices_due') }}</td>
-                                        <td class="text-end">0</td>
-                                        <td class="text-end">0</td>
+                                        <td class="text-end">{{ number_format($amount_from_me_to_be_paied, 2, '.', ' ') }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -210,7 +220,7 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
-                            
+
                         </div>
                     </div>
                 </div>
@@ -220,7 +230,7 @@
 
         <div class="m-5">
             @include('menu.footer-global')
-        </div>   
+        </div>
 
     </div>
 </div>

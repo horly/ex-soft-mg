@@ -170,6 +170,10 @@ Route::controller(DashboardController::class)->group(function(){
                 Route::get('/dashboard/{id:int}/{id2:int}', 'dashboard')->name('app_dashboard');
             });
         });
+
+        Route::post('/change-devise-view-global', 'changeDevGl')->name('app_change_devise_view_global');
+        Route::post('/income-global', 'incomeGlobal')->name('app_income_global');
+        Route::post('/set-year-evolution', 'set_year_evolution')->name('app_set_year_evolution');
     });
 });
 

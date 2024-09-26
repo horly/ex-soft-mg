@@ -66,6 +66,8 @@
         'recipes' => "Recettes",
         'evolution_of_income_and_expenses_over_the_last_12_months' => "Evolution des revenus et dépenses sur les 12 derniers mois",
 
+        'evolution_of_income_and_expenses_for_the_year' => "Evolution des revenus et dépenses pour l'année",
+
         'timeline' => "Echancier",
         'designation' => "Désignation",
         'number' => "Nombre",
@@ -79,4 +81,7 @@
         'debtors' => "Débiteurs",
 
         'payment_methods' => "Modes de paiement",
+
+        'results' => "Résultats",
+        'year' => "Année",
 ];

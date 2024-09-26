@@ -40,10 +40,10 @@
                 <div class="card">
                     <div class="card-body">
                         <a href="#" onclick="setUpinvoice('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_invoice') }}', '{{ 0 }}', '{{ 0 }}', '{{ 0 }}', '{{ 0 }}')" class="btn btn-primary mb-3" role="button">
-                            <i class="fa-solid fa-circle-plus"></i> 
+                            <i class="fa-solid fa-circle-plus"></i>
                             &nbsp;{{ __('auth.add') }}
                         </a>
-                        
+
                         <table class="table table-striped table-hover border bootstrap-datatable">
                             <thead>
                                 <th>N°</th>
@@ -62,8 +62,8 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <a href="{{ route('app_info_sales_invoice', [
-                                                'id' => $entreprise->id, 
-                                                'id2' => $functionalUnit->id, 
+                                                'id' => $entreprise->id,
+                                                'id2' => $functionalUnit->id,
                                                 'ref_invoice' => $invoice->reference_sales_invoice ]) }}">
                                                 {{ $invoice->reference_sales_invoice }}
                                             </a>
@@ -81,7 +81,7 @@
                                         </td>
                                         <td>{{ date('Y-m-d', strtotime($invoice->due_date)) }}</td>
                                         <td class="text-end">
-                                            {{ number_format($invoice->total, 2, '.', ' ') }} 
+                                            {{ number_format($invoice->total, 2, '.', ' ') }}
                                         </td>
                                         <td class="text-end">
                                             @php
@@ -101,8 +101,8 @@
                                         </td>
                                         <td class="text-center">
                                             <a href="{{ route('app_info_sales_invoice', [
-                                                'id' => $entreprise->id, 
-                                                'id2' => $functionalUnit->id, 
+                                                'id' => $entreprise->id,
+                                                'id2' => $functionalUnit->id,
                                                 'ref_invoice' => $invoice->reference_sales_invoice ]) }}">
                                                 {{ __('main.show') }}
                                             </a>

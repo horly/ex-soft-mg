@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('reference_serv', 255);
             $table->integer('reference_number');
-            $table->string('description_serv', 255);
+            $table->string('description_serv', 1500);
             $table->double('unit_price');
 
             $table->bigInteger('id_cat')->unsigned()->index();

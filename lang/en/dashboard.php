@@ -57,7 +57,7 @@
         'you_cannot_delete_the_default_currency' => "You cannot delete the default currency",
         'default_currency' => "Default currency",
         'update_currency' => "Update currency",
-        
+
         'period' => "Period",
         'from' => "From",
         'to' => "To",
@@ -65,6 +65,8 @@
         'articles' => "Articles",
         'recipes' => "Recipes",
         'evolution_of_income_and_expenses_over_the_last_12_months' => "Evolution of income and expenses over the last 12 months",
+
+        'evolution_of_income_and_expenses_for_the_year' => "Evolution of income and expenses for the year",
 
         'timeline' => "Timeline",
         'designation' => "Designation",
@@ -79,4 +81,7 @@
         'debtors' => "Debtors",
 
         'payment_methods' => "Payment methods",
+
+        'results' => "Results",
+        'year' => "Year",
 ];
