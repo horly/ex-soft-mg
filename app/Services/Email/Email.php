@@ -16,20 +16,21 @@ class Email
     protected $mail;
     protected $app_name;
     protected $username;
-    protected $mail_from_address;
+    protected $from_address;
 
     function __construct()
     {
-        $this->app_name = config('app.name'); //in .en file = EXADERP!
-        $this->username = config('app.mail_username'); //in .en file = contact@exaderp.com
-        $this->mail_from_address = config('app.mail_from_address');
+        $this->app_name = config('app.name'); //EXAD
+        $this->username = config('app.mail_username'); //webmaster@exadgroup.org
+        $this->from_address = config('app.mail_from_address'); //sales@exadgroup.org
 
         $this->mail = new PHPMailer;
         $this->mail->isSMTP();
         $this->mail->SMTPDebug = 0; //pas d'afficahe de debug mais si nous voulons afficher les erreurs il faut le mettre à 2
-        $this->mail->Port = config('app.mail_port'); //587
-        $this->mail->Host = config('app.mail_host'); //https://mail17.lwspanel.com
+        $this->mail->Port = 465; //587
+        $this->mail->Host = config('app.mail_host'); //mail.exadgroup.org
         $this->mail->SMTPAuth = true;
+        $this->mail->SMTPSecure = 'tls';
         $this->mail->Username = config('app.mail_username'); //webmaster@exadgroup.org
         $this->mail->Password = config('app.mail_password'); //hG9-vTunHvb3a5U
         $this->mail->CharSet  = "UTF-8";
@@ -44,10 +45,11 @@ class Email
         $this->mail->Subject = $subject;
         $this->mail->setFrom($this->username, $this->app_name);
         $this->mail->addReplyTo($this->username, $this->app_name);
-        $this->mail->addAddress($emailUser, $name);
+        $this->mail->addAddress($emailUser);
         $this->mail->IsHTML(true);
         $this->mail->Body = $message;
-        $this->mail->send();
+
+        return $this->mail->send();
 
         //ici c'est pour le teste et voir les erreurs
         /*if(!$mail->send())
@@ -111,7 +113,7 @@ class Email
                         'platform' => $platform
             ]);
 
-        $this->sendHtmlEmail($subject, $email, $name, $message);
+        return $this->sendHtmlEmail($subject, $email, $name, $message);
     }
 
     //send change email request
