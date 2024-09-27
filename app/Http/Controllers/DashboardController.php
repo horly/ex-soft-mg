@@ -191,27 +191,55 @@ class DashboardController extends Controller
         $id_devise = $this->request->input('id_devise');
         $month = $this->request->input('month');
         $year = $this->request->input('year');
+        $monthly = $this->request->input('monthly');
 
-        $start_day = date('01'); // hard-coded '01' for first day
-        $end_day  = date('t');
+        $recettesPeriod = null;
+        $depensePeriod = null;
 
-        $recettesPeriod = DB::table('payment_methods')
-                    ->join('encaissements', 'encaissements.id_pay_meth', '=', 'payment_methods.id')
-                    ->where('payment_methods.id_currency', $id_devise)
-                    ->whereBetween('encaissements.created_at', [$year . '-' . $month . '-' . $start_day, $year . '-' . $month . '-' . $end_day])->sum('amount');
+        if($monthly == "true")
+        {
+            $start_day = date('01'); // hard-coded '01' for first day
+            $end_day  = date('31');
 
-        //dd($recettesPeriod);
+            $recettesPeriod = DB::table('payment_methods')
+                        ->join('encaissements', 'encaissements.id_pay_meth', '=', 'payment_methods.id')
+                        ->where('payment_methods.id_currency', $id_devise)
+                        ->whereBetween('encaissements.created_at', [$year . '-' . $month . '-' . $start_day, $year . '-' . $month . '-' . $end_day])->sum('amount');
+
+            //dd($recettesPeriod);
 
 
-        /**
-         * recettesPeriod : pour récupérer les récettes du mois
-         */
-        $depensePeriod = DB::table('payment_methods')
-                    ->join('decaissements', 'decaissements.id_pay_meth', '=', 'payment_methods.id')
-                    ->where('payment_methods.id_currency', $id_devise)
-                    ->whereBetween('decaissements.created_at', [$year . '-' . $month . '-' . $start_day, $year . '-' . $month . '-' . $end_day])->sum('amount');
+            /**
+             * recettesPeriod : pour récupérer les récettes du mois
+             */
+            $depensePeriod = DB::table('payment_methods')
+                        ->join('decaissements', 'decaissements.id_pay_meth', '=', 'payment_methods.id')
+                        ->where('payment_methods.id_currency', $id_devise)
+                        ->whereBetween('decaissements.created_at', [$year . '-' . $month . '-' . $start_day, $year . '-' . $month . '-' . $end_day])->sum('amount');
 
-        //dd($depensePeriod);
+            //dd($depensePeriod);
+        }
+        else
+        {
+            $recettesPeriod = DB::table('payment_methods')
+            ->join('encaissements', 'encaissements.id_pay_meth', '=', 'payment_methods.id')
+            ->where('payment_methods.id_currency', $id_devise)
+            ->whereBetween('encaissements.created_at', [$year . '-01-01', $year . '-12-31'])->sum('amount');
+
+            //dd($recettesPeriod);
+
+
+            /**
+             * recettesPeriod : pour récupérer les récettes du mois
+             */
+            $depensePeriod = DB::table('payment_methods')
+                        ->join('decaissements', 'decaissements.id_pay_meth', '=', 'payment_methods.id')
+                        ->where('payment_methods.id_currency', $id_devise)
+                        ->whereBetween('decaissements.created_at', [$year . '-01-01', $year . '-12-31'])->sum('amount');
+
+            //dd($depensePeriod);
+        }
+
 
         $recettes = number_format($recettesPeriod, 2, '.', '');
         $depenses = number_format($depensePeriod, 2, '.', '');

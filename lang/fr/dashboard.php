@@ -84,4 +84,5 @@
 
         'results' => "Résultats",
         'year' => "Année",
+        'total_for_year' => "Total pour l'année",
 ];

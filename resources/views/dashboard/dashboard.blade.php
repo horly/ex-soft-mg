@@ -159,7 +159,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h4 class="mb-3">{{ __('dashboard.evolution_of_income_and_expenses_for_the_year')}} <span id="evolution-year">{{ $year }}</span></h4>
+                    <h4 class="mb-3">{{ __('dashboard.evolution_of_income_and_expenses_for_the_year')}} <span class="evolution-year">{{ $year }}</span></h4>
 
                     <div class="row">
                         <div class="col-md-3">
@@ -220,7 +220,10 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
-
+                            <div class="card-header">
+                                <h4>{{ __('dashboard.total_for_year')}} <span class="evolution-year">{{ $year }}</span></h4>
+                            </div>
+                            <div id="chart-total-year"></div>
                         </div>
                     </div>
                 </div>
