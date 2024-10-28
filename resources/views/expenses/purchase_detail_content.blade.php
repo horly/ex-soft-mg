@@ -6,6 +6,7 @@
                 {{ __('expenses.purchase_details') }}
             </div>
 
+
             <form action="{{ route('app_save_purchase') }}" method="POST">
                 @csrf
 
@@ -79,91 +80,97 @@
                     </div>
                 </div>
 
-                {{-- button de sauvegarde --}}
-                @include('button.save-button')
+                @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                    {{-- button de sauvegarde --}}
+                    @include('button.save-button')
 
-                <br>
+                    <br>
 
-                @if ($purchases)
+                    @if ($purchases)
 
-                    @if ($paymentReceived != 0 )
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-danger" type="button" disabled>
-                                <i class="fa-solid fa-trash-can"></i>
-                                {{ __('entreprise.delete') }}
-                            </button>
-                        </div>
-                    @else
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-danger" type="button" onclick="deleteElementThreeVal('{{ $purchases->reference_purch }}', {{ $entreprise->id }}, {{ $functionalUnit->id }}, '{{ route('app_delete_purchase') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
-                                <i class="fa-solid fa-trash-can"></i>
-                                {{ __('entreprise.delete') }}
-                            </button>
-                        </div>
+                        @if ($paymentReceived != 0 )
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-danger" type="button" disabled>
+                                    <i class="fa-solid fa-trash-can"></i>
+                                    {{ __('entreprise.delete') }}
+                                </button>
+                            </div>
+                        @else
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-danger" type="button" onclick="deleteElementThreeVal('{{ $purchases->reference_purch }}', {{ $entreprise->id }}, {{ $functionalUnit->id }}, '{{ route('app_delete_purchase') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                    {{ __('entreprise.delete') }}
+                                </button>
+                            </div>
+                        @endif
+
                     @endif
 
-                @endif
+                    <br>
 
-                <br>
+                    @if ($purchases)
 
-                @if ($purchases)
+                        @if ($paymentReceived == $purchases->amount && $remainingBalance == 0 )
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-success" type="button" disabled>
+                                    <i class="fa-solid fa-coins"></i>
+                                    {{ __('expenses.record_a_payment') }}
+                                </button>
+                            </div>
+                        @else
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#cash-in">
+                                    <i class="fa-solid fa-coins"></i>
+                                    {{ __('expenses.record_a_payment') }}
+                                </button>
+                            </div>
+                        @endif
 
-                    @if ($paymentReceived == $purchases->amount && $remainingBalance == 0 )
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-success" type="button" disabled>
-                                <i class="fa-solid fa-coins"></i>
-                                {{ __('expenses.record_a_payment') }}
-                            </button>
-                        </div>
-                    @else
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#cash-in">
-                                <i class="fa-solid fa-coins"></i>
-                                {{ __('expenses.record_a_payment') }}
-                            </button>
-                        </div>
                     @endif
-
                 @endif
-
             </form>
+
 
         </div>
     </div>
     <div class="col-md-6">
         <div class="p-4 border rounded">
 
-            <form class="mb-3 row" id="purchase_upload_pdf_form" method="POST" action="{{ route('app_upload_purchase_pdf') }}" token="{{ csrf_token() }}" enctype="multipart/form-data">
-                @csrf
-                <input type="hidden" name="ref_purchase" value="{{ $ref_purchase }}">
-                <input type="hidden" name="file_purchase-message" id="file_purchase-message" value="{{ __('expenses.please_select_a_file') }}">
-                <input type="hidden" name="file_purchase-size" id="file_purchase-size" value="{{ __('expenses.file_must_not_exceed') }}">
+            @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
 
-                <label for="file_purchase" class="col-sm-3 col-form-label">{{ __('expenses.add_a_file') }}</label>
-                <div class="col-sm-9">
-                    <div class="input-group">
-                        <input class="form-control" type="file" id="file_purchase" name="file_purchase" accept=".pdf">
-                        <button class="btn btn-primary" type="submit" id="button-addon2">
-                            <i class="fa-solid fa-floppy-disk"></i>
-                            &nbsp;{{ __('main.save') }}
-                        </button>
+                <form class="mb-3 row" id="purchase_upload_pdf_form" method="POST" action="{{ route('app_upload_purchase_pdf') }}" token="{{ csrf_token() }}" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="ref_purchase" value="{{ $ref_purchase }}">
+                    <input type="hidden" name="file_purchase-message" id="file_purchase-message" value="{{ __('expenses.please_select_a_file') }}">
+                    <input type="hidden" name="file_purchase-size" id="file_purchase-size" value="{{ __('expenses.file_must_not_exceed') }}">
+
+                    <label for="file_purchase" class="col-sm-3 col-form-label">{{ __('expenses.add_a_file') }}</label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            <input class="form-control" type="file" id="file_purchase" name="file_purchase" accept=".pdf">
+                            <button class="btn btn-primary" type="submit" id="button-addon2">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                &nbsp;{{ __('main.save') }}
+                            </button>
+                        </div>
+                        <small class="text-danger" id="file_purchase-error"></small>
+
+                        <div class="progress mt-3" id="zone-progress-bar-purchase" hidden>
+                            <div class="progress-bar bg-success" role="progressbar" id="progress-bar-purchase" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                        </div>
                     </div>
-                    <small class="text-danger" id="file_purchase-error"></small>
+                </form>
 
-                    <div class="progress mt-3" id="zone-progress-bar-purchase" hidden>
-                        <div class="progress-bar bg-success" role="progressbar" id="progress-bar-purchase" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                <div class="border-bottom mb-4 fw-bold">
+                    {{ __('expenses.preview') }}
+                </div>
+                <object data="{{ asset('assets/img/purchase') }}/{{ $ref_purchase }}.pdf" type="application/pdf" width="100%" height="500px">
+                    <div class="alert alert-warning text-center" role="alert">
+                        <i class="fa-regular fa-file"></i> {{ __('expenses.no_preview_available') }}
                     </div>
-                </div>
-            </form>
+                </object>
+            @endif
 
-            <div class="border-bottom mb-4 fw-bold">
-                {{ __('expenses.preview') }}
-            </div>
-            <object data="{{ asset('assets/img/purchase') }}/{{ $ref_purchase }}.pdf" type="application/pdf" width="100%" height="500px">
-                <div class="alert alert-warning text-center" role="alert">
-                    <i class="fa-regular fa-file"></i> {{ __('expenses.no_preview_available') }}
-                </div>
-            </object>
         </div>
     </div>
 </div>

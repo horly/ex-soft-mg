@@ -35,6 +35,7 @@ class User extends Authenticatable
         'grade_id',
         'sub_id',
         'id_country',
+        'grade',
     ];
 
     /**
@@ -216,5 +217,10 @@ class User extends Authenticatable
     public function entrance()
     {
         return $this->hasMany('App\Models\Entrance');
+    }
+
+    public function permissionsAssgn()
+    {
+        return $this->hasMany('App\Models\PermissionAssign');
     }
 }

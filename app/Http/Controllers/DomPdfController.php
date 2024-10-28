@@ -42,6 +42,16 @@ class DomPdfController extends Controller
 
         $tot_excl_tax = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->sum('total_price_inv_elmnt');
 
+        $payment_terms_assign = DB::table('payment_terms_assigns')
+            ->where('ref_invoice', $ref_invoice)->first();
+
+        $payment_terms_proforma = null;
+        if($payment_terms_assign)
+        {
+            $payment_terms_proforma = DB::table('payment_terms_proformas')
+                ->where('id', $payment_terms_assign->id_payment_terms)->first();
+        }
+
 
         $pdf = Pdf::loadView('pdf.invoice_pdf', compact(
             'entreprise',
@@ -52,7 +62,9 @@ class DomPdfController extends Controller
             'invoice_elements',
             'logo',
             'tot_excl_tax',
-            'contact'
+            'contact',
+            'payment_terms_proforma',
+            'payment_terms_assign',
         ));
         return $pdf->stream('invoice.pdf');
     }

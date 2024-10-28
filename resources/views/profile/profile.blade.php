@@ -25,13 +25,13 @@
             --}}
 
             <div class="p-4" id="myTabContent">
-                    
+
                 @include('profile.profile-info')
-                
+
             </div>
         </div>
-        
-   </div>    
+
+   </div>
 
    <div class="m-5">
        @include('menu.footer-global')

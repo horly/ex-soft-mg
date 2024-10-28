@@ -31,12 +31,12 @@ class EntrepriseController extends Controller
         $user = Auth::user();
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
 
-        $user->role->name == 'admin'
-            ? $functionalUnits = DB::table('functional_units')->where('id_entreprise', $entreprise->id)->get() 
+        $user->role->name == 'admin' || $user->role->name == 'superadmin'
+            ? $functionalUnits = DB::table('functional_units')->where('id_entreprise', $entreprise->id)->get()
             : $functionalUnits = DB::table('manage_f_u_s')
                                     ->join('functional_units', 'manage_f_u_s.id_fu', '=', 'functional_units.id')
                                     ->where([
-                                        'functional_units.id_entreprise' => $entreprise->id, 
+                                        'functional_units.id_entreprise' => $entreprise->id,
                                         'manage_f_u_s.id_user' => $user->id
                                     ])
                                     ->get();
@@ -51,7 +51,7 @@ class EntrepriseController extends Controller
 
         return view('entreprise.entreprise-info-page', compact('entreprise', 'functionalUnits'));
     }
-    
+
     public function createEntreprise()
     {
         $countries_gb = DB::table('countries')
@@ -69,7 +69,7 @@ class EntrepriseController extends Controller
     }
 
     public function saveEntreprise(CreateEntrepriseForm $requestF)
-    {   
+    {
         $id_entreprise = $requestF->input('id_entreprise');
         $entrepriseRequest = $requestF->input('entrepriseRequest');
         $name_entreprise = $requestF->input('name_entreprise');
@@ -103,7 +103,7 @@ class EntrepriseController extends Controller
             /*BusinessContact::create([
                 'phone_number' => $phone_entreprise,
                 'id_entreprise' => $entreprise->id,
-            ]); 
+            ]);
 
             BusinessEmail::create([
                 'email' => $email_entreprise,
@@ -135,7 +135,7 @@ class EntrepriseController extends Controller
                 $url = route('app_entreprise_info_page', ['id' => $id_entreprise]);
                 $description = "entreprise.has_just_modified_the_information_of_the_company";
                 $this->notificationRepo->setNotification($id_entreprise, $description, $url);
-            
+
             return redirect()->route('app_entreprise_info_page', ['id' => $id_entreprise])->with('success', __('entreprise.company_updated_successfully'));
         }
     }
@@ -153,7 +153,7 @@ class EntrepriseController extends Controller
 
     public function createFunctionalUnit($id)
     {
-        $entreprise = DB::table('entreprises')->where('id', $id)->first(); 
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $devises = DB::table('devises')
                         ->orderBy('iso_code')
                         ->get();
@@ -188,14 +188,14 @@ class EntrepriseController extends Controller
         $bankAccounts = DB::table('bank_accounts')
                         ->where('id_entreprise', $entreprise->id)
                         ->get();
-        
+
         $devises = DB::table('devises')
                         ->orderBy('iso_code')
                         ->get();
 
         return view('entreprise.update-entreprise', compact(
-                            'entreprise', 
-                            'countries_gb', 
+                            'entreprise',
+                            'countries_gb',
                             'countries_fr',
                             'entrepriseContry',
                             'phoneNumbers',
@@ -230,7 +230,7 @@ class EntrepriseController extends Controller
             $url = route('app_entreprise_info_page', ['id' => $id_entreprise]);
             $description = "entreprise.added_a_bank_account_number";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
-    
+
             return redirect()->back()->with('success', __('entreprise.bank_account_added_successfully'));
         }
         else

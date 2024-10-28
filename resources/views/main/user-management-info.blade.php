@@ -18,7 +18,7 @@
     <div class="card">
 
         <div class="card-body">
-              
+
             <div class="row">
                 <div class="col-md-4">
                     <div class="p-4">
@@ -34,7 +34,7 @@
                             <div class="col-md-4"><i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;{{ __('main.name') }}</div>
                             <div class="col-md-8 text-primary fw-bold">{{ $user->name }}</div>
                         </div>
-            
+
                         <div class="row mb-4">
                             <div class="col-md-4"><i class="fa-solid fa-envelope"></i>&nbsp;&nbsp;&nbsp;{{ __('auth.email') }}</div>
                             <div class="col-md-8 text-primary fw-bold">
@@ -47,34 +47,34 @@
                             $grade = DB::table('grades')->where('id', $user->grade_id)->first();
                             $country = DB::table('countries')->where('id', $user->id_country)->first();
                         @endphp
-            
+
                         <div class="row mb-4">
                             <div class="col-md-4"><i class="fa-solid fa-universal-access"></i>&nbsp;&nbsp;&nbsp;{{ __('auth.role') }}</div>
                             <div class="col-md-8 text-primary fw-bold">{{ __('profile.' . $role->name) }}</div>
                         </div>
-                        
+
                         <div class="row mb-4">
                             <div class="col-md-4"><i class="fa-solid fa-briefcase"></i>&nbsp;&nbsp;&nbsp;{{ __('main.function') }}</div>
-                            <div class="col-md-8 text-primary fw-bold">{{ $grade->name }}</div>
+                            <div class="col-md-8 text-primary fw-bold">{{ Auth::user()->grade }}</div>
                         </div>
-            
+
                         <div class="row mb-4">
                             <div class="col-md-4"><i class="fa-solid fa-earth-africa"></i>&nbsp;&nbsp;&nbsp;{{ __('main.country') }}</div>
                             <div class="col-md-8 text-primary fw-bold">
                                 {{ Config::get('app.locale') == 'en' ? $country->name_gb : $country->name_fr }}
                             </div>
                         </div>
-            
+
                         <div class="row mb-4">
                             <div class="col-md-4"><i class="fa-solid fa-phone"></i>&nbsp;&nbsp;&nbsp;{{ __('main.phone_number') }}</div>
                             <div class="col-md-8 text-primary fw-bold">+{{ $country->telephone_code }} {{ chunk_split($user->phone_number, 3, ' ') }}</div>
                         </div>
-            
+
                         <div class="row mb-4">
                             <div class="col-md-4"><i class="fa-solid fa-barcode"></i>&nbsp;&nbsp;&nbsp;{{ __('main.registration_number') }}</div>
                             <div class="col-md-8 text-primary fw-bold">{{ $user->matricule }}</div>
                         </div>
-            
+
                         <div class="row mb-4">
                             <div class="col-md-4"><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;&nbsp;{{ __('main.address') }}</div>
                             <div class="col-md-8 text-primary fw-bold">{{ $user->address }}</div>
@@ -83,54 +83,97 @@
                         <div class="row mb-4">
                             <div class="col-md-4"><i class="fa-solid fa-building-circle-check"></i>&nbsp;&nbsp;&nbsp;{{ __('main.company') }}</div>
                             <div class="col-sm-8">
-                                <ul class="list-group list-group-flush border mb-3">
-                                    @php
-                                        $entreprises = DB::table('manages')
-                                                        ->join('entreprises', 'manages.id_entreprise', '=', 'entreprises.id')
-                                                        ->where('manages.id_user', $user->id)
-                                                        ->get();
-                                    @endphp
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {{ __('main.companies_managed') }}
-                                        </li>
-                                    @foreach ($entreprises as $entreprise)
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <span><i class="fa-solid fa-building-columns"></i></span>&nbsp;&nbsp;
-                                                <span>{{ $entreprise->name }}</span>
-                                            </div>
-                                            <div>
-                                                <a class="btn btn-success" role="button" href="{{ route('app_assign_functional_unit_to_user', ['id' => $entreprise->id, 'idUser' => $user->id ]) }}">
-                                                    <i class="fa-solid fa-gear"></i>
-                                                </a>
-                                                <button class="btn btn-danger" type="button" onclick="deleteElementTwoVal('{{ $entreprise->id }}', '{{ $user->id }}', '{{ route('app_delete_management_entreprise') }}', '{{ csrf_token() }}');">
-                                                    <i class="fa-solid fa-trash-can"></i>
-                                                </button>
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addEntrepriseToUser">
-                                    <i class="fa-solid fa-circle-plus"></i>
-                                    {{ __('auth.add') }}
-                                </button>
-                                
+                                @php
+                                    $entrepriseMng = DB::table('entreprises')->where('id_user', $user->id)->first();
+                                    $entrepriseMngs = DB::table('entreprises')->where('id_user', $user->id)->get();
+                                @endphp
+
+                                @if ($entrepriseMng)
+                                    <ul>
+                                        @foreach ($entrepriseMngs as $entreprisemng)
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <span><i class="fa-solid fa-building-columns"></i></span>&nbsp;&nbsp;
+                                                    <span>{{ $entreprisemng->name }}</span>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <ul class="list-group list-group-flush border mb-3">
+                                        @php
+                                            $entreprises = DB::table('manages')
+                                                            ->join('entreprises', 'manages.id_entreprise', '=', 'entreprises.id')
+                                                            ->where('manages.id_user', $user->id)
+                                                            ->get();
+                                        @endphp
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {{ __('main.companies_managed') }}
+                                            </li>
+                                        @foreach ($entreprises as $entreprise)
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <span><i class="fa-solid fa-building-columns"></i></span>&nbsp;&nbsp;
+                                                    <span>{{ $entreprise->name }}</span>
+                                                </div>
+                                                <div>
+                                                    <a class="btn btn-success" role="button" href="{{ route('app_assign_functional_unit_to_user', ['id' => $entreprise->id, 'idUser' => $user->id ]) }}">
+                                                        <i class="fa-solid fa-gear"></i>
+                                                    </a>
+                                                    <button class="btn btn-danger" type="button" onclick="deleteElementTwoVal('{{ $entreprise->id }}', '{{ $user->id }}', '{{ route('app_delete_management_entreprise') }}', '{{ csrf_token() }}');">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addEntrepriseToUser">
+                                        <i class="fa-solid fa-circle-plus"></i>
+                                        {{ __('auth.add') }}
+                                    </button>
+                                @endif
+
                             </div>
                         </div>
-                        
+
                         <div class="d-grid gap-2">
                             <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $user->id }}', '{{ route('app_delete_user') }}', '{{ csrf_token() }}');">
                                 <i class="fa-solid fa-trash-can"></i>
                                 {{ __('entreprise.delete') }}
                             </button>
                         </div>
-            
+
                     </div>
                 </div>
             </div>
-               
+
+            <div class="border-bottom mt-4 fw-bold">
+            </div>
+
+            <div class="p-4">
+                <h5 class="mb-4">{{ __('main.login_history')}}</h5>
+
+                <table class="table table-striped table-hover border bootstrap-datatable">
+                    <thead>
+                        <th>N°</th>
+                        <th>{{ __('auth.device') }}</th>
+                        <th>IP</th>
+                        <th>Date</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($histories as $history)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $history->browser }} {{ __('auth.on') }} {{ $history->platform }}</td>
+                                <td>{{ $history->ip }}</td>
+                                <td>{{ $history->created_at->format("Y-m-d H:i:s") }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
        </div>
-    
+
     </div>
 
 
@@ -149,7 +192,22 @@
             </div>
             <div class="modal-body bg-body-tertiary  p-4">
                 @php
-                    $entreprises = DB::table('entreprises')->where('id_user', Auth::user()->id)->get();
+                    $entreprises = null;
+
+                    if(Auth::user()->role->name  == "superadmin")
+                    {
+                        $role = DB::table('roles')->where('name', "admin")->first();
+                        $userAdmin = DB::table('users')->where(['sub_id' => $user->sub_id, 'role_id' => $role->id ])->first();
+
+                        //dd($userAdmin);
+
+                        $entreprises = DB::table('entreprises')->where('id_user', $userAdmin->id)->get();
+                    }
+                    else
+                    {
+                        $entreprises = DB::table('entreprises')->where('id_user', Auth::user()->id)->get();
+                    }
+
                 @endphp
 
                 <table class="table table-striped table-hover border bootstrap-datatable-modal">
@@ -191,7 +249,7 @@
             <div class="modal-footer">
                 {{-- button de fermeture modale --}}
                 @include('button.close-button')
-                </div> 
+                </div>
             </div>
         </div>
     </div>

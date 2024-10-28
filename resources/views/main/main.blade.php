@@ -17,15 +17,15 @@
 
     <div class="card">
         <div class="card-body">
-            @if(Auth::user()->role->name == "admin")
+            @if(Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
             <div class="mb-3">
-                <a href="{{ route('app_create_entreprise') }}" class="btn btn-primary" role="button"><i class="fa-solid fa-building-circle-check"></i> 
+                <a href="{{ route('app_create_entreprise') }}" class="btn btn-primary" role="button"><i class="fa-solid fa-building-circle-check"></i>
                     &nbsp;{{ __('main.create_entreprise') }}
                 </a>
             </div>
             <hr class="dropdown-divider">
             @endif
-            
+
             <div class="p-4">
                 <table class="table table-striped table-hover border bootstrap-datatable">
                     <thead>

@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    @if (Auth::user()->role->name == "admin")
+    @if (Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
         <div class="row">
             <div class="col-md-6 mb-3">
                 <div class="d-grid gap-2">

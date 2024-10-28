@@ -19,20 +19,20 @@
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last">
                             <h3>{{ __('dashboard.update_currency') }}</h3>
-                            <p class="text-subtitle text-muted"></p> 
+                            <p class="text-subtitle text-muted"></p>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav class="float-start float-lg-end" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                  <li class="breadcrumb-item"><a href="{{ route('app_currency', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.currencies') }}</a></li>
-                                  <li class="breadcrumb-item"><a href="{{ route('app_info_currency', ['id' => $entreprise->id, 'id2' => $functionalUnit->id, 'id3' => $deviseSel->id]) }}">{{ __('dashboard.currency_information') }}</a></li>
+                                  <li class="breadcrumb-item"><a href="{{ route('app_currency', ['group' => 'currency', 'id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.currencies') }}</a></li>
+                                  <li class="breadcrumb-item"><a href="{{ route('app_info_currency', ['group' => 'currency', 'id' => $entreprise->id, 'id2' => $functionalUnit->id, 'id3' => $deviseSel->id]) }}">{{ __('dashboard.currency_information') }}</a></li>
                                   <li class="breadcrumb-item active" aria-current="page">{{ __('dashboard.update_currency') }}</li>
                                 </ol>
                             </nav>
                         </div>
                     </div>
                 </div>
-    
+
                 {{-- On inlut les messages flash--}}
                 @include('message.flash-message')
 
@@ -47,7 +47,7 @@
                             <input type="hidden" name="fuRequest" id="fuRequest" value="edit">
 
                             <div class="mb-4 row">
-                                <label for="currency_name_dev" class="col-sm-4 col-form-label">{{ __('dashboard.currency_name') }}*</label> 
+                                <label for="currency_name_dev" class="col-sm-4 col-form-label">{{ __('dashboard.currency_name') }}*</label>
                                 <div class="col-sm-8">
                                   <select name="currency_name_dev" id="currency_name_dev" class="form-select @error('currency_name_dev') is-invalid @enderror">
                                       @if (Config::get('app.locale') == 'en')
@@ -78,8 +78,10 @@
                                 </div>
                             </div>
 
-                            {{-- button de sauvegarde --}}
-                            @include('button.save-button')
+                            @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                                {{-- button de sauvegarde --}}
+                                @include('button.save-button')
+                            @endif
 
                         </form>
                     </div>
@@ -87,7 +89,7 @@
 
                 <div class="m-5">
                     @include('menu.footer-global')
-                </div>    
+                </div>
 
             </div>
         </div>

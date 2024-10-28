@@ -59,7 +59,8 @@ class AddUserForm extends FormRequest
 
             'role.required' => __('auth.error_role_register_message'),
 
-            'function.required' => __('auth.error_function_register_message'),
+            //'function.required' => __('auth.error_function_register_message'),
+            'function.required' => __('main.enter_your_grade_please'),
 
             'phoneNumber.required' => __('auth.error_phone_number_register_message'),
             'phoneNumber.numeric' => __('auth.error_phone_number_register_message'),

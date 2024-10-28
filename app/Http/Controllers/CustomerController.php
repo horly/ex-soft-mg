@@ -20,9 +20,9 @@ class CustomerController extends Controller
     protected $notificationRepo;
     protected $generateReferenceNumber;
 
-    function __construct(Request $request, 
-                            EntrepriseRepo $entrepriseRepo, 
-                            NotificationRepo $notificationRepo, 
+    function __construct(Request $request,
+                            EntrepriseRepo $entrepriseRepo,
+                            NotificationRepo $notificationRepo,
                             GenerateRefenceNumber $generateReferenceNumber)
     {
         $this->request = $request;
@@ -31,7 +31,7 @@ class CustomerController extends Controller
         $this->generateReferenceNumber = $generateReferenceNumber;
     }
 
-    public function customer($id, $id2)
+    public function customer($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -41,16 +41,34 @@ class CustomerController extends Controller
                     ->orderByDesc('id')
                     ->get();
 
-        
-        return view('client.client', compact('entreprise', 'functionalUnit', 'clients'));
+
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('client.client', compact('entreprise', 'functionalUnit', 'clients', 'group', 'permission_assign'));
     }
 
-    public function addNewClient($id, $id2)
+    public function addNewClient($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
 
-        return view('client.add_new_client', compact('entreprise', 'functionalUnit'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('client.add_new_client', compact('entreprise', 'functionalUnit', 'permission_assign'));
     }
 
     public function createClient(CreateClientForm $requestF)
@@ -115,16 +133,16 @@ class CustomerController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_customer', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $client_saved->id]);
+            $url = route('app_info_customer', ['group' => 'customer', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $client_saved->id]);
             $description = "client.added_a_new_customer";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_customer', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_customer', ['group' => 'customer', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('client.customer_added_successfully'));
         }
         else
         {
-            
+
             DB::table('clients')
             ->where('id', $id_customer)
             ->update([
@@ -137,18 +155,18 @@ class CustomerController extends Controller
                 'website_cl' => $company_website_cl,
                 'updated_at' => new \DateTimeImmutable,
             ]);
-           
+
             //Notification
-            $url = route('app_info_customer', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_customer]);
+            $url = route('app_info_customer', ['group' => 'customer', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_customer]);
             $description = "client.updated_a_customer_from_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_customer', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_customer', ['group' => 'customer', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('client.customer_updated_successfully'));
         }
     }
 
-    public function infoCustomer($id, $id2, $id3)
+    public function infoCustomer($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -167,7 +185,7 @@ class CustomerController extends Controller
                         ])
                         ->orderBy('sales_invoices.id', 'desc')
                         ->get();
-                        
+
         $invoices_proforma = DB::table('clients')
                         ->join('sales_invoices', 'clients.id', '=', 'sales_invoices.id_client')
                         ->where([
@@ -185,14 +203,24 @@ class CustomerController extends Controller
                             'devise_gestion_ufs.default_cur_manage' => 1,
                 ])->first();
 
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
         return view('client.info_client', compact(
-            'entreprise', 
-            'functionalUnit', 
-            'client', 
-            'contacts', 
-            'invoices', 
+            'entreprise',
+            'functionalUnit',
+            'client',
+            'contacts',
+            'invoices',
             'invoices_proforma',
             'deviseGest',
+            'permission_assign'
         ));
     }
 
@@ -210,18 +238,27 @@ class CustomerController extends Controller
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_customer', [
-            'id' => $id_entreprise, 
+            'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('client.customer_deleted_successfully'));
     }
 
-    public function updateCustomer($id, $id2, $id3)
+    public function updateCustomer($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
         $client = DB::table('clients')->where('id', $id3)->first();
         $contacts = DB::table('customer_contacts')->where('id_client', $client->id)->get();
 
-        return view('client.update_client', compact('entreprise', 'functionalUnit', 'client', 'contacts'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('client.update_client', compact('entreprise', 'functionalUnit', 'client', 'contacts', 'permission_assign'));
     }
 
     public function addNewContactClient()
@@ -231,10 +268,10 @@ class CustomerController extends Controller
         $department_cl = $this->request->input('department_cl');
         $email_cl = $this->request->input('email_cl');
         $phone_number_cl = $this->request->input('phone_number_cl');
-        $address_cl = $this->request->input('address_cl'); 
+        $address_cl = $this->request->input('address_cl');
         $id_client = $this->request->input('id_client');
         $modalRequest = $this->request->input('modalRequest');
-        $id_contact = $this->request->input('id_contact'); 
+        $id_contact = $this->request->input('id_contact');
         $id_entreprise = $this->request->input('id_entreprise');
         $id_fu = $this->request->input('id_fu');
 
@@ -256,7 +293,7 @@ class CustomerController extends Controller
              $url = route('app_info_customer', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_client]);
              $description = "client.added_a_customer_contact";
              $this->notificationRepo->setNotification($id_entreprise, $description, $url);
- 
+
              return redirect()->back()->with('success', __('client.contact_saved_successfully'));
         }
         else
@@ -276,7 +313,7 @@ class CustomerController extends Controller
             $url = route('app_info_customer', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_client]);
             $description = "client.updated_a_customer_contact";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
- 
+
             return redirect()->back()->with('success', __('client.contact_updated_successfully'));
         }
     }

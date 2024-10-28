@@ -16,18 +16,18 @@ return new class extends Migration
             $table->string('type_cr', 255);
             $table->string('reference_cr', 255);
             $table->integer('reference_number');
-            $table->string('entreprise_name_cr', 255)->default('-');
-            $table->string('rccm_cr', 255)->default('-');
-            $table->string('id_nat_cr', 255)->default('-');
-            $table->string('nif_cr', 255)->default('-');
-            $table->string('account_num_cr', 255)->default('-');
-            $table->string('website_cr', 255)->default('-');
+            $table->string('entreprise_name_cr', 255)->default('-')->nullable();;
+            $table->string('rccm_cr', 255)->default('-')->nullable();
+            $table->string('id_nat_cr', 255)->default('-')->nullable();
+            $table->string('nif_cr', 255)->default('-')->nullable();
+            $table->string('account_num_cr', 255)->default('-')->nullable();
+            $table->string('website_cr', 255)->default('-')->nullable();
             $table->string('contact_name_cr', 255);
             $table->string('fonction_contact_cr', 255);
             $table->string('phone_number_cr', 255);
             $table->string('email_adress_cr', 255);
             $table->string('address_cr', 255);
-            
+
             $table->bigInteger('id_user')->unsigned()->index();
             $table->foreign('id_user')
                     ->references('id')->on('users')

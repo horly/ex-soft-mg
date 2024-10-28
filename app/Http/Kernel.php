@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\IsAdmin::class,
         'entreprise' => \App\Http\Middleware\Entreprise::class,
         'funcUnit' => \App\Http\Middleware\FunctionalUnit::class,
+        'menu_access' => \App\Http\Middleware\MenuAccess::class,
     ];
 }

@@ -23,7 +23,7 @@
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav class="float-start float-lg-end" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                          <li class="breadcrumb-item"><a href="{{ route('app_proforma', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.proforma_invoice') }}</a></li>
+                          <li class="breadcrumb-item"><a href="{{ route('app_proforma', ['group' => 'sale', 'id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.proforma_invoice') }}</a></li>
                           <li class="breadcrumb-item active" aria-current="page">{{ __('invoice.proforma_details') }}</li>
                         </ol>
                     </nav>
@@ -78,16 +78,7 @@
                             {{ __('client.reference') }}
                         </div>
                         <div class="col-md-8 text-primary fw-bold">
-                            {{ $invoice->reference_sales_invoice }}
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            {{ __('invoice.date') }}
-                        </div>
-                        <div class="col-md-8 text-primary fw-bold">
-                            {{ date('Y-m-d', strtotime($invoice->created_at)) }}
+                            {{ $invoice->reference_personalized }}
                         </div>
                     </div>
 
@@ -113,6 +104,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
+                                <th class="text-start">REF/SKU</th>
                                 <th scope="col">{{ __('article.description') }}</th>
                                 <th scope="col" class="text-end">{{ __('invoice.quantity') }}</th>
                                 <th scope="col" class="text-end">{{ __('article.unit_price') }} {{ $deviseGest->iso_code }}</th>
@@ -123,6 +115,7 @@
                             @foreach ($invoice_elements as $invoice_element)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
+                                    <td class="text-start">{{ $invoice_element->custom_reference }}</td>
                                     <td>{{ $invoice_element->description_inv_elmnt }}</td>
                                     <td class="text-end">{{ $invoice_element->quantity }}</td>
                                     <td class="text-end">{{ number_format($invoice_element->unit_price_inv_elmnt, 2, '.', ' ') }}</td>
@@ -178,73 +171,102 @@
                                     {{ number_format($invoice->total, 2, '.', ' ') }}
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="fw-bold">
+                                    {{ __('invoice.validity_of_the_offer') }} :
+                                    {{ $invoice->validity_of_the_offer_day }}
+                                    {{ __('invoice.days') }}
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">
+                                    {{ __('invoice.payment_terms') }} :
+                                    {{ $payment_terms_assign->purcentage . '%,' }}
+                                    @if ($payment_terms_proforma->description == "after_delivery")
+                                        {{ $payment_terms_assign->day_number }}
+                                        {{ __('invoice.days') }}
+                                        {{ __('invoice.after_delivery') }}
+                                    @else
+                                        {{ __('invoice.to_order') }}
+                                    @endif
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                         </tbody>
                     </table>
 
+                    @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
 
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
 
-
-                            <form class="d-grid gap-2" method="POST" action="{{ route('app_transform_invoice_simple') }}">
-                                <button class="btn btn-primary" type="submit">
-                                    @csrf
-                                    <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
-                                    <input type="hidden" name="id_fu" value="{{ $functionalUnit->id }}">
-                                    <input type="hidden" name="ref_invoice" value="{{ $ref_invoice }}">
-                                    <i class="fa-solid fa-file-invoice"></i>
-                                    {{ __('invoice.convert_to_simple_invoice') }}
-                                </button>
-                            </form>
-
-                        </div>
-
-                        <div class="col-md-3 mb-3">
-                            <div class="d-grid gap-2">
-                                <a class="btn btn-primary" role="button" href="/invoice_pdf/{{ $entreprise->id }}/{{ $functionalUnit->id }}/{{ $invoice->reference_sales_invoice }}" target="_blank">
-                                    <i class="fa-solid fa-print"></i>
-                                    {{ __('invoice.print') }}
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 mb-3">
-                            @if ($paymentReceived != 0 )
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-success" type="button" disabled>
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                        {{ __('entreprise.edit') }}
+                                <form class="d-grid gap-2" method="POST" action="{{ route('app_transform_invoice_simple') }}">
+                                    <button class="btn btn-primary" type="submit">
+                                        @csrf
+                                        <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
+                                        <input type="hidden" name="id_fu" value="{{ $functionalUnit->id }}">
+                                        <input type="hidden" name="ref_invoice" value="{{ $ref_invoice }}">
+                                        <i class="fa-solid fa-file-invoice"></i>
+                                        {{ __('invoice.convert_to_simple_invoice') }}
                                     </button>
-                                </div>
-                            @else
+                                </form>
+
+                            </div>
+
+                            <div class="col-md-3 mb-3">
                                 <div class="d-grid gap-2">
-                                    <a class="btn btn-success" role="button" href="{{ route('app_add_new_proforma', ['id' => $entreprise->id, 'id2' => $functionalUnit->id, 'ref_invoice' => $ref_invoice]) }}">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                        {{ __('entreprise.edit') }}
+                                    <a class="btn btn-primary" role="button" href="/invoice_pdf/{{ $entreprise->id }}/{{ $functionalUnit->id }}/{{ $invoice->reference_sales_invoice }}" target="_blank">
+                                        <i class="fa-solid fa-print"></i>
+                                        {{ __('invoice.print') }}
                                     </a>
                                 </div>
-                            @endif
-                        </div>
+                            </div>
 
-                        <div class="col-md-3 mb-3">
-                            @if ($paymentReceived != 0 )
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-danger" type="button" disabled>
-                                        <i class="fa-solid fa-trash-can"></i>
-                                        {{ __('entreprise.delete') }}
-                                    </button>
-                                </div>
-                            @else
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-danger" type="button" onclick="deleteElementThreeVal('{{ $invoice->reference_sales_invoice }}', {{ $entreprise->id }}, {{ $functionalUnit->id }}, '{{ route('app_delete_sales_invoice') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                        {{ __('entreprise.delete') }}
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
+                            <div class="col-md-3 mb-3">
+                                @if ($paymentReceived != 0 )
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-success" type="button" disabled>
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            {{ __('entreprise.edit') }}
+                                        </button>
+                                    </div>
+                                @else
+                                    <div class="d-grid gap-2">
+                                        <a class="btn btn-success" role="button" href="{{ route('app_add_new_proforma', ['group' => 'sale', 'id' => $entreprise->id, 'id2' => $functionalUnit->id, 'ref_invoice' => $ref_invoice]) }}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            {{ __('entreprise.edit') }}
+                                        </a>
+                                    </div>
+                                @endif
+                            </div>
 
-                    </div>
+                            <div class="col-md-3 mb-3">
+                                @if ($paymentReceived != 0 )
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-danger" type="button" disabled>
+                                            <i class="fa-solid fa-trash-can"></i>
+                                            {{ __('entreprise.delete') }}
+                                        </button>
+                                    </div>
+                                @else
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-danger" type="button" onclick="deleteElementThreeVal('{{ $invoice->reference_sales_invoice }}', {{ $entreprise->id }}, {{ $functionalUnit->id }}, '{{ route('app_delete_sales_invoice') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                            {{ __('entreprise.delete') }}
+                                        </button>
+                                    </div>
+                                @endif
+                            </div>
+
+                        </div>
+                    @endif
 
 
                 </div>

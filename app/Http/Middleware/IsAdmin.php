@@ -19,11 +19,11 @@ class IsAdmin
         /**
 	    * add role attributes in user table
 	    */
-        if(Auth::user() && Auth::user()->role->name == 'admin')
+        if((Auth::user() && Auth::user()->role->name == 'admin') || Auth::user()->role->name == 'superadmin')
         {
             return $next($request);
         }
-        
+
         return redirect('/main');
         }
 }

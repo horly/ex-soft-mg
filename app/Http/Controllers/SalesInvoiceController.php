@@ -8,11 +8,13 @@ use App\Models\Encaissement;
 use App\Models\Entrance;
 use App\Models\InvoiceElement;
 use App\Models\InvoiceMargin;
+use App\Models\PaymentTermsAssign;
 use App\Models\SalesInvoice;
 use App\Models\SerialNumberInvoice;
 use App\Repository\EntrepriseRepo;
 use App\Repository\GenerateRefenceNumber;
 use App\Repository\NotificationRepo;
+use App\Services\Reference\Reference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +39,7 @@ class SalesInvoiceController extends Controller
         $this->generateReferenceNumber = $generateReferenceNumber;
     }
 
-    public function salesInvoice($id, $id2)
+    public function salesInvoice($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -58,7 +60,16 @@ class SalesInvoiceController extends Controller
                         ->orderBy('sales_invoices.id', 'desc')
                         ->get();
 
-        return view('invoice_sales.sales_invoice', compact('entreprise', 'functionalUnit', 'deviseGest', 'invoices'));
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
+        return view('invoice_sales.sales_invoice', compact('entreprise', 'functionalUnit', 'deviseGest', 'invoices', 'permission_assign'));
     }
 
     public function setUpInvoice()
@@ -106,8 +117,6 @@ class SalesInvoiceController extends Controller
             $this->request->session()->put('fullname_contact', $contact->fullname_cl);
         }
 
-
-
         if($is_proforma == 1)
         {
             $invoice_margin_not_saved = DB::table('invoice_margins')
@@ -136,6 +145,7 @@ class SalesInvoiceController extends Controller
                 ]);
 
                 return redirect()->route('app_add_new_proforma', [
+                    'group' => 'sale',
                     'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_invoice' => $refInvoice,
@@ -144,6 +154,7 @@ class SalesInvoiceController extends Controller
             else
             {
                 return redirect()->route('app_add_new_proforma', [
+                    'group' => 'sale',
                     'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_invoice' => $invoice_margin_not_saved->ref_invoice,
@@ -178,14 +189,16 @@ class SalesInvoiceController extends Controller
                 ]);
 
                 return redirect()->route('app_add_new_delivery_note', [
+                    'group' => 'sale',
                     'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_invoice' => $refInvoice,
-            ]);
+                ]);
             }
             else
             {
                 return redirect()->route('app_add_new_delivery_note', [
+                    'group' => 'sale',
                     'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_invoice' => $invoice_margin_not_saved->ref_invoice,
@@ -223,14 +236,16 @@ class SalesInvoiceController extends Controller
                 ]);
 
                 return redirect()->route('app_add_new_sales_invoice', [
+                    'group' => 'sale',
                     'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_invoice' => $refInvoice,
-            ]);
+                ]);
             }
             else
             {
                 return redirect()->route('app_add_new_sales_invoice', [
+                    'group' => 'sale',
                     'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_invoice' => $invoice_margin_not_saved->ref_invoice,
@@ -240,7 +255,7 @@ class SalesInvoiceController extends Controller
 
     }
 
-    public function addNewSalesInvoice($id, $id2, $ref_invoice)
+    public function addNewSalesInvoice($group, $id, $id2, $ref_invoice)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -273,6 +288,14 @@ class SalesInvoiceController extends Controller
 
         $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
 
+        /**
+         * On génère une référence pour chaque user
+         * par exemple
+         * IK/001/2024
+         */
+        $reference = new Reference(Auth::user()->name);
+        $reference_personalized = $reference->getInvoiceReference();
+
         if($invoice)
         {
             $client = DB::table('clients')->where('id', $invoice->id_client)->first();
@@ -292,8 +315,21 @@ class SalesInvoiceController extends Controller
 
             $this->request->session()->put('date_sales_invoice', date('Y-m-d', strtotime($date)));
             $this->request->session()->put('due_date_sales_invoice', date('Y-m-d', strtotime($due_date)));
+
+            $reference_personalized = $invoice->reference_personalized;
         }
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
+        $payment_terms_proforma = null;
+        $payment_terms_assign = null;
 
         return view('invoice_sales.add_new_sales_invoice', compact(
             'entreprise',
@@ -307,6 +343,11 @@ class SalesInvoiceController extends Controller
             'invoice_elements',
             'country',
             'tot_excl_tax',
+            'permission_assign',
+            'reference_personalized',
+            'invoice',
+            'payment_terms_proforma',
+            'payment_terms_assign',
         ));
     }
 
@@ -392,7 +433,6 @@ class SalesInvoiceController extends Controller
         $ref_invoice = $this->request->input('ref_invoice');
         $descrption_saved_art = $this->request->input('descrption_saved_art');
         $id_invoice_margin = $this->request->input('id_invoice_margin');
-        $margin_invoice = $this->request->input('article_margin_invoice');
 
         $article_sales_invoice = $this->request->input('article_sales_invoice');
         $article_qty_invoice = $this->request->input('article_qty_invoice');
@@ -404,6 +444,10 @@ class SalesInvoiceController extends Controller
 
         $id_customer_session_art = $this->request->input('id_customer_session_art');
         $id_contact_session_art = $this->request->input('id_contact_session_art');
+        $concerne_session = $this->request->input('concerne_session');
+        $article_reference_invoice = $this->request->input('article_reference_invoice');
+
+        //dd($article_reference_invoice);
 
         if($id_customer_session_art != 0 && $id_contact_session_art != 0)
         {
@@ -420,7 +464,14 @@ class SalesInvoiceController extends Controller
             $this->request->session()->put('fullname_contact', $contact->fullname_cl);
         }
 
+        if($concerne_session != "")
+        {
+            $this->request->session()->put('invoice_concern_sales', $concerne_session);
+        }
+
         //dd($this->request->all());
+
+        //dd($modalRequest);
 
         if($modalRequest != "edit")
         {
@@ -446,6 +497,8 @@ class SalesInvoiceController extends Controller
                         'id_marge' => $id_invoice_margin,
                         'id_user' => Auth::user()->id,
                         'id_fu' => $id_fu,
+                        'margin' => $article_margin_invoice,
+                        'custom_reference' => $article_reference_invoice
                     ]);
 
                     $whereData = [
@@ -464,7 +517,7 @@ class SalesInvoiceController extends Controller
                         $pur_price = $invoice_elemnt->purshase_price_inv_elmnt;
                         $quantity_get = $invoice_elemnt->quantity;
 
-                        $value = ($pur_price * $margin_invoice) / 100;
+                        $value = ($pur_price * $article_margin_invoice) / 100;
                         $final_price = $pur_price + $value;
 
                         $total_price = $final_price * $quantity_get;
@@ -475,12 +528,6 @@ class SalesInvoiceController extends Controller
                             'total_price_inv_elmnt' => $total_price,
                         ]);
                     }
-
-                    DB::table('invoice_margins')
-                        ->where('id', $id_invoice_margin)
-                        ->update([
-                            'margin' => $article_margin_invoice,
-                        ]);
                 }
                 else
                 {
@@ -503,13 +550,14 @@ class SalesInvoiceController extends Controller
                         'ref_service' => $article_sales_invoice,
                         'description_inv_elmnt' => $descrption_saved_art,
                         'quantity' => $article_qty_invoice,
-                        'purshase_price_inv_elmnt' => $total_price_inv_elmnt,
-                        'unit_price_inv_elmnt' => $total_price_inv_elmnt,
+                        'purshase_price_inv_elmnt' => $article_sale_price_invoice,
+                        'unit_price_inv_elmnt' => $article_sale_price_invoice,
                         'total_price_inv_elmnt' => $total_price_inv_elmnt,
                         'id_marge' => $id_invoice_margin,
                         'is_an_article' => 0,
                         'id_user' => Auth::user()->id,
                         'id_fu' => $id_fu,
+                        'custom_reference' => $article_reference_invoice
                     ]);
                 }
                 else
@@ -525,22 +573,37 @@ class SalesInvoiceController extends Controller
             //si c'est un article
             if($is_an_article == 1)
             {
+
+                //dd($id_invoice_element);
+
                 DB::table('invoice_elements')->where('id', $id_invoice_element)
                 ->update([
                     'ref_article' => $article_sales_invoice,
-                    'description_inv_elmnt' => $descrption_saved_art,
                     'quantity' => $article_qty_invoice,
                     'purshase_price_inv_elmnt' => $article_purchase_price_invoice,
                     'unit_price_inv_elmnt' => $article_sale_price_invoice,
                     'total_price_inv_elmnt' => $total_price_inv_elmnt,
                     'id_marge' => $id_invoice_margin,
+                    'margin' => $article_margin_invoice,
+                    'custom_reference' => $article_reference_invoice,
                 ]);
 
                 return redirect()->back();
             }
             else
             {
+                DB::table('invoice_elements')->where('id', $id_invoice_element)
+                ->update([
+                    'ref_article' => $article_sales_invoice,
+                    'quantity' => $article_qty_invoice,
+                    'purshase_price_inv_elmnt' => $article_sale_price_invoice,
+                    'unit_price_inv_elmnt' => $article_sale_price_invoice,
+                    'total_price_inv_elmnt' => $total_price_inv_elmnt,
+                    'id_marge' => $id_invoice_margin,
+                    'custom_reference' => $article_reference_invoice
+                ]);
 
+                return redirect()->back();
             }
         }
     }
@@ -581,6 +644,46 @@ class SalesInvoiceController extends Controller
         $is_simple_invoice_inv = $requestF->input('is_simple_invoice_inv');
 
         $invoice_concern_sales = $requestF->input('invoice_concern_sales');
+        //$ref_personalized = $requestF->input('invoice_concern_sales');
+        $validity_of_the_offer = $requestF->input('validity_of_the_offer');
+        $payment_terms = $requestF->input('payment_terms'); //to_order or after_delivery
+        $payment_terms_percentage = $requestF->input('payment_terms_percentage');
+        $after_delivery_days = $requestF->input('after_delivery_days');
+
+
+        if($is_proforma == 1)
+        {
+            $payment_terms_proformas = DB::table('payment_terms_proformas')->where('description', $payment_terms)->first();
+            PaymentTermsAssign::create([
+                'ref_invoice' => $ref_invoice,
+                'id_payment_terms' => $payment_terms_proformas->id,
+                'purcentage' => $payment_terms_percentage,
+                'day_number' => $after_delivery_days,
+            ]);
+        }
+        else
+        {
+            $validity_of_the_offer = 15;
+        }
+
+
+        $reference_personalized = "";
+
+        if($is_simple_invoice_inv == 1)
+        {
+            $reference = new Reference(Auth::user()->name);
+            $reference_personalized = $reference->getInvoiceReference();
+        }
+        if($is_proforma == 1)
+        {
+            $reference = new Reference(Auth::user()->name);
+            $reference_personalized = $reference->getProformaReference();
+        }
+        if($is_delivery_note_marge == 1)
+        {
+            $reference = new Reference(Auth::user()->name);
+            $reference_personalized = $reference->getDeliveryReference();
+        }
 
 
         $time = date('H:i:s');
@@ -624,10 +727,12 @@ class SalesInvoiceController extends Controller
                     'id_fu' => $id_fu,
                     'id_contact' => $client_contact_sales_invoice,
                     'created_at' => $date_invoice,
-                    'due_date' => $due_date,
+                    'due_date' => $date_invoice,
                     'is_proforma_inv' => $is_proforma,
                     'is_delivery_note' => $is_delivery_note_marge,
                     'is_simple_invoice' => $is_simple_invoice_inv,
+                    'reference_personalized' => $reference_personalized,
+                    'validity_of_the_offer_day' => $validity_of_the_offer
                 ]);
 
                 DB::table('invoice_margins')
@@ -640,31 +745,31 @@ class SalesInvoiceController extends Controller
                 if($is_proforma == 1 && $is_delivery_note_marge == 0)
                 {
                     //Notification
-                    $url = route('app_info_proforma', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                    $url = route('app_info_proforma', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
                     $description = "invoice.added_a_new_proforma_invoice_in_the_functional_unit";
                     $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-                    return redirect()->route('app_proforma', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                    return redirect()->route('app_proforma', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu ])
                         ->with('success', __('invoice.proforma_invoice_added_successfully'));
                 }
                 else if($is_delivery_note_marge == 1 && $is_proforma == 0)
                 {
                     //Notification
-                    $url = route('app_info_delivery_note', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                    $url = route('app_info_delivery_note', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
                     $description = "invoice.added_a_delivery_note";
                     $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-                    return redirect()->route('app_delivery_note', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                    return redirect()->route('app_delivery_note', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu ])
                         ->with('success', __('invoice.delivery_note_added_successfully'));
                 }
                 else
                 {
                     //Notification
-                    $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                    $url = route('app_info_sales_invoice', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
                     $description = "invoice.added_an_invoice_in_the_functional_unit";
                     $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-                    return redirect()->route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                    return redirect()->route('app_sales_invoice', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu ])
                         ->with('success', __('invoice.the_invoice_was_added_successfully'));
                 }
             }
@@ -687,21 +792,22 @@ class SalesInvoiceController extends Controller
                         'id_fu' => $id_fu,
                         'id_contact' => $client_contact_sales_invoice,
                         'created_at' => $date_invoice,
-                        'due_date' => $due_date,
+                        'due_date' => $date_invoice,
                         'updated_at' => new \DateTimeImmutable,
                         'is_proforma_inv' => $is_proforma,
                         'is_delivery_note' => $is_delivery_note_marge,
                         'is_simple_invoice' => $is_simple_invoice_inv,
+                        'validity_of_the_offer_day' => $validity_of_the_offer
                 ]);
 
                 if($is_proforma == 1 && $is_delivery_note_marge == 0)
                 {
                     //Notification
-                    $url = route('app_info_proforma', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                    $url = route('app_info_proforma', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
                     $description = "invoice.modified_a_proforma_invoice_in_the_functional_unit";
                     $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-                    return redirect()->route('app_proforma', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                    return redirect()->route('app_proforma', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu ])
                         ->with('success', __('invoice.the_proforma_invoice_has_been_successfully_modified'));
 
 
@@ -709,21 +815,21 @@ class SalesInvoiceController extends Controller
                 else if($is_delivery_note_marge == 1 && $is_proforma == 0)
                 {
                     //Notification
-                    $url = route('app_info_delivery_note', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                    $url = route('app_info_delivery_note', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
                     $description = "invoice.modified_a_delivery_note";
                     $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-                    return redirect()->route('app_delivery_note', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                    return redirect()->route('app_delivery_note', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu ])
                         ->with('success', __('invoice.delivery_note_modified_successfully'));
                 }
                 else
                 {
                     //Notification
-                    $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+                    $url = route('app_info_sales_invoice', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
                     $description = "invoice.modified_an_invoice_in_the_functional_unit";
                     $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-                    return redirect()->route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu ])
+                    return redirect()->route('app_sales_invoice', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu ])
                         ->with('success', __('invoice.the_invoice_was_successfully_modified'));
                 }
             }
@@ -736,7 +842,7 @@ class SalesInvoiceController extends Controller
         }
     }
 
-    public function infoSalesInvoice($id, $id2, $ref_invoice)
+    public function infoSalesInvoice($group, $id, $id2, $ref_invoice)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -793,6 +899,15 @@ class SalesInvoiceController extends Controller
 
         $purchases = null;
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
         return view('invoice_sales.info_sales_invoice', compact(
             'entreprise',
             'functionalUnit',
@@ -808,7 +923,8 @@ class SalesInvoiceController extends Controller
             'remainingBalance',
             'paymentMethods',
             'contact',
-            'purchases'
+            'purchases',
+            'permission_assign'
         ));
     }
 
@@ -939,40 +1055,43 @@ class SalesInvoiceController extends Controller
         if($is_proforma == 1)
         {
             //Notification
-            $url = route('app_proforma', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_proforma', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu]);
             $description = "invoice.deleted_a_proforma_invoice";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
             return redirect()->route('app_proforma', [
+                'group' => 'sale',
                 'id' => $id_entreprise,
                 'id2' => $id_fu ])->with('success', __('invoice.proforma_invoice_successfully_deleted'));
         }
         else if($is_delivery_note == 1)
         {
             //Notification
-            $url = route('app_delivery_note', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_delivery_note', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu]);
             $description = "invoice.deleted_a_delivery_note";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
             return redirect()->route('app_delivery_note', [
+                'group' => 'sale',
                 'id' => $id_entreprise,
                 'id2' => $id_fu ])->with('success', __('invoice.delivery_note_successfully_deleted'));
         }
         else
         {
             //Notification
-            $url = route('app_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_sales_invoice', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu]);
             $description = "invoice.deleted_an_invoice_in_the_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
             return redirect()->route('app_sales_invoice', [
+                'group' => 'sale',
                 'id' => $id_entreprise,
                 'id2' => $id_fu ])->with('success', __('invoice.invoice_deleted_successfully'));
         }
 
     }
 
-    public function proforma($id, $id2)
+    public function proforma($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -992,15 +1111,25 @@ class SalesInvoiceController extends Controller
                         ->orderBy('sales_invoices.id', 'desc')
                         ->get();
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
         return view('invoice_sales.proforma.proforma', compact(
             'entreprise',
             'functionalUnit',
             'deviseGest',
             'invoices',
+            'permission_assign',
         ));
     }
 
-    public function addNewProforma($id, $id2, $ref_invoice)
+    public function addNewProforma($group, $id, $id2, $ref_invoice)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -1032,6 +1161,58 @@ class SalesInvoiceController extends Controller
 
         $tot_excl_tax = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->sum('total_price_inv_elmnt');
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
+        $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
+
+        /**
+         * On génère une référence pour chaque user
+         * par exemple
+         * IK/001/2024
+         */
+        $reference = new Reference(Auth::user()->name);
+        $reference_personalized = $reference->getInvoiceReference();
+
+        if($invoice)
+        {
+            $client = DB::table('clients')->where('id', $invoice->id_client)->first();
+            $contact = DB::table('customer_contacts')->where('id', $invoice->id_contact)->first();
+
+            $this->request->session()->put('id_client', $client->id);
+            $client->type == 'particular'
+                ? $this->request->session()->put('entreprise_client', $contact->fullname_cl)
+                : $this->request->session()->put('entreprise_client', $client->entreprise_name_cl);
+
+            $this->request->session()->put('id_contact', $contact->id);
+            $this->request->session()->put('fullname_contact', $contact->fullname_cl);
+            $this->request->session()->put('invoice_concern_sales', $invoice->concern_invoice);
+
+            $date = $invoice->created_at;
+            $due_date = $invoice->due_date;
+
+            $this->request->session()->put('date_sales_invoice', date('Y-m-d', strtotime($date)));
+            $this->request->session()->put('due_date_sales_invoice', date('Y-m-d', strtotime($due_date)));
+
+            $reference_personalized = $invoice->reference_personalized;
+        }
+
+        $payment_terms_assign = DB::table('payment_terms_assigns')
+            ->where('ref_invoice', $ref_invoice)->first();
+
+        $payment_terms_proforma = null;
+        if($payment_terms_assign)
+        {
+            $payment_terms_proforma = DB::table('payment_terms_proformas')
+                ->where('id', $payment_terms_assign->id_payment_terms)->first();
+        }
+
         return view('invoice_sales.proforma.add_new_proforma', compact(
             'entreprise',
             'functionalUnit',
@@ -1044,10 +1225,15 @@ class SalesInvoiceController extends Controller
             'invoice_elements',
             'country',
             'tot_excl_tax',
+            'permission_assign',
+            'reference_personalized',
+            'invoice',
+            'payment_terms_proforma',
+            'payment_terms_assign',
         ));
     }
 
-    public function infoProforma($id, $id2, $ref_invoice)
+    public function infoProforma($group, $id, $id2, $ref_invoice)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -1103,6 +1289,25 @@ class SalesInvoiceController extends Controller
 
         //dd($paymentMethods);
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
+        $payment_terms_assign = DB::table('payment_terms_assigns')
+                ->where('ref_invoice', $ref_invoice)->first();
+
+        $payment_terms_proforma = null;
+        if($payment_terms_assign)
+        {
+            $payment_terms_proforma = DB::table('payment_terms_proformas')
+                ->where('id', $payment_terms_assign->id_payment_terms)->first();
+        }
+
         return view('invoice_sales.proforma.info_proforma', compact(
             'entreprise',
             'functionalUnit',
@@ -1117,7 +1322,10 @@ class SalesInvoiceController extends Controller
             'paymentReceived',
             'remainingBalance',
             'paymentMethods',
-            'contact'
+            'contact',
+            'permission_assign',
+            'payment_terms_assign',
+            'payment_terms_proforma',
         ));
     }
 
@@ -1144,6 +1352,7 @@ class SalesInvoiceController extends Controller
         ]);
 
         return redirect()->route('app_info_sales_invoice', [
+            'group' => 'sale',
             'id' => $id_entreprise,
             'id2' => $id_fu,
             'ref_invoice' => $ref_invoice
@@ -1165,7 +1374,7 @@ class SalesInvoiceController extends Controller
         ]);
     }
 
-    public function deliveryNote($id, $id2)
+    public function deliveryNote($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -1186,15 +1395,25 @@ class SalesInvoiceController extends Controller
                         ->orderBy('sales_invoices.id', 'desc')
                         ->get();
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
         return view('delivery_note.delivery_note', compact(
             'entreprise',
             'functionalUnit',
             'deviseGest',
-            'invoices'
+            'invoices',
+            'permission_assign'
         ));
     }
 
-    public function addNewDeliveryNote($id, $id2, $ref_invoice)
+    public function addNewDeliveryNote($group, $id, $id2, $ref_invoice)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -1228,6 +1447,9 @@ class SalesInvoiceController extends Controller
 
         $tot_excl_tax = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->sum('total_price_inv_elmnt');
 
+        $reference = new Reference(Auth::user()->name);
+        $reference_personalized = $reference->getInvoiceReference();
+
         if($invoice)
         {
             $client = DB::table('clients')->where('id', $invoice->id_client)->first();
@@ -1246,9 +1468,31 @@ class SalesInvoiceController extends Controller
 
             $this->request->session()->put('date_sales_invoice', date('Y-m-d', strtotime($date)));
             $this->request->session()->put('due_date_sales_invoice', date('Y-m-d', strtotime($due_date)));
+
+            $reference_personalized = $invoice->reference_personalized;
         }
 
         //dd($invoice_margin);
+
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
+        /**
+         * On génère une référence pour chaque user
+         * par exemple
+         * IK/001/2024
+         */
+        $reference = new Reference(Auth::user()->name);
+        $reference_personalized = $reference->getDeliveryReference();
+
+        $payment_terms_proforma = null;
+        $payment_terms_assign = null;
 
         return view('delivery_note.add_new_delivery_note', compact(
             'entreprise',
@@ -1261,7 +1505,11 @@ class SalesInvoiceController extends Controller
             'invoice_margin',
             'invoice_elements',
             'country',
-            'tot_excl_tax'
+            'tot_excl_tax',
+            'permission_assign',
+            'reference_personalized',
+            'payment_terms_proforma',
+            'payment_terms_assign',
         ));
     }
 
@@ -1305,7 +1553,7 @@ class SalesInvoiceController extends Controller
         return redirect()->back();
     }
 
-    public function infoDeliveryNote($id, $id2, $ref_invoice)
+    public function infoDeliveryNote($group, $id, $id2, $ref_invoice)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -1361,6 +1609,15 @@ class SalesInvoiceController extends Controller
 
         //dd($paymentMethods);
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
         return view('delivery_note.info_delivery_note', compact(
             'entreprise',
             'functionalUnit',
@@ -1375,7 +1632,8 @@ class SalesInvoiceController extends Controller
             'paymentReceived',
             'remainingBalance',
             'paymentMethods',
-            'contact'
+            'contact',
+            'permission_assign'
         ));
     }
 
@@ -1393,13 +1651,14 @@ class SalesInvoiceController extends Controller
         ]);
 
         return redirect()->route('app_info_delivery_note', [
+            'group' => 'sale',
             'id' => $id_entreprise,
             'id2' => $id_functionalUnit,
             'ref_invoice' => $ref_invoice
         ]);
     }
 
-    public function entrances($id, $id2)
+    public function entrances($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -1412,11 +1671,21 @@ class SalesInvoiceController extends Controller
                         'devise_gestion_ufs.default_cur_manage' => 1,
         ])->first();
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
         return view('invoice_sales.entrances', compact(
             'entreprise',
             'functionalUnit',
             'entrances',
             'deviseGest',
+            'permission_assign'
         ));
     }
 
@@ -1428,13 +1697,14 @@ class SalesInvoiceController extends Controller
         $reference_entrance = "ENTR" . date('Y') . date('m') . date('d') . date('H') . date('i') . date('s') . Auth::user()->id;
 
         return redirect()->route('app_add_new_entrance', [
+            'group' => 'sale',
             'id' => $id_entreprise,
             'id2' => $id_functionalUnit,
             'ref_entrance' => $reference_entrance,
         ]);
     }
 
-    public function add_new_entrance($id, $id2, $ref_entrance)
+    public function add_new_entrance($group, $id, $id2, $ref_entrance)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -1475,6 +1745,15 @@ class SalesInvoiceController extends Controller
                     ])->first();
         }
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
         return view('invoice_sales.add_new_entrance', compact(
             'entreprise',
             'functionalUnit',
@@ -1484,7 +1763,8 @@ class SalesInvoiceController extends Controller
             'entrance',
             'ref_entrance',
             'encaissement',
-            'paymentMeth'
+            'paymentMeth',
+            'permission_assign'
         ));
     }
 

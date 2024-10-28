@@ -20,13 +20,13 @@
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
                         <h3>{{ __('supplier.update_supplier') }}</h3>
-                        <p class="text-subtitle text-muted"></p> 
+                        <p class="text-subtitle text-muted"></p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav class="float-start float-lg-end" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                              <li class="breadcrumb-item"><a href="{{ route('app_supplier', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('supplier.suppliers') }}</a></li>
-                              <li class="breadcrumb-item"><a href="{{ route('app_info_supplier', ['id' => $entreprise->id, 'id2' => $functionalUnit->id, 'id3' => $supplier->id]) }}">{{ __('supplier.supplier_details') }}</a></li>
+                              <li class="breadcrumb-item"><a href="{{ route('app_supplier', ['group' => 'supplier', 'id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('supplier.suppliers') }}</a></li>
+                              <li class="breadcrumb-item"><a href="{{ route('app_info_supplier', ['group' => 'supplier', 'id' => $entreprise->id, 'id2' => $functionalUnit->id, 'id3' => $supplier->id]) }}">{{ __('supplier.supplier_details') }}</a></li>
                               <li class="breadcrumb-item active" aria-current="page">{{ __('supplier.update_supplier') }}</li>
                             </ol>
                         </nav>
@@ -49,7 +49,7 @@
                             <input type="hidden" name="customerRequest" id="customerRequest" value="edit">
 
                             <div class="mb-4 row">
-                                <label for="customer_type_sup" class="col-sm-4 col-form-label">{{ __('supplier.supplier_type') }}*</label> 
+                                <label for="customer_type_sup" class="col-sm-4 col-form-label">{{ __('supplier.supplier_type') }}*</label>
                                 <div class="col-sm-8">
                                   <select name="customer_type_sup" id="customer_type_sup" class="form-select @error('customer_type_sup') is-invalid @enderror">
                                       <option value="{{ $supplier->type_sup }}" selected>{{ __('client.' . $supplier->type_sup) }}</option>
@@ -63,7 +63,7 @@
                             <div class="border-bottom mb-4 fw-bold">
                                 {{ __('supplier.supplier_company_information') }}
                             </div>
-                            
+
                             <div class="mb-4 row">
                                 <label for="company_name_sup" class="col-sm-4 col-form-label">{{ __('main.company_name') }}*</label>
                                 <div class="col-sm-8">
@@ -154,8 +154,10 @@
                                 </div>
                             </div>
 
-                            {{-- button de sauvegarde --}}
-                            @include('button.save-button')
+                            @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                                {{-- button de sauvegarde --}}
+                                @include('button.save-button')
+                            @endif
 
                         </form>
                     </div>

@@ -24,7 +24,7 @@
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav class="float-start float-lg-end" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                              <li class="breadcrumb-item"><a href="{{ route('app_article', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.articles') }}</a></li>
+                              <li class="breadcrumb-item"><a href="{{ route('app_article', ['group' => 'stock', 'id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.articles') }}</a></li>
                               <li class="breadcrumb-item active" aria-current="page">{{ __('article.add_a_new_article') }}</li>
                             </ol>
                         </nav>
@@ -47,7 +47,7 @@
                             <input type="hidden" name="customerRequest" id="customerRequest" value="add">
 
                             <div class="mb-4 row">
-                                <label for="description_art" class="col-sm-4 col-form-label">{{ __('article.description') }}*</label> 
+                                <label for="description_art" class="col-sm-4 col-form-label">{{ __('article.description') }}*</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control @error('description_art') is-invalid @enderror" id="description_art" name="description_art" placeholder="{{ __('article.enter_the_article_description') }}" value="{{ old('description_art') }}">
                                     <small class="text-danger">@error('description_art') {{ $message }} @enderror</small>
@@ -55,11 +55,11 @@
                             </div>
 
                             <div class="mb-4 row">
-                                <label for="subcat_art" class="col-sm-4 col-form-label">{{ __('article.article_subcategory') }}*</label> 
+                                <label for="subcat_art" class="col-sm-4 col-form-label">{{ __('article.article_subcategory') }}*</label>
                                 <div class="col-sm-5">
                                   <select name="subcat_art" id="subcat_art" class="form-select type_contact @error('subcat_art') is-invalid @enderror">
                                       <option value="" selected>{{ __('article.select_a_subcategory') }}</option>
-                                      
+
                                       @foreach ($subcategory_articles as $subcategory_article)
                                         <option value="{{ $subcategory_article->id }}">{{ $subcategory_article->name_subcat_art }}</option>
                                       @endforeach
@@ -68,15 +68,17 @@
                                   <small class="text-danger">@error('subcat_art') {{ $message }} @enderror</small>
                                 </div>
                                 <div class="col-sm-3 d-grid gap-2">
-                                    <a href="{{ route('app_add_new_subcategory_article', ['id' => $entreprise->id, 'id2' => $functionalUnit->id ]) }}" class="btn btn-primary mb-3" role="button">
-                                        <i class="fa-solid fa-circle-plus"></i> 
-                                        &nbsp;{{ __('auth.add') }}
-                                    </a>
+                                    @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                                        <a href="{{ route('app_add_new_subcategory_article', ['group' => 'stock', 'id' => $entreprise->id, 'id2' => $functionalUnit->id ]) }}" class="btn btn-primary mb-3" role="button">
+                                            <i class="fa-solid fa-circle-plus"></i>
+                                            &nbsp;{{ __('auth.add') }}
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
 
                             <div class="mb-4 row">
-                                <label for="purchase_price_art" class="col-sm-4 col-form-label">{{ __('invoice.purchase_price') }}*</label> 
+                                <label for="purchase_price_art" class="col-sm-4 col-form-label">{{ __('invoice.purchase_price') }}*</label>
                                 <div class="col-sm-8">
                                     <div class="input-group">
                                         <input type="number" step="0.01" class="form-control text-end @error('purchase_price_art') is-invalid @enderror" id="purchase_price_art" name="purchase_price_art" placeholder="{{ __('invoice.enter_the_article_purchase_prise') }}" value="{{ old('purchase_price_art') }}">
@@ -87,7 +89,7 @@
                             </div>
 
                             <div class="mb-4 row">
-                                <label for="sale_prise_art" class="col-sm-4 col-form-label">{{ __('invoice.sale_prise') }}*</label> 
+                                <label for="sale_prise_art" class="col-sm-4 col-form-label">{{ __('invoice.sale_prise') }}*</label>
                                 <div class="col-sm-8">
                                     <div class="input-group">
                                         <input type="number" step="0.01" class="form-control text-end @error('sale_prise_art') is-invalid @enderror" id="sale_prise_art" name="sale_prise_art" placeholder="{{ __('invoice.enter_the_article_sale_prise') }}" value="{{ old('sale_prise_art') }}">
@@ -98,15 +100,17 @@
                             </div>
 
                             <div class="mb-4 row">
-                                <label for="number_in_stock_art" class="col-sm-4 col-form-label">{{ __('article.number_in_stock') }}</label> 
+                                <label for="number_in_stock_art" class="col-sm-4 col-form-label">{{ __('article.number_in_stock') }}</label>
                                 <div class="col-sm-8">
                                     <input type="number" class="form-control text-end @error('number_in_stock_art') is-invalid @enderror" id="number_in_stock_art" name="number_in_stock_art" placeholder="{{ __('article.enter_the_number_in_stock') }}" value="{{ old('number_in_stock_art') }}">
                                     <small class="text-danger">@error('number_in_stock_art') {{ $message }} @enderror</small>
                                 </div>
                             </div>
 
-                            {{-- button de sauvegarde --}}
-                            @include('button.save-button')
+                            @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                                {{-- button de sauvegarde --}}
+                                @include('button.save-button')
+                            @endif
 
                         </form>
                     </div>
@@ -118,9 +122,9 @@
             </div>
 
         </div>
-    
+
     </div>
-    
+
 </div>
 
 @endsection

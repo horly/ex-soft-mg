@@ -17,15 +17,15 @@
 
     <div class="card">
         <div class="card-body">
-            @if(Auth::user()->role->name == "admin")
+            @if(Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
             <div class="mb-3">
-                <a href="{{ route('app_add_user_page') }}" class="btn btn-primary" role="button"><i class="fa-solid fa-user-plus"></i> 
+                <a href="{{ route('app_add_user_page') }}" class="btn btn-primary" role="button"><i class="fa-solid fa-user-plus"></i>
                     &nbsp;{{ __('main.add_user') }}
                 </a>
             </div>
             <hr class="dropdown-divider">
         @endif
-        
+
         <div class="p-4">
             <table class="table table-striped table-hover border bootstrap-datatable">
                 <thead>
@@ -50,7 +50,7 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $grade->name }}</td>
                             <td><a href="{{ Auth::user()->id == $user->id ? route('app_profile') : route('app_user_management_info', ['id' => $user->id ]) }}">{{ __('main.show') }}</a></td>
-                        </tr>     
+                        </tr>
                     @endforeach
                 </tbody>
             </table>

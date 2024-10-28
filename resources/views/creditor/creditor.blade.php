@@ -25,7 +25,7 @@
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav class="float-start float-lg-end" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                              <li class="breadcrumb-item"><a href="{{ route('app_dashboard', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ $functionalUnit->name }}</a></li>
+                              <li class="breadcrumb-item"><a href="{{ route('app_dashboard', ['group' => 'global', 'id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ $functionalUnit->name }}</a></li>
                               <li class="breadcrumb-item active" aria-current="page">{{ __('dashboard.creditors') }}</li>
                             </ol>
                         </nav>
@@ -35,15 +35,18 @@
 
             {{-- On inlut les messages flash--}}
             @include('message.flash-message')
-            
+
             <section class="section">
                 <div class="card">
                     <div class="card-body">
-                        <a href="{{ route('app_add_new_creditor', ['id' => $entreprise->id, 'id2' => $functionalUnit->id ]) }}" class="btn btn-primary mb-3" role="button">
-                            <i class="fa-solid fa-circle-plus"></i> 
-                            &nbsp;{{ __('auth.add') }}
-                        </a>
-                        
+
+                        @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                            <a href="{{ route('app_add_new_creditor', ['group' => 'creditor', 'id' => $entreprise->id, 'id2' => $functionalUnit->id ]) }}" class="btn btn-primary mb-3" role="button">
+                                <i class="fa-solid fa-circle-plus"></i>
+                                &nbsp;{{ __('auth.add') }}
+                            </a>
+                        @endif
+
                         <table class="table table-striped table-hover border bootstrap-datatable">
                             <thead>
                                 <th>N°</th>
@@ -61,6 +64,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <a href="{{ route('app_info_creditor', [
+                                                'group' => 'creditor',
                                                 'id' => $entreprise->id,
                                                 'id2' => $functionalUnit->id,
                                                 'id3' => $creditor->id,
@@ -75,6 +79,7 @@
                                         <td>{{ $creditor->phone_number_cr }}</td>
                                         <td>
                                             <a href="{{ route('app_info_creditor', [
+                                                'group' => 'creditor',
                                                 'id' => $entreprise->id,
                                                 'id2' => $functionalUnit->id,
                                                 'id3' => $creditor->id,

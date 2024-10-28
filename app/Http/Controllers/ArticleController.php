@@ -23,9 +23,9 @@ class ArticleController extends Controller
     protected $notificationRepo;
     protected $generateReferenceNumber;
 
-    function __construct(Request $request, 
-                            EntrepriseRepo $entrepriseRepo, 
-                            NotificationRepo $notificationRepo, 
+    function __construct(Request $request,
+                            EntrepriseRepo $entrepriseRepo,
+                            NotificationRepo $notificationRepo,
                             GenerateRefenceNumber $generateReferenceNumber)
     {
         $this->request = $request;
@@ -34,7 +34,7 @@ class ArticleController extends Controller
         $this->generateReferenceNumber = $generateReferenceNumber;
     }
 
-    public function categoryArticle($id, $id2)
+    public function categoryArticle($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -43,16 +43,34 @@ class ArticleController extends Controller
                     ->where('id_fu', $functionalUnit->id)
                     ->orderByDesc('id')
                     ->get();
-                    
-        return view('article.category-article', compact('entreprise', 'functionalUnit', 'category_articles'));
+
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('article.category-article', compact('entreprise', 'functionalUnit', 'category_articles', 'permission_assign'));
     }
 
-    public function addNewCategoryArticle($id, $id2)
+    public function addNewCategoryArticle($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
 
-        return view('article.add_new_category-article', compact('entreprise', 'functionalUnit'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('article.add_new_category-article', compact('entreprise', 'functionalUnit', 'permission_assign'));
     }
 
     public function createCategoryArticle(CreateCategoryForm $requestF)
@@ -78,11 +96,11 @@ class ArticleController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_article_category', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $cat_art_saved->id]);
+            $url = route('app_info_article_category', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $cat_art_saved->id]);
             $description = "article.added_a_new_article_category_in_the_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_category_article', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_category_article', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('article.item_category_added_successfully'));
         }
         else
@@ -95,16 +113,16 @@ class ArticleController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_article_category', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_cat_art]);
+            $url = route('app_info_article_category', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_cat_art]);
             $description = "article.updated_an_article_category";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_category_article', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_category_article', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('article.item_category_updated_successfully'));
         }
     }
 
-    public function infoArticleCategory($id, $id2, $id3)
+    public function infoArticleCategory($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -112,7 +130,16 @@ class ArticleController extends Controller
                     ->join('category_articles', 'category_articles.id_user', '=', 'users.id')
                     ->where('category_articles.id', $id3)->first();
 
-        return view('article.info_category-article', compact('entreprise', 'functionalUnit', 'category_article'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('article.info_category-article', compact('entreprise', 'functionalUnit', 'category_article', 'permission_assign'));
     }
 
     public function deleteCategoryArticle()
@@ -129,17 +156,26 @@ class ArticleController extends Controller
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_category_article', [
-            'id' => $id_entreprise, 
+            'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('article.article_category_successfully_deleted'));
     }
 
-    public function updateArticleCategory($id, $id2, $id3)
+    public function updateArticleCategory($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
         $category_article = DB::table('category_articles')->where('id', $id3)->first();
 
-        return view('article.update_category-article', compact('entreprise', 'functionalUnit', 'category_article'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('article.update_category-article', compact('entreprise', 'functionalUnit', 'category_article', 'permission_assign'));
     }
 
 
@@ -147,7 +183,7 @@ class ArticleController extends Controller
      * Subcategory article
      */
 
-    public function subCategoryArticle($id, $id2)
+    public function subCategoryArticle($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -157,11 +193,20 @@ class ArticleController extends Controller
                     ->where('subcategory_articles.id_fu', $functionalUnit->id)
                     ->orderByDesc('subcategory_articles.id')
                     ->get();
-                    
-        return view('article.subcategory-article', compact('entreprise', 'functionalUnit', 'subcategory_articles'));
+
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('article.subcategory-article', compact('entreprise', 'functionalUnit', 'subcategory_articles', 'permission_assign'));
     }
 
-    public function addNewSubCategoryArticle($id, $id2)
+    public function addNewSubCategoryArticle($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -171,7 +216,16 @@ class ArticleController extends Controller
                 ->orderByDesc('id')
                 ->get();
 
-        return view('article.add_new_subcategory-article', compact('entreprise', 'functionalUnit', 'category_articles'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('article.add_new_subcategory-article', compact('entreprise', 'functionalUnit', 'category_articles', 'permission_assign'));
     }
 
     public function createSubCategoryArticle(CreateSubCategoryForm $requestF)
@@ -199,11 +253,11 @@ class ArticleController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_article_subcategory', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $sub_cat_art_saved->id]);
+            $url = route('app_info_article_subcategory', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $sub_cat_art_saved->id]);
             $description = "article.added_a_new_article_subcategory_in_the_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_subcategory_article', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_subcategory_article', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('article.article_subcategory_added_successfully'));
         }
         else
@@ -217,16 +271,16 @@ class ArticleController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_article_subcategory', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_subcat_art]);
+            $url = route('app_info_article_subcategory', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_subcat_art]);
             $description = "article.updated_an_article_subcategory";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_subcategory_article', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_subcategory_article', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('article.item_subcategory_updated_successfully'));
         }
     }
 
-    public function infoArticleSubCategory($id, $id2, $id3)
+    public function infoArticleSubCategory($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -234,7 +288,16 @@ class ArticleController extends Controller
                     ->join('subcategory_articles', 'subcategory_articles.id_user', '=', 'users.id')
                     ->where('subcategory_articles.id', $id3)->first();
 
-        return view('article.info_sub_categorie-article', compact('entreprise', 'functionalUnit', 'subcategory_article'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('article.info_sub_categorie-article', compact('entreprise', 'functionalUnit', 'subcategory_article', 'permission_assign'));
     }
 
     public function deleteSubCategoryArticle()
@@ -251,11 +314,11 @@ class ArticleController extends Controller
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_subcategory_article', [
-            'id' => $id_entreprise, 
+            'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('article.article_subcategory_successfully_deleted'));
     }
 
-    public function updateArticleSubCategory($id, $id2, $id3)
+    public function updateArticleSubCategory($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -265,19 +328,29 @@ class ArticleController extends Controller
 
         $cat_art_get = DB::table('category_articles')->where('id', $subcategory_article->id_cat)->first();
 
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
         return view('article.update_subcategory-article', compact(
-                        'entreprise', 
-                        'functionalUnit', 
+                        'entreprise',
+                        'functionalUnit',
                         'category_articles',
-                        'subcategory_article', 
-                        'cat_art_get'
+                        'subcategory_article',
+                        'cat_art_get',
+                        'permission_assign'
         ));
     }
 
     /**
      * Article
      */
-    public function article($id, $id2)
+    public function article($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -294,11 +367,20 @@ class ArticleController extends Controller
                         'devise_gestion_ufs.id_fu' => $functionalUnit->id,
                         'devise_gestion_ufs.default_cur_manage' => 1,
                     ])->first();
-        
-        return view('article.article', compact('entreprise', 'functionalUnit', 'articles', 'deviseGest'));
+
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('article.article', compact('entreprise', 'functionalUnit', 'articles', 'deviseGest', 'permission_assign'));
     }
 
-    public function addNewArticle($id, $id2)
+    public function addNewArticle($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -315,7 +397,17 @@ class ArticleController extends Controller
                     'devise_gestion_ufs.default_cur_manage' => 1,
             ])->first();
 
-        return view('article.add_new_article', compact('entreprise', 'functionalUnit', 'subcategory_articles', 'deviseGest'));
+
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('article.add_new_article', compact('entreprise', 'functionalUnit', 'subcategory_articles', 'deviseGest', 'permission_assign'));
     }
 
     public function createArticle(CreateArticleForm $requestF)
@@ -349,11 +441,11 @@ class ArticleController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_article', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $article_saved->id]);
+            $url = route('app_info_article', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $article_saved->id]);
             $description = "article.added_a_new_article_in_the_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_article', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_article', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('article.article_added_successfully'));
         }
         else
@@ -370,16 +462,16 @@ class ArticleController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_article', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_art]);
+            $url = route('app_info_article', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_art]);
             $description = "article.updated_an_article";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_article', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_article', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('article.article_updated_successfully'));
         }
     }
 
-    public function infoArticle($id, $id2, $id3)
+    public function infoArticle($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -387,7 +479,7 @@ class ArticleController extends Controller
         $article = DB::table('users')
                     ->join('articles', 'articles.id_user', '=', 'users.id')
                     ->where('articles.id', $id3)->first();
-        
+
         $deviseGest = DB::table('devises')
                     ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
                     ->where([
@@ -395,7 +487,16 @@ class ArticleController extends Controller
                         'devise_gestion_ufs.default_cur_manage' => 1,
                     ])->first();
 
-        return view('article.info_article', compact('entreprise', 'functionalUnit', 'article', 'deviseGest'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('article.info_article', compact('entreprise', 'functionalUnit', 'article', 'deviseGest', 'permission_assign'));
     }
 
     public function deleteArticle()
@@ -412,11 +513,11 @@ class ArticleController extends Controller
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_article', [
-            'id' => $id_entreprise, 
-            'id2' => $id_fu ])->with('success', __('article.article_successfully_deleted'));   
+            'id' => $id_entreprise,
+            'id2' => $id_fu ])->with('success', __('article.article_successfully_deleted'));
     }
 
-    public function updateArticle($id, $id2, $id3)
+    public function updateArticle($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -424,7 +525,7 @@ class ArticleController extends Controller
         $article = DB::table('users')
                     ->join('articles', 'articles.id_user', '=', 'users.id')
                     ->where('articles.id', $id3)->first();
-        
+
         $subcategory_articles = DB::table('subcategory_articles')
                     ->where('id_fu', $functionalUnit->id)
                     ->orderByDesc('id')
@@ -434,7 +535,7 @@ class ArticleController extends Controller
                     ->where('id', $article->id_sub_cat)
                     ->orderByDesc('id')
                     ->first();
-        
+
         $deviseGest = DB::table('devises')
                     ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
                     ->where([
@@ -442,13 +543,23 @@ class ArticleController extends Controller
                         'devise_gestion_ufs.default_cur_manage' => 1,
                     ])->first();
 
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
         return view('article.update_article', compact(
-            'entreprise', 
-            'functionalUnit', 
-            'article', 
-            'deviseGest', 
+            'entreprise',
+            'functionalUnit',
+            'article',
+            'deviseGest',
             'subcategory_articles',
-            'subcategory_art'
+            'subcategory_art',
+            'permission_assign'
         ));
     }
 }

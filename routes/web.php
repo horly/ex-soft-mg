@@ -5,6 +5,7 @@ use App\Http\Controllers\CreditorController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DebtController;
 use App\Http\Controllers\DebtorController;
 use App\Http\Controllers\DomPdfController;
 use App\Http\Controllers\EntrepriseController;
@@ -17,6 +18,8 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PaymentMethodesController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReceivableController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SalesInvoiceController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SupplierController;
@@ -62,12 +65,25 @@ Route::controller(HomeController::class)->group(function(){
             Route::post('/delete_management_entreprise', 'deleteManagementEntr')->name('app_delete_management_entreprise');
 
             Route::get('/assign_functional_unit_to_user/{id:int}/{idUser:int}', 'assignFunctUser')->name('app_assign_functional_unit_to_user');
+            Route::get('/permissions/{id_user:int}/{id_fu:int}', 'permissions')->name('app_permissions');
         });
         Route::get('/main', 'main')->name('app_main');
         Route::get('/login_history', 'loginHistory')->name('app_login_history');
         Route::get('/all_notification', 'allNotif')->name('app_all_notification');
         Route::get('/unviewed_notifications', 'unviewedNotif')->name('app_unviewed_notifications');
         Route::post('/read_notification', 'readNotif')->name('app_read_notification');
+        Route::post('/get_permission', 'get_permission')->name('app_get_permission');
+        Route::post('/save_permissions', 'save_permissions')->name('app_save_permissions');
+        Route::post('/save_contact_permissions', 'save_contact_permissions')->name('app_save_contact_permissions');
+        Route::post('/save_stock_permissions', 'save_stock_permissions')->name('app_save_stock_permissions');
+        Route::post('/save_service_permissions', 'save_service_permissions')->name('app_save_service_permissions');
+        Route::post('/save_currency_permissions', 'save_currency_permissions')->name('app_save_currency_permissions');
+        Route::post('/save_payment_method_permissions', 'save_payment_method_permissions')->name('app_save_payment_method_permissions');
+        Route::post('/save_debt_permissions', 'save_debt_permissions')->name('app_save_debt_permissions');
+        Route::post('/save_receivable_permissions', 'save_receivable_permissions')->name('app_save_receivable_permissions');
+        Route::post('/save_sales_permissions', 'save_sales_permissions')->name('app_save_sales_permissions');
+        Route::post('/save_expense_permissions', 'save_expense_permissions')->name('app_save_expense_permissions');
+        Route::post('/save_report_permissions', 'save_report_permissions')->name('app_save_report_permissions');
     });
 });
 
@@ -167,7 +183,7 @@ Route::controller(DashboardController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
-                Route::get('/dashboard/{id:int}/{id2:int}', 'dashboard')->name('app_dashboard');
+                Route::get('/dashboard/{group:string}/{id:int}/{id2:int}', 'dashboard')->name('app_dashboard');
             });
         });
 
@@ -181,10 +197,12 @@ Route::controller(CurrencyController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
-                Route::get('/currency/{id:int}/{id2:int}', 'currency')->name('app_currency');
-                Route::get('/create_currency/{id:int}/{id2:int}', 'createCurrency')->name('app_create_currency');
-                Route::get('/info_currency/{id:int}/{id2:int}/{id3:int}', 'infoCurrency')->name('app_info_currency');
-                Route::get('/update_currency/{id:int}/{id2:int}/{id3:int}', 'upDatecurrency')->name('app_update_currency');
+                Route::middleware('menu_access')->group(function(){
+                    Route::get('/currency/{group:string}/{id:int}/{id2:int}', 'currency')->name('app_currency');
+                    Route::get('/create_currency/{group:string}/{id:int}/{id2:int}', 'createCurrency')->name('app_create_currency');
+                    Route::get('/info_currency/{group:string}/{id:int}/{id2:int}/{id3:int}', 'infoCurrency')->name('app_info_currency');
+                    Route::get('/update_currency/{group:string}/{id:int}/{id2:int}/{id3:int}', 'upDatecurrency')->name('app_update_currency');
+                });
             });
         });
 
@@ -199,10 +217,12 @@ Route::controller(CustomerController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
-                Route::get('/customer/{id:int}/{id2:int}', 'customer')->name('app_customer');
-                Route::get('/add_new_client/{id:int}/{id2:int}', 'addNewClient')->name('app_add_new_client');
-                Route::get('/info_customer/{id:int}/{id2:int}/{id3:int}', 'infoCustomer')->name('app_info_customer');
-                Route::get('/update_customer/{id:int}/{id2:int}/{id3:int}', 'updateCustomer')->name('app_update_customer');
+                Route::middleware('menu_access')->group(function(){
+                    Route::get('/customer/{group:string}/{id:int}/{id2:int}', 'customer')->name('app_customer');
+                    Route::get('/add_new_client/{group:string}/{id:int}/{id2:int}', 'addNewClient')->name('app_add_new_client');
+                    Route::get('/info_customer/{group:string}/{id:int}/{id2:int}/{id3:int}', 'infoCustomer')->name('app_info_customer');
+                    Route::get('/update_customer/{group:string}/{id:int}/{id2:int}/{id3:int}', 'updateCustomer')->name('app_update_customer');
+                });
             });
         });
 
@@ -218,10 +238,12 @@ Route::controller(SupplierController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
-                Route::get('/supplier/{id:int}/{id2:int}', 'supplier')->name('app_supplier');
-                Route::get('/add_new_supplier/{id:int}/{id2:int}', 'addNewSupplier')->name('app_add_new_supplier');
-                Route::get('/info_supplier/{id:int}/{id2:int}/{id3:int}', 'infoSupplier')->name('app_info_supplier');
-                Route::get('/update_supplier/{id:int}/{id2:int}/{id3:int}', 'updateSupplier')->name('app_update_supplier');
+                Route::middleware('menu_access')->group(function(){
+                    Route::get('/supplier/{group:string}/{id:int}/{id2:int}', 'supplier')->name('app_supplier');
+                    Route::get('/add_new_supplier/{group:string}/{id:int}/{id2:int}', 'addNewSupplier')->name('app_add_new_supplier');
+                    Route::get('/info_supplier/{group:string}/{id:int}/{id2:int}/{id3:int}', 'infoSupplier')->name('app_info_supplier');
+                    Route::get('/update_supplier/{group:string}/{id:int}/{id2:int}/{id3:int}', 'updateSupplier')->name('app_update_supplier');
+                });
             });
         });
 
@@ -236,10 +258,12 @@ Route::controller(CreditorController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
-                Route::get('/creditor/{id:int}/{id2:int}', 'creditor')->name('app_creditor');
-                Route::get('/add_new_creditor/{id:int}/{id2:int}', 'addNewCreditor')->name('app_add_new_creditor');
-                Route::get('/info_creditor/{id:int}/{id2:int}/{id3:int}', 'infoCreditor')->name('app_info_creditor');
-                Route::get('/update_creditor/{id:int}/{id2:int}/{id3:int}', 'updateCreditor')->name('app_update_creditor');
+                Route::middleware('menu_access')->group(function(){
+                    Route::get('/creditor/{group:string}/{id:int}/{id2:int}', 'creditor')->name('app_creditor');
+                    Route::get('/add_new_creditor/{group:string}/{id:int}/{id2:int}', 'addNewCreditor')->name('app_add_new_creditor');
+                    Route::get('/info_creditor/{group:string}/{id:int}/{id2:int}/{id3:int}', 'infoCreditor')->name('app_info_creditor');
+                    Route::get('/update_creditor/{group:string}/{id:int}/{id2:int}/{id3:int}', 'updateCreditor')->name('app_update_creditor');
+                });
             });
         });
 
@@ -253,10 +277,12 @@ Route::controller(DebtorController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
-                Route::get('/debtor/{id:int}/{id2:int}', 'debtor')->name('app_debtor');
-                Route::get('/add_new_debtor/{id:int}/{id2:int}', 'addNewDebtor')->name('app_add_new_debtor');
-                Route::get('/info_debtor/{id:int}/{id2:int}/{id3:int}', 'infoDebtor')->name('app_info_debtor');
-                Route::get('/update_debtor/{id:int}/{id2:int}/{id3:int}', 'updateDebtor')->name('app_update_debtor');
+                Route::middleware('menu_access')->group(function(){
+                    Route::get('/debtor/{group:string}/{id:int}/{id2:int}', 'debtor')->name('app_debtor');
+                    Route::get('/add_new_debtor/{group:string}/{id:int}/{id2:int}', 'addNewDebtor')->name('app_add_new_debtor');
+                    Route::get('/info_debtor/{group:string}/{id:int}/{id2:int}/{id3:int}', 'infoDebtor')->name('app_info_debtor');
+                    Route::get('/update_debtor/{group:string}/{id:int}/{id2:int}/{id3:int}', 'updateDebtor')->name('app_update_debtor');
+                });
             });
         });
 
@@ -270,27 +296,29 @@ Route::controller(ArticleController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
-                /**
-                 * Article Category
-                 */
-                Route::get('/category_article/{id:int}/{id2:int}', 'categoryArticle')->name('app_category_article');
-                Route::get('/add_new_category_article/{id:int}/{id2:int}', 'addNewCategoryArticle')->name('app_add_new_category_article');
-                Route::get('/info_article_category/{id:int}/{id2:int}/{id3:int}', 'infoArticleCategory')->name('app_info_article_category');
-                Route::get('/update_article_category/{id:int}/{id2:int}/{id3:int}', 'updateArticleCategory')->name('app_update_article_category');
-                /**
-                 * Article Subcategory
-                 */
-                Route::get('/subcategory_article/{id:int}/{id2:int}', 'subCategoryArticle')->name('app_subcategory_article');
-                Route::get('/add_new_subcategory_article/{id:int}/{id2:int}', 'addNewSubCategoryArticle')->name('app_add_new_subcategory_article');
-                Route::get('/info_article_subcategory/{id:int}/{id2:int}/{id3:int}', 'infoArticleSubCategory')->name('app_info_article_subcategory');
-                Route::get('/update_article_subcategory/{id:int}/{id2:int}/{id3:int}', 'updateArticleSubCategory')->name('app_update_article_subcategory');
-                /**
-                 * Article
-                 */
-                Route::get('/article/{id:int}/{id2:int}', 'article')->name('app_article');
-                Route::get('/add_new_article/{id:int}/{id2:int}', 'addNewArticle')->name('app_add_new_article');
-                Route::get('/info_article/{id:int}/{id2:int}/{id3:int}', 'infoArticle')->name('app_info_article');
-                Route::get('/update_article/{id:int}/{id2:int}/{id3:int}', 'updateArticle')->name('app_update_article');
+                Route::middleware('menu_access')->group(function(){
+                    /**
+                     * Article Category
+                     */
+                    Route::get('/category_article/{group:string}/{id:int}/{id2:int}', 'categoryArticle')->name('app_category_article');
+                    Route::get('/add_new_category_article/{group:string}/{id:int}/{id2:int}', 'addNewCategoryArticle')->name('app_add_new_category_article');
+                    Route::get('/info_article_category/{group:string}/{id:int}/{id2:int}/{id3:int}', 'infoArticleCategory')->name('app_info_article_category');
+                    Route::get('/update_article_category/{group:string}/{id:int}/{id2:int}/{id3:int}', 'updateArticleCategory')->name('app_update_article_category');
+                    /**
+                     * Article Subcategory
+                     */
+                    Route::get('/subcategory_article/{group:string}/{id:int}/{id2:int}', 'subCategoryArticle')->name('app_subcategory_article');
+                    Route::get('/add_new_subcategory_article/{group:string}/{id:int}/{id2:int}', 'addNewSubCategoryArticle')->name('app_add_new_subcategory_article');
+                    Route::get('/info_article_subcategory/{group:string}/{id:int}/{id2:int}/{id3:int}', 'infoArticleSubCategory')->name('app_info_article_subcategory');
+                    Route::get('/update_article_subcategory/{group:string}/{id:int}/{id2:int}/{id3:int}', 'updateArticleSubCategory')->name('app_update_article_subcategory');
+                    /**
+                     * Article
+                     */
+                    Route::get('/article/{group:string}/{id:int}/{id2:int}', 'article')->name('app_article');
+                    Route::get('/add_new_article/{group:string}/{id:int}/{id2:int}', 'addNewArticle')->name('app_add_new_article');
+                    Route::get('/info_article/{group:string}/{id:int}/{id2:int}/{id3:int}', 'infoArticle')->name('app_info_article');
+                    Route::get('/update_article/{group:string}/{id:int}/{id2:int}/{id3:int}', 'updateArticle')->name('app_update_article');
+                });
             });
         });
 
@@ -316,20 +344,22 @@ Route::controller(ServiceController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
-                /**
-                 * Service Category
-                 */
-                Route::get('/category_service/{id:int}/{id2:int}', 'categoryService')->name('app_category_service');
-                Route::get('/add_new_category_service/{id:int}/{id2:int}', 'addNewCategoryService')->name('app_add_new_category_service');
-                Route::get('/info_service_category/{id:int}/{id2:int}/{id3:int}', 'infoServiceCategory')->name('app_info_service_category');
-                Route::get('/update_service_category/{id:int}/{id2:int}/{id3:int}', 'updateServiceCategory')->name('app_update_service_category');
-                /**
-                 * Service
-                 */
-                Route::get('/service/{id:int}/{id2:int}', 'service')->name('app_service');
-                Route::get('/add_new_service/{id:int}/{id2:int}', 'addNewService')->name('app_add_new_service');
-                Route::get('/info_service/{id:int}/{id2:int}/{id3:int}', 'infoService')->name('app_info_service');
-                Route::get('/update_service/{id:int}/{id2:int}/{id3:int}', 'updateService')->name('app_update_service');
+                Route::middleware('menu_access')->group(function(){
+                    /**
+                     * Service Category
+                     */
+                    Route::get('/category_service/{group:string}/{id:int}/{id2:int}', 'categoryService')->name('app_category_service');
+                    Route::get('/add_new_category_service/{group:string}/{id:int}/{id2:int}', 'addNewCategoryService')->name('app_add_new_category_service');
+                    Route::get('/info_service_category/{group:string}/{id:int}/{id2:int}/{id3:int}', 'infoServiceCategory')->name('app_info_service_category');
+                    Route::get('/update_service_category/{group:string}/{id:int}/{id2:int}/{id3:int}', 'updateServiceCategory')->name('app_update_service_category');
+                    /**
+                     * Service
+                     */
+                    Route::get('/service/{group:string}/{id:int}/{id2:int}', 'service')->name('app_service');
+                    Route::get('/add_new_service/{group:string}/{id:int}/{id2:int}', 'addNewService')->name('app_add_new_service');
+                    Route::get('/info_service/{group:string}/{id:int}/{id2:int}/{id3:int}', 'infoService')->name('app_info_service');
+                    Route::get('/update_service/{group:string}/{id:int}/{id2:int}/{id3:int}', 'updateService')->name('app_update_service');
+                });
             });
         });
 
@@ -351,10 +381,12 @@ Route::controller(PaymentMethodesController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
-                Route::get('/payment_methods/{id:int}/{id2:int}', 'paymentMethods')->name('app_payment_methods');
-                Route::get('/add_new_payment_methods/{id:int}/{id2:int}', 'addNewPaymentMethods')->name('app_add_new_payment_methods');
-                Route::get('/info_payment_methods/{id:int}/{id2:int}/{id3:int}', 'infoPaymentMethods')->name('app_info_payment_methods');
-                Route::get('/update_payment_methods/{id:int}/{id2:int}/{id3:int}', 'upDatePaymentMethods')->name('app_update_payment_methods');
+                Route::middleware('menu_access')->group(function(){
+                    Route::get('/payment_methods/{group:string}/{id:int}/{id2:int}', 'paymentMethods')->name('app_payment_methods');
+                    Route::get('/add_new_payment_methods/{group:string}/{id:int}/{id2:int}', 'addNewPaymentMethods')->name('app_add_new_payment_methods');
+                    Route::get('/info_payment_methods/{group:string}/{id:int}/{id2:int}/{id3:int}', 'infoPaymentMethods')->name('app_info_payment_methods');
+                    Route::get('/update_payment_methods/{group:string}/{id:int}/{id2:int}/{id3:int}', 'upDatePaymentMethods')->name('app_update_payment_methods');
+                });
             });
         });
 
@@ -368,22 +400,24 @@ Route::controller(SalesInvoiceController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
-                Route::get('/sales_invoice/{id:int}/{id2:int}', 'salesInvoice')->name('app_sales_invoice');
-                Route::get('/add_new_sales_invoice/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewSalesInvoice')->name('app_add_new_sales_invoice');
-                Route::get('/info_sales_invoice/{id:int}/{id2:int}/{ref_invoice:string}', 'infoSalesInvoice')->name('app_info_sales_invoice');
-                Route::get('/update_sales_invoice/{id:int}/{id2:int}/{id3:int}', 'upDateSalesInvoice')->name('app_update_sales_invoice');
+                Route::middleware('menu_access')->group(function(){
+                    Route::get('/sales_invoice/{group:string}/{id:int}/{id2:int}', 'salesInvoice')->name('app_sales_invoice');
+                    Route::get('/add_new_sales_invoice/{group:string}/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewSalesInvoice')->name('app_add_new_sales_invoice');
+                    Route::get('/info_sales_invoice/{group:string}/{id:int}/{id2:int}/{ref_invoice:string}', 'infoSalesInvoice')->name('app_info_sales_invoice');
+                    Route::get('/update_sales_invoice/{id:int}/{id2:int}/{id3:int}', 'upDateSalesInvoice')->name('app_update_sales_invoice');
 
-                Route::get('/proforma/{id:int}/{id2:int}', 'proforma')->name('app_proforma');
-                Route::get('/add_new_proforma/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewProforma')->name('app_add_new_proforma');
-                Route::get('/info_proforma/{id:int}/{id2:int}/{ref_invoice:string}', 'infoProforma')->name('app_info_proforma');
-                Route::get('/update_proforma/{id:int}/{id2:int}/{id3:int}', 'updateProforma')->name('app_update_proforma');
+                    Route::get('/proforma/{group:string}/{id:int}/{id2:int}', 'proforma')->name('app_proforma');
+                    Route::get('/add_new_proforma/{group:string}/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewProforma')->name('app_add_new_proforma');
+                    Route::get('/info_proforma/{group:string}/{id:int}/{id2:int}/{ref_invoice:string}', 'infoProforma')->name('app_info_proforma');
+                    Route::get('/update_proforma/{group:string}/{id:int}/{id2:int}/{id3:int}', 'updateProforma')->name('app_update_proforma');
 
-                Route::get('/delivery_note/{id:int}/{id2:int}', 'deliveryNote')->name('app_delivery_note');
-                Route::get('/add_new_delivery_note/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewDeliveryNote')->name('app_add_new_delivery_note');
-                Route::get('/info_delivery_note/{id:int}/{id2:int}/{ref_invoice:string}', 'infoDeliveryNote')->name('app_info_delivery_note');
+                    Route::get('/delivery_note/{group:string}/{id:int}/{id2:int}', 'deliveryNote')->name('app_delivery_note');
+                    Route::get('/add_new_delivery_note/{group:string}/{id:int}/{id2:int}/{ref_invoice:string}', 'addNewDeliveryNote')->name('app_add_new_delivery_note');
+                    Route::get('/info_delivery_note/{group:string}/{id:int}/{id2:int}/{ref_invoice:string}', 'infoDeliveryNote')->name('app_info_delivery_note');
 
-                Route::get('/entrances/{id:int}/{id2:int}', 'entrances')->name('app_entrances');
-                Route::get('/add_new_entrance/{id:int}/{id2:int}/{ref_entrance:string}', 'add_new_entrance')->name('app_add_new_entrance');
+                    Route::get('/entrances/{group:string}/{id:int}/{id2:int}', 'entrances')->name('app_entrances');
+                    Route::get('/add_new_entrance/{group:string}/{id:int}/{id2:int}/{ref_entrance:string}', 'add_new_entrance')->name('app_add_new_entrance');
+                });
             });
         });
 
@@ -437,12 +471,14 @@ Route::controller(ExpensesController::class)->group(function(){
     Route::middleware('auth')->group(function(){
         Route::middleware('entreprise')->group(function(){
             Route::middleware('funcUnit')->group(function(){
-                Route::get('/purchases/{id:int}/{id2:int}', 'purchases')->name('app_purchases');
-                Route::get('/add_new_purchase/{id:int}/{id2:int}/{ref_purchase:string}', 'addNewPurchase')->name('app_add_new_purchase');
-                Route::get('/update_purchase/{id:int}/{id2:int}/{ref_purchase:string}', 'updatePurchase')->name('app_update_purchase');
+                    Route::middleware('menu_access')->group(function(){
+                    Route::get('/purchases/{group:string}/{id:int}/{id2:int}', 'purchases')->name('app_purchases');
+                    Route::get('/add_new_purchase/{group:string}/{id:int}/{id2:int}/{ref_purchase:string}', 'addNewPurchase')->name('app_add_new_purchase');
+                    Route::get('/update_purchase/{group:string}/{id:int}/{id2:int}/{ref_purchase:string}', 'updatePurchase')->name('app_update_purchase');
 
-                Route::get('/expenses/{id:int}/{id2:int}', 'expenses')->name('app_expenses');
-                Route::get('/add_new_expense/{id:int}/{id2:int}/{ref_expense:string}', 'addNewExpense')->name('app_add_new_expense');
+                    Route::get('/expenses/{group:string}/{id:int}/{id2:int}', 'expenses')->name('app_expenses');
+                    Route::get('/add_new_expense/{group:string}/{id:int}/{id2:int}/{ref_expense:string}', 'addNewExpense')->name('app_add_new_expense');
+                });
             });
         });
 
@@ -453,5 +489,42 @@ Route::controller(ExpensesController::class)->group(function(){
 
         Route::post('/setup_expense', 'setUpExpense')->name('app_setup_expense');
         Route::post('/save_expense', 'saveExpense')->name('app_save_expense');
+    });
+});
+
+
+Route::controller(DebtController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                Route::middleware('menu_access')->group(function(){
+
+                });
+            });
+        });
+    });
+});
+
+Route::controller(ReceivableController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                Route::middleware('menu_access')->group(function(){
+
+                });
+            });
+        });
+    });
+});
+
+Route::controller(ReportController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('entreprise')->group(function(){
+            Route::middleware('funcUnit')->group(function(){
+                Route::middleware('menu_access')->group(function(){
+
+                });
+            });
+        });
     });
 });

@@ -19,9 +19,9 @@ class CreditorController extends Controller
     protected $notificationRepo;
     protected $generateReferenceNumber;
 
-    function __construct(Request $request, 
-                            EntrepriseRepo $entrepriseRepo, 
-                            NotificationRepo $notificationRepo, 
+    function __construct(Request $request,
+                            EntrepriseRepo $entrepriseRepo,
+                            NotificationRepo $notificationRepo,
                             GenerateRefenceNumber $generateReferenceNumber)
     {
         $this->request = $request;
@@ -30,7 +30,7 @@ class CreditorController extends Controller
         $this->generateReferenceNumber = $generateReferenceNumber;
     }
 
-    public function creditor($id, $id2)
+    public function creditor($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -39,16 +39,34 @@ class CreditorController extends Controller
                     ->where('id_fu', $functionalUnit->id)
                     ->orderByDesc('id')
                     ->get();
-        
-        return view('creditor.creditor', compact('entreprise', 'functionalUnit', 'creditors'));
+
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('creditor.creditor', compact('entreprise', 'functionalUnit', 'creditors', 'edit_delete_contents', 'permission_assign'));
     }
 
-    public function addNewCreditor($id, $id2)
+    public function addNewCreditor($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
 
-        return view('creditor.add_new_creditor', compact('entreprise', 'functionalUnit'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('creditor.add_new_creditor', compact('entreprise', 'functionalUnit', 'edit_delete_contents', 'permission_assign'));
     }
 
     public function createCreditor(CreateCreditorForm $requestF)
@@ -112,11 +130,11 @@ class CreditorController extends Controller
             }
 
             //Notification
-            $url = route('app_info_creditor', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $creditor_saved->id]);
+            $url = route('app_info_creditor', ['group' => 'creditor', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $creditor_saved->id]);
             $description = "creditor.added_a_new_creditor";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_creditor', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_creditor', ['group' => 'creditor', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('creditor.creditor_added_successfully'));
         }
         else
@@ -163,16 +181,16 @@ class CreditorController extends Controller
             }
 
             //Notification
-            $url = route('app_info_creditor', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_creditor]);
+            $url = route('app_info_creditor', ['group' => 'creditor', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_creditor]);
             $description = "creditor.updated_a_creditor_from_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_creditor', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_creditor', ['group' => 'creditor', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('creditor.creditor_updated_successfully'));
         }
     }
 
-    public function infoCreditor($id, $id2, $id3)
+    public function infoCreditor($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -180,7 +198,16 @@ class CreditorController extends Controller
                     ->join('creditors', 'creditors.id_user', '=', 'users.id')
                     ->where('creditors.id', $id3)->first();
 
-        return view('creditor.info_creditor', compact('entreprise', 'functionalUnit', 'creditor'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('creditor.info_creditor', compact('entreprise', 'functionalUnit', 'creditor', 'permission_assign'));
     }
 
     public function deleteCreditor()
@@ -197,11 +224,11 @@ class CreditorController extends Controller
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_creditor', [
-            'id' => $id_entreprise, 
+            'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('creditor.creditor_deleted_successfully'));
     }
 
-    public function updateCreditor($id, $id2, $id3)
+    public function updateCreditor($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();

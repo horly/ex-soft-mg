@@ -51,7 +51,7 @@ class ProfileController extends Controller
             //on hashe uplodad_profile + le md5 uniqid + l'id de l'utilisateur
             $image_hash = 'upload_profile' . md5(uniqid()) . $id_entreprise;
             //$folderPath = base_path() . '/public_html/assets/img/logo/entreprise/';
-            $folderPath = public_path() . '/assets/img/logo/entreprise/';
+            $folderPath = config('app.public_html') . '/assets/img/logo/entreprise/';
 
             $image_parts = explode(";base64,", $image);
             $image_base64 = base64_decode($image_parts[1]);
@@ -77,7 +77,7 @@ class ProfileController extends Controller
             //on hashe uplodad_profile + le md5 uniqid + l'id de l'utilisateur
             $image_hash = 'upload_profile' . md5(uniqid()) . $id_user;
             //$folderPath = base_path() . '/public_html/assets/img/profile/';
-            $folderPath = public_path() . '/assets/img/profile/';
+            $folderPath = config('app.public_html') . '/assets/img/profile/';
 
             $image_parts = explode(";base64,", $image);
             $image_base64 = base64_decode($image_parts[1]);
@@ -126,7 +126,8 @@ class ProfileController extends Controller
             ->where('id', $user->id)
             ->update([
                 'name' => $name_profile,
-                'grade_id' => $function_profile,
+                'grade_id' => 1,
+                'grade' => $function_profile,
                 'id_country' => $country_profile,
                 'phone_number' => $phone_number_profile,
                 'matricule' => $registration_number_profile,

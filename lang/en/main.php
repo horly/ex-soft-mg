@@ -2,9 +2,10 @@
     return [
         'admin' => "Administrator",
         'user' => "User",
+        'superadmin' => "Super Administrator",
 
         'choose' => "Choose",
-        'function' => "Function",
+        'function' => "Grade",
         'address' => "Address",
         'phone_number' => "Phone number",
         'home' => "Home",
@@ -48,7 +49,7 @@
         'enter_your_company_slogan' => "Enter your company slogan",
         'enter_your_business_phone_number' => "Enter your company phone number",
         'add_another_phone_number' => "Add another phone number",
-        
+
         'email_address' => "Email address",
         'enter_your_company_email_address' => "Enter your company email address",
         'website' => "Website",
@@ -71,7 +72,7 @@
         'user_management' => "User Management",
         'my_login_history' => 'My login history',
         'name' => "Name",
-        'bank_account' => "Bank Account", 
+        'bank_account' => "Bank Account",
 
         'user_information' => "User information",
         'user_deleted_successfully' => "User deleted successfully",
@@ -89,4 +90,20 @@
         'all_notification' => "All notification",
         'display' => "Display",
         'unviewed_notifications' => "Unviewed notifications",
+
+        'login_history' => "Login history",
+        'permissions' => "Permissions",
+        'functional_unit_management' => "Functional unit management",
+
+        'full_dashboard_view' => "Full dashboard view",
+        'edit_delete_contents' => "Edit/Delete contents",
+        'billing' => "Billing",
+        'report_generation' => "Report generation",
+
+        'permissions_saved_successfully' => "Permissions saved successfully",
+        'global_permissions' => "Global permissions",
+        'menu_permissions' => "Menu permissions",
+
+        'enter_your_grade' => "Enter the grade",
+        'enter_your_grade_please' => "Enter the grade please!",
     ];

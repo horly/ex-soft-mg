@@ -19,9 +19,9 @@ class DebtorController extends Controller
     protected $notificationRepo;
     protected $generateReferenceNumber;
 
-    function __construct(Request $request, 
-                            EntrepriseRepo $entrepriseRepo, 
-                            NotificationRepo $notificationRepo, 
+    function __construct(Request $request,
+                            EntrepriseRepo $entrepriseRepo,
+                            NotificationRepo $notificationRepo,
                             GenerateRefenceNumber $generateReferenceNumber)
     {
         $this->request = $request;
@@ -30,7 +30,7 @@ class DebtorController extends Controller
         $this->generateReferenceNumber = $generateReferenceNumber;
     }
 
-    public function debtor($id, $id2)
+    public function debtor($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -39,16 +39,34 @@ class DebtorController extends Controller
                     ->where('id_fu', $functionalUnit->id)
                     ->orderByDesc('id')
                     ->get();
-        
-        return view('debtor.debtor', compact('entreprise', 'functionalUnit', 'debtors'));
+
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('debtor.debtor', compact('entreprise', 'functionalUnit', 'debtors', 'permission_assign'));
     }
 
-    public function addNewDebtor($id, $id2)
+    public function addNewDebtor($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
 
-        return view('debtor.add_new_debtor', compact('entreprise', 'functionalUnit'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('debtor.add_new_debtor', compact('entreprise', 'functionalUnit', 'permission_assign'));
     }
 
     public function createDebtor(CreateDebtorForm $requestF)
@@ -112,11 +130,11 @@ class DebtorController extends Controller
             }
 
             //Notification
-            $url = route('app_info_debtor', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $debtor_saved->id]);
+            $url = route('app_info_debtor', ['group' => 'debtor', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $debtor_saved->id]);
             $description = "debtor.added_a_new_debtor";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_debtor', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_debtor', ['group' => 'debtor', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('debtor.debtor_added_successfully'));
         }
         else
@@ -163,16 +181,16 @@ class DebtorController extends Controller
             }
 
             //Notification
-            $url = route('app_info_debtor', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_creditor]);
+            $url = route('app_info_debtor', ['group' => 'debtor', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_creditor]);
             $description = "debtor.updated_a_debtor_from_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_debtor', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_debtor', ['group' => 'debtor', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('debtor.debtor_updated_successfully'));
         }
     }
 
-    public function infoDebtor($id, $id2, $id3)
+    public function infoDebtor($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -180,7 +198,16 @@ class DebtorController extends Controller
                     ->join('debtors', 'debtors.id_user', '=', 'users.id')
                     ->where('debtors.id', $id3)->first();
 
-        return view('debtor.info_debtor', compact('entreprise', 'functionalUnit', 'debtor'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('debtor.info_debtor', compact('entreprise', 'functionalUnit', 'debtor', 'permission_assign'));
     }
 
     public function deleteDebtor()
@@ -197,16 +224,25 @@ class DebtorController extends Controller
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_debtor', [
-            'id' => $id_entreprise, 
+            'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('debtor.debtor_deleted_successfully'));
     }
 
-    public function updateDebtor($id, $id2, $id3)
+    public function updateDebtor($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
         $debtor = DB::table('debtors')->where('id', $id3)->first();
 
-        return view('debtor.update_debtor', compact('entreprise', 'functionalUnit', 'debtor'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('debtor.update_debtor', compact('entreprise', 'functionalUnit', 'debtor', 'permission_assign'));
     }
 }

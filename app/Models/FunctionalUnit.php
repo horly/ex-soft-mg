@@ -141,5 +141,10 @@ class FunctionalUnit extends Model
     {
         return $this->hasMany('App\Models\Entrance');
     }
+
+    public function permissionsAssgn()
+    {
+        return $this->hasMany('App\Models\PermissionAssign');
+    }
 }
 

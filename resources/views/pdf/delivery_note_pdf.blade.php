@@ -112,54 +112,53 @@
         }
     </style>
 
-    <div class="header">
-        @if ($logo != 0 || $logo != '0')
-        <img src="{{ $logo }}" alt="" width="150">
-        @else
-            <h1>LOGO</h1>
-        @endif
-    </div>
-    <div>
-        <h2 class="invoice-title">
-            {{ __('invoice.delivery_note_MAJ') }} N° {{ $invoice->reference_sales_invoice }}
-        </h2>
-    </div>
+<div class="header">
+    @if ($logo != 0 || $logo != '0')
+    <img src="{{ $logo }}" alt="" width="150">
+    @else
+        <h1>LOGO</h1>
+    @endif
+</div>
+<div>
+    <h2 class="invoice-title">
+        {{ __('invoice.delivery_note_MAJ') }} N° {{ $invoice->reference_personalized }}
+    </h2>
+</div>
 
+{{--
+<div class="box small-text">
+    <div class="key">{{ __('invoice.due_date') }} : </div>
+    <div class="content">{{ date('Y-m-d', strtotime($invoice->due_date)) }}</div>
+    <div class="right">{{ __('client.reference') }} {{ $customer->reference_cl }}</div>
+</div>
+--}}
+
+@if ($customer->type == "company")
     <div class="box small-text">
         <div class="key">Date : </div>
         <div class="content">{{ date('Y-m-d', strtotime($invoice->created_at)) }}</div>
-        <div class="right">{{ __('invoice.customer') }} : </div>
+        <div class="right">
+            {{ $customer->entreprise_name_cl }}
+        </div>
     </div>
-
+@else
     <div class="box small-text">
         <div class="key"></div>
         <div class="content"></div>
-        <div class="right">{{ __('client.reference') }} {{ $customer->reference_cl }}</div>
-    </div>
-
-    @if ($customer->type == "company")
-        <div class="box small-text">
-            <div class="key"></div>
-            <div class="content"></div>
-            <div class="right">
-                {{ $customer->entreprise_name_cl }}
-            </div>
+        <div class="right">
+            {{ $contact->fullname_cl }}
         </div>
-    @else
-        <div class="box small-text">
-            <div class="key"></div>
-            <div class="content"></div>
-            <div class="right">
-                {{ $contact->fullname_cl }}
-            </div>
-        </div>
-    @endif
-
-    <div class="box mb-3 small-text">
-        <div class="key"></div>
-        <div class="content"></div>
-        <div class="right">{{ $contact->address_cl }}</div>
     </div>
+@endif
+
+
+<div class="box mb-3 small-text">
+    <div class="key"></div>
+    <div class="content"></div>
+    <div class="right">{{ $contact->address_cl }}</div>
+</div>
+
+<div class="small-text mb-3"><b>{{ __('invoice.concern') }}</b> : {{ $invoice->concern_invoice }}</div>
 
     <table class="table mb-3 small-text">
         <thead>
@@ -214,7 +213,7 @@
     </div>
 
     <div class="box small-text">
-        <div class="key">{{ $contact->fullname_cl }}</div>
+        <div class="key"></div>
         <div class="content"></div>
         <div class="right">{{ $user->name }}</div>
     </div>

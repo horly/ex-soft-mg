@@ -25,7 +25,7 @@
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav class="float-start float-lg-end" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                              <li class="breadcrumb-item"><a href="{{ route('app_payment_methods', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.payment_methods') }}</a></li>
+                              <li class="breadcrumb-item"><a href="{{ route('app_payment_methods', ['group' => 'payment_method', 'id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.payment_methods') }}</a></li>
                               <li class="breadcrumb-item active" aria-current="page">{{ __('payment_methods.add_a_new_payment_method') }}</li>
                             </ol>
                         </nav>
@@ -101,12 +101,14 @@
                                     </select>
                                     <small class="text-danger">@error('devise_pay_meth') {{ $message }} @enderror</small>
                                 </div>
-                                <div class="col-sm-3 d-grid gap-2">
-                                    <a href="{{ route('app_create_currency', ['id' => $entreprise->id, 'id2' => $functionalUnit->id ]) }}" class="btn btn-primary mb-3" role="button">
-                                        <i class="fa-solid fa-circle-plus"></i> 
-                                        &nbsp;{{ __('auth.add') }}
-                                    </a>
-                                </div>
+                                @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                                    <div class="col-sm-3 d-grid gap-2">
+                                        <a href="{{ route('app_create_currency', ['group' => 'currency', 'id' => $entreprise->id, 'id2' => $functionalUnit->id ]) }}" class="btn btn-primary mb-3" role="button">
+                                            <i class="fa-solid fa-circle-plus"></i>
+                                            &nbsp;{{ __('auth.add') }}
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="mb-4 row">
@@ -117,9 +119,10 @@
                                 </div>
                             </div>
 
-
-                            {{-- button de sauvegarde --}}
-                            @include('button.save-button')
+                            @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                                {{-- button de sauvegarde --}}
+                                @include('button.save-button')
+                            @endif
 
                         </form>
                     </div>

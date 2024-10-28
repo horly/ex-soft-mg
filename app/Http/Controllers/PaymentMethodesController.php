@@ -30,7 +30,7 @@ class PaymentMethodesController extends Controller
         $this->generateReferenceNumber = $generateReferenceNumber;
     }
 
-    public function paymentMethods($id, $id2)
+    public function paymentMethods($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -49,15 +49,25 @@ class PaymentMethodesController extends Controller
                             ->orderBy('payment_methods.id', 'asc')
                             ->get();
 
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
         return view('payment_methods.payment_methods', compact(
             'entreprise',
             'functionalUnit',
             'deviseGest',
-            'paymentMethods'
+            'paymentMethods',
+            'permission_assign'
         ));
     }
 
-    public function addNewPaymentMethods($id, $id2)
+    public function addNewPaymentMethods($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -80,7 +90,23 @@ class PaymentMethodesController extends Controller
             ->orderBy('devise_gestion_ufs.id', 'desc')
             ->get();
 
-        return view('payment_methods.add_new_payment_methods', compact('entreprise', 'functionalUnit', 'deviseGests', 'deviseDefault'));
+
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('payment_methods.add_new_payment_methods', compact(
+            'entreprise',
+            'functionalUnit',
+            'deviseGests',
+            'deviseDefault',
+            'permission_assign')
+        );
     }
 
     public function createPaymentMethods(PaymentMethodForm $requestF)
@@ -110,11 +136,11 @@ class PaymentMethodesController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_payment_methods', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $payMeth->id]);
+            $url = route('app_info_payment_methods', ['group' => 'payment_method', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $payMeth->id]);
             $description = "payment_methods.added_a_payment_method_in_the_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_payment_methods', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_payment_methods', ['group' => 'payment_method', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('payment_methods.payment_method_added_successfully'));
         }
         else
@@ -132,16 +158,16 @@ class PaymentMethodesController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_payment_methods', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_payment_methods]);
+            $url = route('app_info_payment_methods', ['group' => 'payment_method', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_payment_methods]);
             $description = "payment_methods.has_updated_a_payment_method_in_the_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_payment_methods', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_payment_methods', ['group' => 'payment_method', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('payment_methods.payment_method_updated_successfully'));
         }
     }
 
-    public function infoPaymentMethods($id, $id2, $id3)
+    public function infoPaymentMethods($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -175,6 +201,15 @@ class PaymentMethodesController extends Controller
         $encaissements = DB::table('encaissements')->where('id_pay_meth', $paymentMethod->id)->orderBy('id', 'desc')->get();
         $decaissements = DB::table('decaissements')->where('id_pay_meth', $paymentMethod->id)->orderBy('id', 'desc')->get();
 
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
         return view('payment_methods.info_payment_methods', compact(
             'entreprise',
             'functionalUnit',
@@ -184,7 +219,8 @@ class PaymentMethodesController extends Controller
             'encaissement_exit',
             'paymentMade',
             'encaissements',
-            'decaissements'
+            'decaissements',
+            'permission_assign'
             //'decaissement_exit'
         ));
     }
@@ -207,7 +243,7 @@ class PaymentMethodesController extends Controller
             'id2' => $id_fu ])->with('success', __('payment_methods.payment_method_deleted_successfully'));
     }
 
-    public function upDatePaymentMethods($id, $id2, $id3)
+    public function upDatePaymentMethods($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -234,13 +270,23 @@ class PaymentMethodesController extends Controller
         $encaissement_exit = DB::table('encaissements')->where('id_pay_meth', $paymentMethod->id)->first();
         //$decaissement_exit = DB::table('encaissements')->where('id_pay_meth', $paymentMethod->id)->first();
 
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
         return view('payment_methods.update_payment_methods', compact(
             'entreprise',
             'functionalUnit',
             'deviseGests',
             'paymentMethod',
             'devisePaymethod',
-            'encaissement_exit'
+            'encaissement_exit',
+            'permission_assign'
         ));
     }
 }

@@ -132,7 +132,7 @@
                 <hr class="dropdown-divider">
                 <a class="dropdown-item" href="{{ route('app_profile') }}"><i class="fa-solid fa-user"></i> {{ __('main.profile') }}</a>
                 <hr class="dropdown-divider">
-                @if(Auth::user()->role->name == "admin")
+                @if(Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
                     <a class="dropdown-item" href="{{ route('app_user_management') }}"><i class="fa-solid fa-users"></i> {{ __('main.user_management') }}</a>
                 @endif
                 <hr class="dropdown-divider">

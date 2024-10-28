@@ -34,7 +34,7 @@ class ExpensesController extends Controller
         $this->generateReferenceNumber = $generateReferenceNumber;
     }
 
-    public function purchases($id, $id2)
+    public function purchases($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -47,11 +47,21 @@ class ExpensesController extends Controller
                         'devise_gestion_ufs.default_cur_manage' => 1,
         ])->first();
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
         return view('expenses.purchase', compact(
             'entreprise',
             'functionalUnit',
             'purchases',
             'deviseGest',
+            'permission_assign',
         ));
     }
 
@@ -91,6 +101,7 @@ class ExpensesController extends Controller
                 ]);
 
                 return redirect()->route('app_add_new_purchase', [
+                    'group' => 'expense',
                     'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_purchase' => $refPurchase,
@@ -99,6 +110,7 @@ class ExpensesController extends Controller
             else
             {
                 return redirect()->route('app_add_new_purchase', [
+                    'group' => 'expense',
                     'id' => $id_entreprise,
                     'id2' => $id_functionalUnit,
                     'ref_purchase' => $purchase_margin_not_saved->ref_purchase,
@@ -149,7 +161,7 @@ class ExpensesController extends Controller
         }
     }
 
-    public function addNewPurchase($id, $id2, $ref_purchase)
+    public function addNewPurchase($group, $id, $id2, $ref_purchase)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -183,6 +195,15 @@ class ExpensesController extends Controller
 
         $ref_invoice = "";
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
         return view('expenses.add_new_purchase', compact(
             'entreprise',
             'functionalUnit',
@@ -193,7 +214,8 @@ class ExpensesController extends Controller
             'deviseGest',
             'purchases',
             'paymentMethods',
-            'ref_invoice'
+            'ref_invoice',
+            'permission_assign'
         ));
     }
 
@@ -204,7 +226,16 @@ class ExpensesController extends Controller
 
         //$this->request->file_purchase->move(base_path() . '/public_html/assets/img/purchase/', $file);
 
-        $this->request->file_purchase->move(public_path('/assets/img/purchase/'), $file);
+        $path = config('app.public_html') . '/assets/img/purchase/';
+        $fileExist = config('app.public_html') . '/assets/img/purchase/' . $ref_purchase . '.pdf';
+
+        if (file_exists($fileExist)) {
+            unlink($fileExist);
+            $this->request->file_purchase->move($path, $file);
+        } else {
+            $this->request->file_purchase->move($path, $file);
+        }
+
 
         return response()->json([
             'status' => "success",
@@ -281,7 +312,7 @@ class ExpensesController extends Controller
         }
     }
 
-    public function updatePurchase($id, $id2, $ref_purchase)
+    public function updatePurchase($group, $id, $id2, $ref_purchase)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -332,6 +363,15 @@ class ExpensesController extends Controller
                             'devises.iso_code' => $deviseGest->iso_code,
                         ])->get();
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
         return view('expenses.update_purchase', compact(
             'entreprise',
             'functionalUnit',
@@ -345,6 +385,7 @@ class ExpensesController extends Controller
             'paymentReceived',
             'remainingBalance',
             'paymentMethods',
+            'permission_assign'
         ));
     }
 
@@ -375,7 +416,7 @@ class ExpensesController extends Controller
             'id2' => $id_fu ])->with('success', __('expenses.purchase_invoice_successfully_deleted'));
     }
 
-    public function expenses($id, $id2)
+    public function expenses($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -388,11 +429,21 @@ class ExpensesController extends Controller
                         'devise_gestion_ufs.default_cur_manage' => 1,
         ])->first();
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
         return view('expenses.expenses', compact(
             'entreprise',
             'functionalUnit',
             'expenses',
             'deviseGest',
+            'permission_assign'
         ));
     }
 
@@ -404,13 +455,14 @@ class ExpensesController extends Controller
         $reference_expense = "EXP" . date('Y') . date('m') . date('d') . date('H') . date('i') . date('s') . Auth::user()->id;
 
         return redirect()->route('app_add_new_expense', [
+            'group' => 'expense',
             'id' => $id_entreprise,
             'id2' => $id_functionalUnit,
             'ref_expense' => $reference_expense,
         ]);
     }
 
-    public function addNewExpense($id, $id2, $ref_expense)
+    public function addNewExpense($group, $id, $id2, $ref_expense)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -451,6 +503,15 @@ class ExpensesController extends Controller
                     ])->first();
         }
 
+        $billing = DB::table('permissions')->where('name', 'billing')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $billing->id
+                ])->first();
+
         return view('expenses.add_new_expense', compact(
             'entreprise',
             'functionalUnit',
@@ -460,7 +521,8 @@ class ExpensesController extends Controller
             'expense',
             'ref_expense',
             'decaissement',
-            'paymentMeth'
+            'paymentMeth',
+            'permission_assign'
         ));
     }
 

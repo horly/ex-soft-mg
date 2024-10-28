@@ -137,4 +137,10 @@
         'entrance_recorded_successfully' => "Entrée enregistrée avec succès!",
         'updated_an_entrance' => "a modifié une entrée",
         'entrance_updated_successfully' => "Entrée modifiée avec succès!",
+
+        'validity_of_the_offer' => "Validité de l'offre",
+        'days' => "Jours",
+        'payment_terms' => "Modalité de paiement",
+        'to_order' => "À la commande",
+        'after_delivery' => "Après la livraison",
     ];

@@ -19,12 +19,12 @@
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
                         <h3>{{ __('debtor.debtor_details') }}</h3>
-                        <p class="text-subtitle text-muted"></p> 
+                        <p class="text-subtitle text-muted"></p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav class="float-start float-lg-end" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                              <li class="breadcrumb-item"><a href="{{ route('app_debtor', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.debtors') }}</a></li>
+                              <li class="breadcrumb-item"><a href="{{ route('app_debtor', ['group' => 'debtor', 'id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.debtors') }}</a></li>
                               <li class="breadcrumb-item active" aria-current="page">{{ __('debtor.debtor_details') }}</li>
                             </ol>
                         </nav>
@@ -182,7 +182,7 @@
                                 {{ __('client.creation_date') }}
                             </div>
                             <div class="col-md-8 text-primary fw-bold">
-                                {{ $debtor->created_at }} 
+                                {{ $debtor->created_at }}
                             </div>
                         </div>
 
@@ -191,35 +191,38 @@
                                 {{ __('client.last_modification_date') }}
                             </div>
                             <div class="col-md-8 text-primary fw-bold">
-                                {{ $debtor->updated_at }} 
+                                {{ $debtor->updated_at }}
                             </div>
                         </div>
 
-                        <div class="row">
+                        @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                            <div class="row">
 
-                            <div class="col-md-6 mb-3">
-                                <div class="d-grid gap-2">
-                                    <a class="btn btn-success" role="button" href="{{ route('app_update_debtor', [
-                                        'id' => $entreprise->id, 
-                                        'id2' => $functionalUnit->id,
-                                        'id3' => $debtor->id
-                                        ]) }}">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                        {{ __('entreprise.edit') }}
-                                    </a>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-grid gap-2">
+                                        <a class="btn btn-success" role="button" href="{{ route('app_update_debtor', [
+                                            'group' => 'debtor',
+                                            'id' => $entreprise->id,
+                                            'id2' => $functionalUnit->id,
+                                            'id3' => $debtor->id
+                                            ]) }}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            {{ __('entreprise.edit') }}
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-6 mb-3">
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-danger" type="button" onclick="deleteElementThreeVal('{{ $debtor->id }}', {{ $entreprise->id }}, {{ $functionalUnit->id }}, '{{ route('app_delete_debtor') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                        {{ __('entreprise.delete') }}
-                                    </button>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-danger" type="button" onclick="deleteElementThreeVal('{{ $debtor->id }}', {{ $entreprise->id }}, {{ $functionalUnit->id }}, '{{ route('app_delete_debtor') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                            {{ __('entreprise.delete') }}
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
 
-                        </div>
+                            </div>
+                        @endif
 
                     </div>
                 </div>

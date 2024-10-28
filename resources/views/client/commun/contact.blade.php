@@ -1,8 +1,9 @@
-
-<button class="btn btn-primary mb-3" type="button" onclick="addNewcontact();" data-bs-toggle="modal" data-bs-target="#add_contact">
-    <i class="fa-solid fa-circle-plus"></i>
-    &nbsp;{{ __('auth.add') }}
-</button>
+@if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+    <button class="btn btn-primary mb-3" type="button" onclick="addNewcontact();" data-bs-toggle="modal" data-bs-target="#add_contact">
+        <i class="fa-solid fa-circle-plus"></i>
+        &nbsp;{{ __('auth.add') }}
+    </button>
+@endif
 
 <table class="table table-striped table-hover border bootstrap-datatable">
     <thead>
@@ -26,17 +27,21 @@
                 <td>{{ $contact->email_adress_cl }}</td>
                 <td>{{ $contact->address_cl }}</td>
                 <td class="text-end">
-                    <button class="btn btn-success" type="button" onclick="editContactClient('{{ $contact->id }}', '{{ $contact->fullname_cl }}', '{{ $contact->fonction_contact_cl }}', '{{ $contact->departement_cl }}', '{{ $contact->phone_number_cl }}', '{{ $contact->email_adress_cl }}', '{{ $contact->address_cl }}');" title="{{ __('entreprise.edit') }}" data-bs-toggle="modal" data-bs-target="#add_contact">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </button>
-                    @php
-                        $is_invoiced = DB::table('sales_invoices')->where('id_contact', $contact->id)->first();
-                    @endphp
-
-                    @if (!$is_invoiced)
-                        <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $contact->id }}', '{{ route('app_delete_bank_account') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
-                            <i class="fa-solid fa-trash-can"></i>
+                    @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                        <button class="btn btn-success" type="button" onclick="editContactClient('{{ $contact->id }}', '{{ $contact->fullname_cl }}', '{{ $contact->fonction_contact_cl }}', '{{ $contact->departement_cl }}', '{{ $contact->phone_number_cl }}', '{{ $contact->email_adress_cl }}', '{{ $contact->address_cl }}');" title="{{ __('entreprise.edit') }}" data-bs-toggle="modal" data-bs-target="#add_contact">
+                            <i class="fa-solid fa-pen-to-square"></i>
                         </button>
+                        @php
+                            $is_invoiced = DB::table('sales_invoices')->where('id_contact', $contact->id)->first();
+                        @endphp
+
+                        @if (!$is_invoiced)
+                            <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $contact->id }}', '{{ route('app_delete_bank_account') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        @endif
+                    @else
+                        #
                     @endif
 
                 </td>

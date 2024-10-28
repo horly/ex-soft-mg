@@ -14,6 +14,13 @@
                 <input type="hidden" name="is_simple_invoice_inv" value="{{ $invoice_margin->is_simple_invoice_inv }}">
 
                 <div class="mb-4 row">
+                    <label for="ref_personalized" class="col-sm-2 col-form-label">{{ __('client.reference') }}</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name="ref_personalized" id="ref_personalized" value="{{ $reference_personalized }}" readonly>
+                    </div>
+                </div>
+
+                <div class="mb-4 row">
                     <label for="client_sales_invoice" class="col-sm-2 col-form-label">{{ __('invoice.customer') }}*</label>
                     <div class="col-sm-4">
                         <select class="form-select @error('client_sales_invoice') is-invalid @enderror" name="client_sales_invoice" id="client_sales_invoice" url="{{ route('app_get_contact_client_invoice') }}" token="{{ csrf_token() }}">
@@ -68,6 +75,7 @@
                       <tr>
                         <th scope="col">Action</th>
                         <th scope="col">#</th>
+                        <th scope="col">REF/SKU</th>
                         <th scope="col">{{ __('article.description') }}</th>
                         <th scope="col" class="text-end">{{ __('invoice.quantity') }}</th>
                         <th scope="col" class="text-end">{{ __('article.unit_price') }} {{ $deviseGest->iso_code }}</th>
@@ -82,22 +90,28 @@
                                         <i class="fa-solid fa-trash-can"></i>
                                     </button>
                                     @if ($invoice_element->is_an_article == 1)
-                                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" onclick="updateArticleInvoice('{{ $invoice_element->id }}');" data-bs-target="#new_article_invoice">
+                                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" onclick="updateArticleInvoice('{{ $invoice_element->id }}', 'article');" data-bs-target="#update_article_invoice">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                    @else
+                                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" onclick="updateArticleInvoice('{{ $invoice_element->id }}', 'service');" data-bs-target="#update_service_invoice">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
                                     @endif
                                 </td>
                                 <td>{{ $loop->iteration }}</td>
+                                <td>{{ $invoice_element->custom_reference }}</td>
                                 <td>{{ $invoice_element->description_inv_elmnt }}</td>
                                 <td class="text-end">{{ $invoice_element->quantity }}</td>
                                 <td class="text-end">{{ number_format($invoice_element->unit_price_inv_elmnt, 2, '.', ' ') }}</td>
                                 <td class="text-end">{{ number_format($invoice_element->total_price_inv_elmnt, 2, '.', ' ') }}</td>
                             </tr>
                             <div>
-                                <input type="hidden" id="ref_article-{{ $invoice_element->id }}" value="{{ $invoice_element->ref_article }}">
+                                <input type="hidden" id="ref_article-{{ $invoice_element->id }}" value="{{ $invoice_element->id }}">
+                                <input type="hidden" id="custom_reference-{{ $invoice_element->id }}" value="{{ $invoice_element->custom_reference }}">
                                 <input type="hidden" id="description_inv_elmnt-{{ $invoice_element->id }}" value="{{ $invoice_element->description_inv_elmnt }}">
                                 <input type="hidden" id="quantity-{{ $invoice_element->id }}" value="{{ $invoice_element->quantity }}">
-                                <input type="hidden" id="margin-{{ $invoice_element->id }}" value="{{ $invoice_margin->margin }}">
+                                <input type="hidden" id="margin-{{ $invoice_element->id }}" value="{{ $invoice_element->margin }}">
                                 <input type="hidden" id="purchase-price-{{ $invoice_element->id }}" value="{{ number_format($invoice_element->purshase_price_inv_elmnt, 2, '.', '') }}">
                                 <input type="hidden" id="sale-price-{{ $invoice_element->id }}" value="{{ number_format($invoice_element->unit_price_inv_elmnt, 2, '.', '') }}">
                                 <input type="hidden" id="total-price-{{ $invoice_element->id }}" value="{{ number_format($invoice_element->total_price_inv_elmnt, 2, '.', '') }}">
@@ -231,247 +245,79 @@
                     </div>
                 </div>
 
+                {{--
                 <div class="mb-4 row">
                     <label for="due_date_sales_invoice" class="col-sm-4 col-form-label">{{ __('invoice.due_date') }}*</label>
                     <div class="col-sm-8">
                         <input type="date" class="form-control" id="due_date_sales_invoice" name="due_date_sales_invoice"  value="@if(Session::has('due_date_sales_invoice')){{ Session::get('due_date_sales_invoice') }}@else{{ date('Y-m-d') }}@endif">
                     </div>
                 </div>
+                --}}
 
-                {{-- button de sauvegarde --}}
-                @include('button.save-button')
+                @if (Request::route()->getName() == "app_add_new_proforma")
+                    <div class="mb-4 row">
+                        <label for="validity_of_the_offer" class="col-sm-4 col-form-label">{{ __('invoice.validity_of_the_offer') }}*</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input type="number" class="form-control text-end" id="validity_of_the_offer" name="validity_of_the_offer" min="15" max="90"  value="{{ $invoice ? $invoice->validity_of_the_offer_day : "15" }}">
+                                <span class="input-group-text" id="basic-addon2">{{ __('invoice.days') }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 row">
+                        <label for="payment_terms" class="col-sm-4 col-form-label">{{ __('invoice.payment_terms') }}*</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <select class="form-select" name="payment_terms" id="payment_terms" onclick="payment_terms_select();">
+                                    @php
+                                        $payment_terms = DB::table('payment_terms_proformas')->get();
+                                    @endphp
+
+                                    @if ($payment_terms_proforma)
+                                        <option value="{{ $payment_terms_proforma->description }}" selected>{{ __('invoice.' . $payment_terms_proforma->description) }}</option>
+                                    @endif
+
+                                    @foreach ($payment_terms as $payment_term)
+                                        <option value="{{ $payment_term->description }}">{{ __('invoice.' . $payment_term->description) }}</option>
+                                    @endforeach
+                                </select>
+
+                                <input type="number" class="form-control text-end" id="payment_terms_percentage" name="payment_terms_percentage" min="1" max="100"  value="{{ $payment_terms_assign ? $payment_terms_assign->purcentage : "10" }}">
+                                <span class="input-group-text" id="basic-addon2">%</span>
+
+                                @if ($payment_terms_proforma)
+                                    <input type="number" class="form-control text-end @if($payment_terms_proforma->description == "to_order") d-none @endif after_delivery_zone" id="after_delivery_days" name="after_delivery_days" min="15" max="90"  value="{{ $payment_terms_assign ? $payment_terms_assign->day_number : "15" }}">
+                                    <span class="input-group-text @if($payment_terms_proforma->description == "to_order") d-none @endif after_delivery_zone" id="basic-addon2">{{ __('invoice.days') }}</span>
+                                @else
+                                    <input type="number" class="form-control text-end d-none after_delivery_zone" id="after_delivery_days" name="after_delivery_days" min="15" max="90"  value="{{ $payment_terms_assign ? $payment_terms_assign->day_number : "15" }}">
+                                    <span class="input-group-text d-none after_delivery_zone" id="basic-addon2">{{ __('invoice.days') }}</span>
+                                @endif
+
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                    {{-- button de sauvegarde --}}
+                    <div class="mb-4">
+                        <div class="col-sm-4">
+                            @include('button.save-button')
+                        </div>
+                    </div>
+                @endif
 
             </form>
         </div>
     </div>
 </section>
 
-<div class="modal fade" id="new_article_invoice" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form class="modal-content" id="form_insert_article_invoice" action="{{ route('app_insert_invoice_element') }}" method="POST">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="new-bank-account-modal">{{ __('invoice.insert_an_article') }}</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body bg-body-tertiary p-4">
-                @csrf
+@include('invoice_sales.operation.add_article_modal')
+@include('invoice_sales.operation.update_article_modal')
 
-                <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
-                <input type="hidden" name="id_fu" value="{{ $functionalUnit->id }}">
-                <input type="hidden" name="modalRequest" id="modalRequest-article" value="add"> {{-- Default is add but can be edit also --}}
-                <input type="hidden" name="ref_invoice" id="ref_invoice" value="{{ $ref_invoice }}">
-                <input type="hidden" name="descrption_saved_art" id="descrption_saved_art" value="">
-                <input type="hidden" name="id_invoice_margin" id="id_invoice_margin" value="{{ $invoice_margin->id }}">
-                <input type="hidden" name="id_invoice_element" id="id_invoice_element" value="0">
-                <input type="hidden" name="is_an_article" id="is_an_article" value="1">
-
-                <input type="hidden" class="customer_session" name="id_customer_session_art" id="id_customer_session_art" value="0">
-                <input type="hidden" class="contact_session" name="id_contact_session_art" id="id_contact_session_art" value="0">
-
-                <div class="mb-4 row">
-                    <label for="article_sales_invoice" class="col-sm-4 col-form-label">{{ __('invoice.article') }}*</label>
-                    <div class="col-sm-8 select2-invoice-item-zone">
-                        <select class="form-select" name="article_sales_invoice" id="article_sales_invoice" onchange="getPriceArticleInvoice();">
-                            <option value="" selected>{{ __('invoice.select_an_article') }}</option>
-                            @foreach ($articles as $article)
-                                <option value="{{ $article->reference_art }}" purchase_price="{{ number_format($article->purchase_price, 2, '.', '') }}" sale_price="{{ number_format($article->sale_price, 2, '.', '') }}" description="{{ $article->description_art }}">
-                                    {{ $article->description_art }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <small class="text-danger" id="article_sales_invoice-error"></small>
-                    </div>
-                    <div class="col-sm-8 d-none input-invoice-item-zone">
-                        <input type="text" class="form-control" id="input-invoice-item" disabled>
-                    </div>
-                </div>
-
-                <div class="mb-4 row">
-                    <label for="article_qty_invoice" class="col-sm-4 col-form-label">{{ __('invoice.quantity') }}*</label>
-                    <div class="col-sm-8">
-                        <input type="number" name="article_qty_invoice" id="article_qty_invoice" class="form-control text-end" onkeyup="changeTotalPrice();" onchange="changeTotalPrice();" min="1" value="1">
-                        <small class="text-danger" id="article_qty_invoice-error"></small>
-                    </div>
-                </div>
-
-                <div class="mb-4 row">
-                    <label for="article_margin_invoice" class="col-sm-4 col-form-label">{{ __('invoice.margin') }}*</label>
-                    <div class="col-sm-8">
-                        <div class="input-group">
-                            <input type="number" name="article_margin_invoice" id="article_margin_invoice" onkeyup="calculateMargin('{{ route('app_calculate_margin') }}', '{{ csrf_token() }}');" onchange="calculateMargin('{{ route('app_calculate_margin') }}', '{{ csrf_token() }}');" url="{{ route('app_calculate_margin') }}" token="{{ csrf_token() }}" class="form-control text-end" min="0" value="{{ $invoice_margin->margin }}">
-                            <span class="input-group-text" id="basic-addon2">%</span>
-                        </div>
-                        <small class="text-danger" id="article_margin_invoice-error"></small>
-                    </div>
-                </div>
-
-                <div class="mb-4 row">
-                    <label for="article_purchase_price_invoice" class="col-sm-4 col-form-label">{{ __('invoice.purchase_price') }}*</label>
-                    <div class="col-sm-8">
-                        <div class="input-group">
-                            <input type="number" step="0.01" name="article_purchase_price_invoice" id="article_purchase_price_invoice" class="form-control text-end" min="0" value="0.00" onkeyup="calculateMargin('{{ route('app_calculate_margin') }}', '{{ csrf_token() }}');" onchange="calculateMargin('{{ route('app_calculate_margin') }}', '{{ csrf_token() }}');" url="{{ route('app_calculate_margin') }}" token="{{ csrf_token() }}">
-                            <span class="input-group-text" id="basic-addon2">{{ $deviseGest->iso_code }}</span>
-                        </div>
-                        <small class="text-danger"></small>
-                    </div>
-                </div>
-
-                <div class="mb-4 row">
-                    <label for="article_sale_price_invoice" class="col-sm-4 col-form-label">{{ __('invoice.sale_prise') }}*</label>
-                    <div class="col-sm-8">
-                        <div class="input-group">
-                            <input type="number" step="0.01" name="article_sale_price_invoice" id="article_sale_price_invoice" class="form-control text-end" min="0" value="0.00" readonly>
-                            <span class="input-group-text" id="basic-addon2">{{ $deviseGest->iso_code }}</span>
-                        </div>
-                        <small class="text-danger"></small>
-                    </div>
-                </div>
-
-                <div class="mb-4 row">
-                    <label for="article_total_price_invoice" class="col-sm-4 col-form-label">{{ __('invoice.total_price') }}*</label>
-                    <div class="col-sm-8">
-                        <div class="input-group">
-                            <input type="number" step="0.01" name="article_total_price_invoice" id="article_total_price_invoice" class="form-control text-end" min="0" value="0.00" readonly>
-                            <span class="input-group-text" id="basic-addon2">{{ $deviseGest->iso_code }}</span>
-                        </div>
-                        <small class="text-danger"></small>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="modal-footer">
-                {{-- button de fermeture modale --}}
-                @include('button.close-button')
-
-                <div class="d-grid gap-2">
-                    <button class="btn btn-primary saveP" type="button" id="insert_article_invoice">
-                        <i class="fa-solid fa-floppy-disk"></i>
-                      {{ __('main.save') }}
-                    </button>
-                    <button class="btn btn-primary btn-loadingP d-none" type="button" disabled>
-                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                      {{ __('auth.loading') }}
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-
-<div class="modal fade" id="new_service_invoice" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form class="modal-content" id="form_insert_service_invoice" action="{{ route('app_insert_invoice_element') }}" method="POST">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="new-bank-account-modal">{{ __('invoice.insert_a_service') }}</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body bg-body-tertiary p-4">
-                @csrf
-
-                <input type="hidden" name="id_entreprise" value="{{ $entreprise->id }}">
-                <input type="hidden" name="id_fu" value="{{ $functionalUnit->id }}">
-                <input type="hidden" name="modalRequest" id="modalRequest-service" value="add"> {{-- Default is add but can be edit also --}}
-                <input type="hidden" name="ref_invoice" id="ref_invoice" value="{{ $ref_invoice }}">
-                <input type="hidden" name="descrption_saved_art" id="descrption_saved_serv" value="">
-                <input type="hidden" name="id_invoice_margin" id="id_invoice_margin" value="{{ $invoice_margin->id }}">
-                <input type="hidden" name="id_invoice_element" id="id_invoice_element" value="0">
-                <input type="hidden" name="is_an_article" id="is_an_article" value="0">
-
-                <input type="hidden" class="customer_session" name="id_customer_session_art" id="id_customer_session_art" value="0">
-                <input type="hidden" class="contact_session" name="id_contact_session_art" id="id_contact_session_art" value="0">
-
-                <div class="mb-4 row">
-                    <label for="service_sales_invoice" class="col-sm-4 col-form-label">{{ __('invoice.service') }}*</label>
-                    <div class="col-sm-8 select2-invoice-item-zone">
-                        <select class="form-select" name="article_sales_invoice" id="service_sales_invoice" onchange="getPriceServiceInvoice();">
-                            <option value="" selected>{{ __('invoice.select_a_service') }}</option>
-                            @foreach ($services as $service)
-                                <option value="{{ $service->reference_serv }}" unit_price="{{ number_format($service->unit_price, 2, '.', '') }}" description="{{ $service->description_serv }}">
-                                    {{ $service->description_serv }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <small class="text-danger" id="service_sales_invoice-error"></small>
-                    </div>
-                    <div class="col-sm-8 d-none input-invoice-item-zone">
-                        <input type="text" class="form-control" id="input-invoice-item-service" disabled>
-                    </div>
-                </div>
-
-                <div class="mb-4 row d-none">
-                    <label for="article_qty_invoice" class="col-sm-4 col-form-label">{{ __('invoice.quantity') }}*</label>
-                    <div class="col-sm-8">
-                        <input type="number" name="article_qty_invoice" id="article_qty_invoice" class="form-control text-end" onkeyup="changeTotalPrice();" onchange="changeTotalPrice();" min="1" value="1">
-                        <small class="text-danger" id="article_qty_invoice-error"></small>
-                    </div>
-                </div>
-
-                <div class="mb-4 row d-none">
-                    <label for="article_margin_invoice" class="col-sm-4 col-form-label">{{ __('invoice.margin') }}*</label>
-                    <div class="col-sm-8">
-                        <div class="input-group">
-                            <input type="number" name="article_margin_invoice" id="article_margin_invoice" onkeyup="calculateMargin('{{ route('app_calculate_margin') }}', '{{ csrf_token() }}');" onchange="calculateMargin('{{ route('app_calculate_margin') }}', '{{ csrf_token() }}');" url="{{ route('app_calculate_margin') }}" token="{{ csrf_token() }}" class="form-control text-end" min="0" value="{{ $invoice_margin->margin }}">
-                            <span class="input-group-text" id="basic-addon2">%</span>
-                        </div>
-                        <small class="text-danger" id="article_margin_invoice-error"></small>
-                    </div>
-                </div>
-
-                <div class="mb-4 row d-none">
-                    <label for="article_purchase_price_invoice" class="col-sm-4 col-form-label">{{ __('invoice.purchase_price') }}*</label>
-                    <div class="col-sm-8">
-                        <div class="input-group">
-                            <input type="number" step="0.01" name="article_purchase_price_invoice" id="article_purchase_price_invoice" class="form-control text-end" min="0" value="0.00" readonly>
-                            <span class="input-group-text" id="basic-addon2">{{ $deviseGest->iso_code }}</span>
-                        </div>
-                        <small class="text-danger"></small>
-                    </div>
-                </div>
-
-                <div class="mb-4 row d-none">
-                    <label for="article_sale_price_invoice" class="col-sm-4 col-form-label">{{ __('invoice.sale_prise') }}*</label>
-                    <div class="col-sm-8">
-                        <div class="input-group">
-                            <input type="number" step="0.01" name="article_sale_price_invoice" id="article_sale_price_invoice" class="form-control text-end" min="0" value="0.00" readonly>
-                            <span class="input-group-text" id="basic-addon2">{{ $deviseGest->iso_code }}</span>
-                        </div>
-                        <small class="text-danger"></small>
-                    </div>
-                </div>
-
-                <div class="mb-4 row">
-                    <label for="service_total_price_invoice" class="col-sm-4 col-form-label">{{ __('service.unit_price') }}*</label>
-                    <div class="col-sm-8">
-                        <div class="input-group">
-                            <input type="number" step="0.01" name="article_total_price_invoice" id="service_total_price_invoice" class="form-control text-end" min="0" value="0.00">
-                            <span class="input-group-text" id="basic-addon2">{{ $deviseGest->iso_code }}</span>
-                        </div>
-                        <small class="text-danger"></small>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="modal-footer">
-                {{-- button de fermeture modale --}}
-                @include('button.close-button')
-
-                <div class="d-grid gap-2">
-                    <button class="btn btn-primary saveP" type="button" id="insert_service_invoice">
-                        <i class="fa-solid fa-floppy-disk"></i>
-                      {{ __('main.save') }}
-                    </button>
-                    <button class="btn btn-primary btn-loadingP d-none" type="button" disabled>
-                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                      {{ __('auth.loading') }}
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+@include('invoice_sales.operation.add_service_modal')
+@include('invoice_sales.operation.update_service_modal')
 
 <form action="#">
     <input type="hidden" id="article_sales_invoice-message" value="{{ __('invoice.select_an_article_please') }}">

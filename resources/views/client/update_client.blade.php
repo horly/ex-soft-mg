@@ -20,13 +20,13 @@
                 <div class="row">
                     <div class="col-12 col-md-6 order-md-1 order-last">
                         <h3>{{ __('client.update_customer') }}</h3>
-                        <p class="text-subtitle text-muted"></p> 
+                        <p class="text-subtitle text-muted"></p>
                     </div>
                     <div class="col-12 col-md-6 order-md-2 order-first">
                         <nav class="float-start float-lg-end" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                              <li class="breadcrumb-item"><a href="{{ route('app_customer', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('client.customers') }}</a></li>
-                              <li class="breadcrumb-item"><a href="{{ route('app_info_customer', ['id' => $entreprise->id, 'id2' => $functionalUnit->id, 'id3' => $client->id]) }}">{{ __('client.customer_details') }}</a></li>
+                              <li class="breadcrumb-item"><a href="{{ route('app_customer', ['group' => 'customer', 'id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('client.customers') }}</a></li>
+                              <li class="breadcrumb-item"><a href="{{ route('app_info_customer', ['group' => 'customer', 'id' => $entreprise->id, 'id2' => $functionalUnit->id, 'id3' => $client->id]) }}">{{ __('client.customer_details') }}</a></li>
                               <li class="breadcrumb-item active" aria-current="page">{{ __('client.update_customer') }}</li>
                             </ol>
                         </nav>
@@ -49,7 +49,7 @@
                             <input type="hidden" name="customerRequest" id="customerRequest" value="edit">
 
                             <div class="mb-4 row">
-                                <label for="customer_type_cl" class="col-sm-4 col-form-label">{{ __('client.customer_type') }}*</label> 
+                                <label for="customer_type_cl" class="col-sm-4 col-form-label">{{ __('client.customer_type') }}*</label>
                                 <div class="col-sm-8">
                                   <select name="customer_type_cl" id="customer_type_cl" class="form-select @error('customer_type_cl') is-invalid @enderror">
                                       <option value="{{ $client->type }}" selected>{{ __('client.' . $client->type) }}</option>
@@ -162,8 +162,10 @@
                                 </div>
                             </div>
 
-                            {{-- button de sauvegarde --}}
-                            @include('button.save-button')
+                            @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                                {{-- button de sauvegarde --}}
+                                @include('button.save-button')
+                            @endif
 
                         </form>
                     </div>

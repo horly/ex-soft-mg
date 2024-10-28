@@ -21,9 +21,9 @@ class ServiceController extends Controller
     protected $notificationRepo;
     protected $generateReferenceNumber;
 
-    function __construct(Request $request, 
-                            EntrepriseRepo $entrepriseRepo, 
-                            NotificationRepo $notificationRepo, 
+    function __construct(Request $request,
+                            EntrepriseRepo $entrepriseRepo,
+                            NotificationRepo $notificationRepo,
                             GenerateRefenceNumber $generateReferenceNumber)
     {
         $this->request = $request;
@@ -32,7 +32,7 @@ class ServiceController extends Controller
         $this->generateReferenceNumber = $generateReferenceNumber;
     }
 
-    public function categoryService($id, $id2)
+    public function categoryService($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -41,16 +41,34 @@ class ServiceController extends Controller
                     ->where('id_fu', $functionalUnit->id)
                     ->orderByDesc('id')
                     ->get();
-                    
-        return view('service.category-service', compact('entreprise', 'functionalUnit', 'category_services'));
+
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('service.category-service', compact('entreprise', 'functionalUnit', 'category_services', 'permission_assign'));
     }
 
-    public function addNewCategoryService($id, $id2)
+    public function addNewCategoryService($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
 
-        return view('service.add_new_category-service', compact('entreprise', 'functionalUnit'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('service.add_new_category-service', compact('entreprise', 'functionalUnit', 'permission_assign'));
     }
 
     public function createCategoryService(CreateCategoryForm $requestF)
@@ -76,11 +94,11 @@ class ServiceController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_service_category', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $cat_ser_saved->id]);
+            $url = route('app_info_service_category', ['group' => 'service', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $cat_ser_saved->id]);
             $description = "service.added_a_new_service_category_in_the_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_category_service', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_category_service', ['group' => 'service', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('service.service_category_added_successfully'));
         }
         else
@@ -93,16 +111,16 @@ class ServiceController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_service_category', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_cat_serv]);
+            $url = route('app_info_service_category', ['group' => 'service', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_cat_serv]);
             $description = "service.updated_a_service_category";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_category_service', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_category_service', ['group' => 'service', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('service.service_category_updated_successfully'));
         }
     }
 
-    public function infoServiceCategory($id, $id2, $id3)
+    public function infoServiceCategory($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -110,7 +128,16 @@ class ServiceController extends Controller
                     ->join('category_services', 'category_services.id_user', '=', 'users.id')
                     ->where('category_services.id', $id3)->first();
 
-        return view('service.info_category-service', compact('entreprise', 'functionalUnit', 'category_service'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('service.info_category-service', compact('entreprise', 'functionalUnit', 'category_service', 'permission_assign'));
     }
 
     public function deleteCategoryService()
@@ -127,24 +154,33 @@ class ServiceController extends Controller
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_category_service', [
-            'id' => $id_entreprise, 
+            'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('service.service_category_successfully_deleted'));
     }
 
-    public function updateServiceCategory($id, $id2, $id3)
+    public function updateServiceCategory($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
         $category_service = DB::table('category_services')->where('id', $id3)->first();
 
-        return view('service.update_category-service', compact('entreprise', 'functionalUnit', 'category_service'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('service.update_category-service', compact('entreprise', 'functionalUnit', 'category_service', 'permission_assign'));
     }
 
     /**
      * Service
      */
 
-     public function service($id, $id2)
+     public function service($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -161,11 +197,20 @@ class ServiceController extends Controller
                         'devise_gestion_ufs.id_fu' => $functionalUnit->id,
                         'devise_gestion_ufs.default_cur_manage' => 1,
                     ])->first();
-        
-        return view('service.service', compact('entreprise', 'functionalUnit', 'services', 'deviseGest'));
+
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('service.service', compact('entreprise', 'functionalUnit', 'services', 'deviseGest', 'permission_assign'));
     }
 
-    public function addNewService($id, $id2)
+    public function addNewService($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -182,7 +227,16 @@ class ServiceController extends Controller
                     'devise_gestion_ufs.default_cur_manage' => 1,
             ])->first();
 
-        return view('service.add_new_service', compact('entreprise', 'functionalUnit', 'category_services', 'deviseGest'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('service.add_new_service', compact('entreprise', 'functionalUnit', 'category_services', 'deviseGest', 'permission_assign'));
     }
 
     public function createService(CreateServiceForm $requestF)
@@ -212,11 +266,11 @@ class ServiceController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_service', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $service->id]);
+            $url = route('app_info_service', ['group' => 'service', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $service->id]);
             $description = "service.added_a_new_service_in_the_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_service', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_service', ['group' => 'service', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('service.service_added_successfully'));
         }
         else
@@ -231,16 +285,16 @@ class ServiceController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_service', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_serv]);
+            $url = route('app_info_service', ['group' => 'service', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_serv]);
             $description = "service.updated_a_service";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_service', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_service', ['group' => 'service', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('service.service_updated_successfully'));
         }
     }
 
-    public function infoService($id, $id2, $id3)
+    public function infoService($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -248,7 +302,7 @@ class ServiceController extends Controller
         $service = DB::table('users')
                     ->join('services', 'services.id_user', '=', 'users.id')
                     ->where('services.id', $id3)->first();
-        
+
         $deviseGest = DB::table('devises')
                     ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
                     ->where([
@@ -256,7 +310,16 @@ class ServiceController extends Controller
                         'devise_gestion_ufs.default_cur_manage' => 1,
                     ])->first();
 
-        return view('service.info_service', compact('entreprise', 'functionalUnit', 'service', 'deviseGest'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('service.info_service', compact('entreprise', 'functionalUnit', 'service', 'deviseGest', 'permission_assign'));
     }
 
     public function deleteService()
@@ -273,11 +336,11 @@ class ServiceController extends Controller
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_service', [
-            'id' => $id_entreprise, 
-            'id2' => $id_fu ])->with('success', __('service.service_successfully_deleted'));   
+            'id' => $id_entreprise,
+            'id2' => $id_fu ])->with('success', __('service.service_successfully_deleted'));
     }
 
-    public function updateService($id, $id2, $id3)
+    public function updateService($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -285,7 +348,7 @@ class ServiceController extends Controller
         $service = DB::table('users')
                     ->join('services', 'services.id_user', '=', 'users.id')
                     ->where('services.id', $id3)->first();
-        
+
         $category_services = DB::table('category_services')
                     ->where('id_fu', $functionalUnit->id)
                     ->orderByDesc('id')
@@ -295,7 +358,7 @@ class ServiceController extends Controller
                     ->where('id', $service->id_cat)
                     ->orderByDesc('id')
                     ->first();
-        
+
         $deviseGest = DB::table('devises')
                     ->join('devise_gestion_ufs', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
                     ->where([
@@ -303,13 +366,23 @@ class ServiceController extends Controller
                         'devise_gestion_ufs.default_cur_manage' => 1,
                     ])->first();
 
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
         return view('service.update_service', compact(
-            'entreprise', 
-            'functionalUnit', 
-            'service', 
-            'deviseGest', 
+            'entreprise',
+            'functionalUnit',
+            'service',
+            'deviseGest',
             'category_services',
-            'category_serv'
+            'category_serv',
+            'permission_assign'
         ));
     }
 }

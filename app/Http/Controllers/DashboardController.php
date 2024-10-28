@@ -7,6 +7,7 @@ use App\Repository\NotificationRepo;
 use App\Repository\ShortThousand;
 use App\Services\Number\Number;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -29,7 +30,7 @@ class DashboardController extends Controller
         $this->shortThousand = $shortThousand;
     }
 
-    public function dashboard($id, $id2)
+    public function dashboard($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -156,6 +157,48 @@ class DashboardController extends Controller
         $recettes = $number->formatNumber($recettesPeriod);
         $depenses = $number->formatNumber($depensePeriod);
 
+        $full_dashboard_view = DB::table('permissions')->where('name', 'full_dashboard_view')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $full_dashboard_view->id
+            ])->first();
+
+
+        $sale_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $functionalUnit->id,
+                //'id_perms' => $permission->id,
+                'group' => 'sale'
+        ])->first();
+
+        $expense_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $functionalUnit->id,
+                //'id_perms' => $permission->id,
+                'group' => 'expense'
+        ])->first();
+
+        $stock_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $functionalUnit->id,
+                //'id_perms' => $permission->id,
+                'group' => 'stock'
+        ])->first();
+
+        $customer_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $functionalUnit->id,
+                //'id_perms' => $permission->id,
+                'group' => 'customer'
+        ])->first();
+
         return view('dashboard.dashboard', compact(
             'entreprise',
             'functionalUnit',
@@ -169,7 +212,13 @@ class DashboardController extends Controller
             'depenses',
             'year',
             'amount_from_client_to_be_paied',
-            'amount_from_me_to_be_paied'
+            'amount_from_me_to_be_paied',
+            'permission_assign',
+            'group',
+            'sale_assign',
+            'expense_assign',
+            'stock_assign',
+            'customer_assign',
         ));
     }
 

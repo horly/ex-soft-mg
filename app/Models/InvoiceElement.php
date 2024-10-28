@@ -24,6 +24,8 @@ class InvoiceElement extends Model
         'id_marge',
         'id_user',
         'id_fu',
+        'margin',
+        'custom_reference',
     ];
 
     function invoiceMargin()
@@ -35,7 +37,7 @@ class InvoiceElement extends Model
     {
         return $this->belongsTo('App\Models\User', 'id_user');
     }
- 
+
     function functionalUit()
     {
         return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');

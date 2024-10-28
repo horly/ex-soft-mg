@@ -35,6 +35,10 @@
         }
 
         .box .key {
+            width: 50px;
+        }
+
+        .box .key-long {
             width: 150px;
         }
 
@@ -110,29 +114,25 @@
     <div>
         <h2 class="invoice-title">
             @if ($invoice->is_proforma_inv == 0)
-                {{ __('invoice.invoice_MAJ') }} N° {{ $invoice->reference_sales_invoice }}
+                {{ __('invoice.invoice_MAJ') }} N° {{ $invoice->reference_personalized }}
             @else
-                {{ __('invoice.proforma_invoice_MAJ') }} N° {{ $invoice->reference_sales_invoice }}
+                {{ __('invoice.proforma_invoice_MAJ') }} N° {{ $invoice->reference_personalized }}
             @endif
         </h2>
     </div>
 
-    <div class="box small-text">
-        <div class="key">Date : </div>
-        <div class="content">{{ date('Y-m-d', strtotime($invoice->created_at)) }}</div>
-        <div class="right">{{ __('invoice.customer') }} : </div>
-    </div>
-
+    {{--
     <div class="box small-text">
         <div class="key">{{ __('invoice.due_date') }} : </div>
         <div class="content">{{ date('Y-m-d', strtotime($invoice->due_date)) }}</div>
         <div class="right">{{ __('client.reference') }} {{ $customer->reference_cl }}</div>
     </div>
+    --}}
 
     @if ($customer->type == "company")
         <div class="box small-text">
-            <div class="key"></div>
-            <div class="content"></div>
+            <div class="key">Date : </div>
+            <div class="content">{{ date('Y-m-d', strtotime($invoice->created_at)) }}</div>
             <div class="right">
                 {{ $customer->entreprise_name_cl }}
             </div>
@@ -160,6 +160,7 @@
         <thead>
             <tr>
                 <th class="text-start">#</th>
+                <th class="text-start">REF/SKU</th>
                 <th class="text-start">{{ __('article.description') }}</th>
                 <th class="text-center">{{ __('invoice.quantity') }}</th>
                 <th class="text-end">{{ __('article.unit_price') }} {{ $deviseGest->iso_code }}</th>
@@ -170,6 +171,7 @@
             @foreach ($invoice_elements as $invoice_element)
                 <tr>
                     <td class="text-start">{{ $loop->iteration }}</td>
+                    <td class="text-start">{{ $invoice_element->custom_reference }}</td>
                     <td class="text-start">{{ $invoice_element->description_inv_elmnt }}</td>
                     <td class="text-center">{{ $invoice_element->quantity }}</td>
                     <td class="text-end">{{ number_format($invoice_element->unit_price_inv_elmnt, 2, '.', ' ') }}</td>
@@ -179,15 +181,21 @@
         </tbody>
     </table>
 
-    <div class="box small-text">
-        <div class="key fw-bold">{{ __('invoice.total_excl_tax') }} {{ $deviseGest->iso_code }}</div>
+    <div class="box small-text border-bottom-1">
+        <div class="key-long fw-bold">
+            @if ($invoice->vat != 0)
+                {{ __('invoice.total_excl_tax') }} {{ $deviseGest->iso_code }}
+            @else
+                Total {{ $deviseGest->iso_code }}
+            @endif
+        </div>
         <div class="content"></div>
         <div class="right fw-bold">{{ number_format($tot_excl_tax, 2, '.', ' ') }}</div>
     </div>
 
     @if ($invoice->discount_choice != 0)
         <div class="box small-text">
-            <div class="key fw-bold">{{ __('invoice.discount') }}
+            <div class="key-long fw-bold">{{ __('invoice.discount') }}
                 (-{{ $invoice->discount_value }} {{ $invoice->discount_type }})
             </div>
             <div class="content"></div>
@@ -195,18 +203,46 @@
         </div>
     @endif
 
-    <div class="box border-bottom-1 mb-3 small-text">
-        <div class="key fw-bold">{{ __('invoice.vat') }} {{ $invoice->vat }} %</div>
-        <div class="content"></div>
-        <div class="right fw-bold">{{ number_format($invoice->vat_amount, 2, '.', ' ') }}</div>
-    </div>
+    @if ($invoice->vat != 0)
+        <div class="box border-bottom-1 mb-3 small-text">
+            <div class="key-long fw-bold">{{ __('invoice.vat') }} {{ $invoice->vat }} %</div>
+            <div class="content"></div>
+            <div class="right fw-bold">{{ number_format($invoice->vat_amount, 2, '.', ' ') }}</div>
+        </div>
 
-    <div class="box border-bottom-2 mb-3 small-text">
-        <div class="key fw-bold">{{ __('invoice.total_incl_tax') }} {{ $deviseGest->iso_code }}</div>
-        <div class="content"></div>
-        <div class="right fw-bold">{{ number_format($invoice->total, 2, '.', ' ') }}</div>
-    </div>
+        <div class="box border-bottom-2 mb-3 small-text">
+            <div class="key-long fw-bold">{{ __('invoice.total_incl_tax') }} {{ $deviseGest->iso_code }}</div>
+            <div class="content"></div>
+            <div class="right fw-bold">{{ number_format($invoice->total, 2, '.', ' ') }}</div>
+        </div>
+    @endif
 
+
+    <br>
+
+    @if ($invoice->is_proforma_inv == 1)
+        <ul class="box small-text">
+            <li>
+                {{ __('invoice.validity_of_the_offer') }} :
+                {{ $invoice->validity_of_the_offer_day }}
+                {{ __('invoice.days') }}
+            </li>
+            <li>
+                {{ __('invoice.payment_terms') }} :
+                {{ $payment_terms_assign->purcentage . '%,' }}
+                @if ($payment_terms_proforma->description == "after_delivery")
+                    {{ $payment_terms_assign->day_number }}
+                    {{ __('invoice.days') }}
+                    {{ __('invoice.after_delivery') }}
+                @else
+                    {{ __('invoice.to_order') }}
+                @endif
+            </li>
+        </ul>
+    @endif
+
+
+    <br>
     @php
         $user = DB::table('countries')
                 ->join('users', 'users.id_country', '=', 'countries.id')
@@ -244,6 +280,7 @@
             {{ $user->email }}
         </div>
     </div>
+
 
     <div class="footer small-text-sm">
         @php

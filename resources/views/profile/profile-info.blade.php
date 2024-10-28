@@ -13,12 +13,12 @@
                 </div>
             </div>
 
-            
+
         </div>
     </div>
 
     <div class="col-md-8">
-        
+
         <div class="border bg-body-tertiary p-4">
             <div class="row mb-4">
                 <div class="col-md-4"><i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;{{ __('main.name') }}</div>
@@ -32,7 +32,7 @@
                     <span> | </span>
                     <span>
                         <a href="{{ route('app_change_email_address_request', ['token' => Auth::user()->two_factor_secret]) }}" id="change-email-request-save" role="button" class="btn btn-primary">
-                            <i class="fa-solid fa-pen-to-square"></i> 
+                            <i class="fa-solid fa-pen-to-square"></i>
                             {{ __('entreprise.edit') }}
                         </a>
                     </span>
@@ -66,12 +66,12 @@
 
             <div class="row mb-4">
                 <div class="col-md-4"><i class="fa-solid fa-universal-access"></i>&nbsp;&nbsp;&nbsp;{{ __('auth.role') }}</div>
-                <div class="col-md-8 text-primary fw-bold">{{ __('profile.' . Auth::user()->role->name) }}</div>
+                <div class="col-md-8 text-primary fw-bold">{{ __('main.' . Auth::user()->role->name) }}</div>
             </div>
-            
+
             <div class="row mb-4">
                 <div class="col-md-4"><i class="fa-solid fa-briefcase"></i>&nbsp;&nbsp;&nbsp;{{ __('main.function') }}</div>
-                <div class="col-md-8 text-primary fw-bold">{{ Auth::user()->grade->name }}</div>
+                <div class="col-md-8 text-primary fw-bold">{{ Auth::user()->grade }}</div>
             </div>
 
             <div class="row mb-4">

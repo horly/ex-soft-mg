@@ -18,12 +18,12 @@
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
                     <h3>{{ __('invoice.delivery_note_details') }}</h3>
-                    <p class="text-subtitle text-muted"></p> 
+                    <p class="text-subtitle text-muted"></p>
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav class="float-start float-lg-end" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                          <li class="breadcrumb-item"><a href="{{ route('app_delivery_note', ['id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.delivery_note') }}</a></li>
+                          <li class="breadcrumb-item"><a href="{{ route('app_delivery_note', ['group' => 'sale', 'id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}">{{ __('dashboard.delivery_note') }}</a></li>
                           <li class="breadcrumb-item active" aria-current="page">{{ __('invoice.delivery_note_details') }}</li>
                         </ol>
                     </nav>
@@ -78,7 +78,7 @@
                             {{ __('client.reference') }}
                         </div>
                         <div class="col-md-8 text-primary fw-bold">
-                            {{ $invoice->reference_sales_invoice }}
+                            {{ $invoice->reference_personalized }}
                         </div>
                     </div>
 
@@ -95,6 +95,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
+                                <th class="text-start">REF/SKU</th>
                                 <th scope="col">{{ __('article.description') }}</th>
                                 <th scope="col">{{ __('invoice.serial_number')}}</th>
                                 <th scope="col" class="text-end">{{ __('invoice.quantity') }}</th>
@@ -104,6 +105,7 @@
                             @foreach ($invoice_elements as $invoice_element)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
+                                    <td class="text-start">{{ $invoice_element->custom_reference }}</td>
                                     <td>{{ $invoice_element->description_inv_elmnt }}</td>
                                     <td>
                                         @php
@@ -123,55 +125,56 @@
                         </tbody>
                     </table>
 
+                    @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                        <div class="row">
 
-                    <div class="row">
-
-                        <div class="col-md-4 mb-3">
-                            <div class="d-grid gap-2">
-                                <a class="btn btn-primary" role="button" href="/delivery_note_pdf/{{ $entreprise->id }}/{{ $functionalUnit->id }}/{{ $invoice->reference_sales_invoice }}" target="_blank">
-                                    <i class="fa-solid fa-print"></i>
-                                    {{ __('invoice.print') }}
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            @if ($paymentReceived != 0 )
+                            <div class="col-md-4 mb-3">
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-success" type="button" disabled>
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                        {{ __('entreprise.edit') }}
-                                    </button>
-                                </div>
-                            @else
-                                <div class="d-grid gap-2">
-                                    <a class="btn btn-success" role="button" href="{{ route('app_add_new_delivery_note', ['id' => $entreprise->id, 'id2' => $functionalUnit->id, 'ref_invoice' => $ref_invoice]) }}">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                        {{ __('entreprise.edit') }}
+                                    <a class="btn btn-primary" role="button" href="/delivery_note_pdf/{{ $entreprise->id }}/{{ $functionalUnit->id }}/{{ $invoice->reference_sales_invoice }}" target="_blank">
+                                        <i class="fa-solid fa-print"></i>
+                                        {{ __('invoice.print') }}
                                     </a>
                                 </div>
-                            @endif
-                        </div>
+                            </div>
 
-                        <div class="col-md-4 mb-3">
-                            @if ($paymentReceived != 0 )
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-danger" type="button" disabled>
-                                        <i class="fa-solid fa-trash-can"></i>
-                                        {{ __('entreprise.delete') }}
-                                    </button>
-                                </div>
-                            @else
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-danger" type="button" onclick="deleteElementThreeVal('{{ $invoice->reference_sales_invoice }}', {{ $entreprise->id }}, {{ $functionalUnit->id }}, '{{ route('app_delete_sales_invoice') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                        {{ __('entreprise.delete') }}
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
+                            <div class="col-md-4 mb-3">
+                                @if ($paymentReceived != 0 )
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-success" type="button" disabled>
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            {{ __('entreprise.edit') }}
+                                        </button>
+                                    </div>
+                                @else
+                                    <div class="d-grid gap-2">
+                                        <a class="btn btn-success" role="button" href="{{ route('app_add_new_delivery_note', ['group' => 'sale', 'id' => $entreprise->id, 'id2' => $functionalUnit->id, 'ref_invoice' => $ref_invoice]) }}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            {{ __('entreprise.edit') }}
+                                        </a>
+                                    </div>
+                                @endif
+                            </div>
 
-                    </div>
+                            <div class="col-md-4 mb-3">
+                                @if ($paymentReceived != 0 )
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-danger" type="button" disabled>
+                                            <i class="fa-solid fa-trash-can"></i>
+                                            {{ __('entreprise.delete') }}
+                                        </button>
+                                    </div>
+                                @else
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-danger" type="button" onclick="deleteElementThreeVal('{{ $invoice->reference_sales_invoice }}', {{ $entreprise->id }}, {{ $functionalUnit->id }}, '{{ route('app_delete_sales_invoice') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                            {{ __('entreprise.delete') }}
+                                        </button>
+                                    </div>
+                                @endif
+                            </div>
+
+                        </div>
+                    @endif
 
 
                 </div>

@@ -112,8 +112,16 @@ class LoginController extends Controller
     public function addUserPage()
     {
         $grades = DB::table('grades')->get();
-        $roles = DB::table('roles')->get();
+        $roles = null;
 
+        if(Auth::user()->role->name == "superadmin")
+        {
+            $roles = DB::table('roles')->get();
+        }
+        else
+        {
+            $roles = DB::table('roles')->whereNot('name', 'superadmin')->get();
+        }
 
         $countries_gb = DB::table('countries')
                         ->orderBy('name_gb', 'asc')
@@ -168,7 +176,8 @@ class LoginController extends Controller
                 'email' => $email,
                 'password' => Hash::make($password),
                 'role_id' => $role,
-                'grade_id' => $grade,
+                'grade' => $grade,
+                'grade_id' => 1,
                 'id_country' => $countryUsr,
                 'phone_number' => $phone_number,
                 'matricule' => $matricule,

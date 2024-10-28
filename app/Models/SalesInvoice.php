@@ -14,6 +14,7 @@ class SalesInvoice extends Model
     protected $fillable = [
         'reference_sales_invoice',
         'reference_number',
+        'reference_personalized',
         'concern_invoice',
         'sub_total',
         'total',
@@ -32,6 +33,7 @@ class SalesInvoice extends Model
         'id_fu',
         'id_contact',
         'due_date',
+        'validity_of_the_offer_day',
     ];
 
     function client()
@@ -48,4 +50,5 @@ class SalesInvoice extends Model
     {
         return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');
     }
+
 }

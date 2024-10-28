@@ -62,3 +62,49 @@ $('#record_payment_invoice').click(function(){
         $('#payment_methods_invoice_record').addClass('is-invalid');
     }
 });
+
+
+
+
+/* function getPermissionFu(id_user, id_fu, fu_name, token, url)
+{
+    $('#fu-permissions').text(fu_name);
+    $('#id_fu').val(id_fu);
+
+    $.ajax({
+        type: 'post',
+        url: url,
+        data: {
+            '_token': token,
+            'id_user': id_user,
+            'id_fu': id_fu
+        },
+        success:function(response){
+
+            console.log(response);
+
+            $('#full_dashboard_view').removeAttr('checked');
+            $('#edit_delete_contents').removeAttr('checked');
+            $('#billing').removeAttr('checked');
+            $('#report_generation').removeAttr('checked');
+
+            if(response.full_dashboard_view_assgn == 1){
+                $('#full_dashboard_view').attr('checked', 'checked');
+            }
+
+            if(response.edit_delete_contents_assgn == 1){
+                $('#edit_delete_contents').attr('checked', 'checked');
+            }
+
+            if(response.billing_assgn == 1){
+                $('#billing').attr('checked', 'checked');
+            }
+
+            if(response.report_generation_assgn == 1){
+                $('#report_generation').attr('checked', 'checked');
+            }
+        }
+    });
+}
+
+*/

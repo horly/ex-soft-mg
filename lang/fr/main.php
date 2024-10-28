@@ -2,6 +2,7 @@
     return [
         'admin' => "Administrateur",
         'user' => "Utilisateur",
+        'superadmin' => "Super Administrateur",
 
         'choose' => "Choisir",
         'function' => "Fonction",
@@ -25,7 +26,7 @@
         'logout' => "Se déconnecter",
 
         'main_menu' => "Menu principal",
-        'entreprises' => "Entreprises", 
+        'entreprises' => "Entreprises",
 
         'home' => "Accueil",
         'terms' => "Termes",
@@ -64,11 +65,11 @@
         'enter_a_valid_company_email_address_please' => "Entrez une adresse émail valide de votre entreprise S.V.P!",
 
         'company_added_successfully' => "Entreprise ajoutée avec succès!",
-        
+
         'user_management' => "Gestion des utilisateurs",
         'my_login_history' => 'Mon historique de connexion',
         'name' => "Nom",
-        'bank_account' => "Compte bancaire", 
+        'bank_account' => "Compte bancaire",
 
         'user_information' => "Informations de l'utilisateur",
         'user_deleted_successfully' => "Utilisateur supprimé avec succès",
@@ -86,4 +87,21 @@
         'all_notification' => "Toutes les notifications",
         'display' => "Afficher",
         'unviewed_notifications' => "Les notifications non consultées",
+
+        'login_history' => "Historique de connexion",
+        'permissions' => "Autorisations",
+        'functional_unit_management' => "Gestion de l'unité fonctionnelle",
+
+        'full_dashboard_view' => "Vue complète du tableau de bord",
+        'edit_delete_contents' => "Edition/suppression des contenus",
+        'billing' => "Facturation",
+        'report_generation' => "Génération de rapports",
+
+        'permissions_saved_successfully' => "Autorisations enregistrées avec succès",
+        'global_permissions' => "Autorisations globales",
+        'menu_permissions' => "Autorisations des menus",
+
+        'enter_your_grade' => "Entrez la fonction",
+        'enter_your_grade_please' => "Veuillez entrer la fonction!",
+
 ];

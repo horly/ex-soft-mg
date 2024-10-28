@@ -18,8 +18,8 @@ class Entreprise
     public function handle(Request $request, Closure $next): Response
     {
         /**
-         * get route parametre 
-         * I can also use this : $id_entreprise = $request->route('id'); 
+         * get route parametre
+         * I can also use this : $id_entreprise = $request->route('id');
          */
 
         $id_entreprise = $request->route()->parameter('id');
@@ -36,7 +36,7 @@ class Entreprise
                         'sub_id' => $user->sub_id
                     ])->first();
 
-        if($user->role->name == "admin")
+        if($user->role->name == "admin" || $user->role->name == "superadmin")
         {
             if($entreprise)
             {

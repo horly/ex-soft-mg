@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('clients', function (Blueprint $table) {
             //
-            $table->string('nif_cl', 255)->after('id_nat_cl')->default('-');
+            $table->string('nif_cl', 255)->after('id_nat_cl')->default('-')->nullable();;
         });
     }
 

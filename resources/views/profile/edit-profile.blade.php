@@ -33,12 +33,15 @@
                     <div class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-briefcase"></i></span>
+                            <input type="text" class="form-control @error('function_profile') is-invalid @enderror" id="function_profile" name="function_profile" placeholder="{{ __('main.enter_your_grade') }}" value="{{ Auth::user()->grade }}">
+                            {{--
                             <select class="form-select @error('function_profile') is-invalid @enderror" id="function_profile" name="function_profile">
                                 <option value="{{ Auth::user()->grade->id }}" selected>{{ Auth::user()->grade->name }}</option>
                                 @foreach ($grades as $grade)
                                     <option value="{{ $grade->id }}">{{ $grade->name }}</option>
                                 @endforeach
                             </select>
+                            --}}
                         </div>
                         <small class="text-danger">@error('function_profile'){{ $message }}@enderror</small>
                     </div>
@@ -91,7 +94,7 @@
                         <small class="text-danger">@error('registration_number_profile'){{ $message }}@enderror</small>
                     </div>
                 </div>
-                
+
                 <div class="mb-4 row">
                     <label for="address_profile" class="col-sm-4 col-form-label">{{ __('main.address') }}*</label>
                     <div class="col-md-8">

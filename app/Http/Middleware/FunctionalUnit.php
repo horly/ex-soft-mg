@@ -32,8 +32,8 @@ class FunctionalUnit
                         'id' => $id_entreprise,
                         'sub_id' => $user->sub_id
         ])->first();
-        
-        if($user->role->name == "admin")
+
+        if($user->role->name == "admin" || $user->role->name == "superadmin")
         {
             if($entreprise)
             {

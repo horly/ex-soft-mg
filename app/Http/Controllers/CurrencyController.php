@@ -7,6 +7,7 @@ use App\Models\DeviseGestionUF;
 use App\Repository\EntrepriseRepo;
 use App\Repository\NotificationRepo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CurrencyController extends Controller
@@ -23,7 +24,7 @@ class CurrencyController extends Controller
         $this->notificationRepo = $notificationRepo;
     }
 
-    public function currency($id, $id2)
+    public function currency($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -48,11 +49,27 @@ class CurrencyController extends Controller
             ->orderBy('devise_gestion_ufs.id', 'desc')
             ->get();
 
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
 
-        return view('currency.currency', compact('entreprise', 'functionalUnit', 'devises', 'deviseGest', 'deviseDefault', 'deviseFU'));
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('currency.currency', compact(
+            'entreprise',
+            'functionalUnit',
+            'devises',
+            'deviseGest',
+            'deviseDefault',
+            'deviseFU',
+            'permission_assign')
+        );
     }
 
-    public function createCurrency($id, $id2)
+    public function createCurrency($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -65,7 +82,16 @@ class CurrencyController extends Controller
                 'devise_gestion_ufs.default_cur_manage' => 1,
         ])->first();
 
-        return view('currency.create_currency', compact('entreprise', 'functionalUnit', 'devises', 'deviseGest'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('currency.create_currency', compact('entreprise', 'functionalUnit', 'devises', 'deviseGest', 'permission_assign'));
     }
 
     public function saveCurrency(CurrencyForm $requestF)
@@ -94,11 +120,11 @@ class CurrencyController extends Controller
                 ]);
 
                 //Notification
-                $url = route('app_info_currency', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $currecy_saved->id]);
+                $url = route('app_info_currency', ['group' => 'currency', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $currecy_saved->id]);
                 $description = "dashboard.added_a_new_currency_in_the_functional_unit";
                 $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-                return redirect()->route('app_currency', ['id' => $id_entreprise, 'id2' => $id_fu])
+                return redirect()->route('app_currency', ['group' => 'currency', 'id' => $id_entreprise, 'id2' => $id_fu])
                             ->with('success', __('dashboard.currency_added_successfully'));
             }
             else
@@ -116,11 +142,11 @@ class CurrencyController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_currency', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_currency_gest]);
+            $url = route('app_info_currency', ['group' => 'currency', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_currency_gest]);
             $description = "dashboard.updated_a_currency_in_the_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_currency', ['id' => $id_entreprise, 'id2' => $id_fu])
+            return redirect()->route('app_currency', ['group' => 'currency', 'id' => $id_entreprise, 'id2' => $id_fu])
                     ->with('success', __('dashboard.currency_updated_successfully'));
         }
     }
@@ -147,7 +173,7 @@ class CurrencyController extends Controller
             ]);
 
             //Notification
-            $url = route('app_currency', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_currency', ['group' => 'currency', 'id' => $id_entreprise, 'id2' => $id_fu]);
             $description = "dashboard.changed_the_default_currency";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -159,7 +185,7 @@ class CurrencyController extends Controller
         }
     }
 
-    public function infoCurrency($id, $id2, $id3)
+    public function infoCurrency($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -178,7 +204,16 @@ class CurrencyController extends Controller
             ->join('devises', 'devise_gestion_ufs.id_devise', '=', 'devises.id')
             ->where('devises.id', $id3)->first();
 
-        return view('currency.info_currency', compact('entreprise', 'functionalUnit', 'devise', 'deviseDefault'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('currency.info_currency', compact('entreprise', 'functionalUnit', 'devise', 'deviseDefault', 'permission_assign'));
     }
 
     public function deleteCurrency()
@@ -203,7 +238,7 @@ class CurrencyController extends Controller
             'id2' => $id_fu ])->with('success', __('dashboard.currency_deleted_successfully'));
     }
 
-    public function upDatecurrency($id, $id2, $id3)
+    public function upDatecurrency($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -226,6 +261,23 @@ class CurrencyController extends Controller
                 'devise_gestion_ufs.default_cur_manage' => 1,
         ])->first();
 
-        return view('currency.updated_currency', compact('entreprise', 'functionalUnit', 'deviseSel', 'devises', 'deviseGest', 'deviseGestionUfs'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+                ->where([
+                    'id_user' => Auth::user()->id,
+                    'id_fu' => $id2,
+                    'id_perms' => $edit_delete_contents->id
+                ])->first();
+
+        return view('currency.updated_currency', compact(
+            'entreprise',
+            'functionalUnit',
+            'deviseSel',
+            'devises',
+            'deviseGest',
+            'deviseGestionUfs',
+            'permission_assign')
+        );
     }
 }

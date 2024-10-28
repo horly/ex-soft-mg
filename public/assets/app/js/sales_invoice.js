@@ -44,7 +44,8 @@ function getPriceArticleInvoice()
     {
         article_purchase_price_invoice.val($('#article_sales_invoice option:selected').attr('purchase_price'));
 
-        var sale_p = calculateMargin($('#article_margin_invoice').attr('url'), $('#article_margin_invoice').attr('token'));
+        var sale_p = calculateMargin($('#article_margin_invoice').attr('url'), $('#article_margin_invoice').attr('token'), 'add');
+        console.log(qty);
         var total_sale_p = sale_p * qty;
 
         article_sale_price_invoice.val(sale_p.toFixed(2));
@@ -60,15 +61,22 @@ function getPriceArticleInvoice()
 function getPriceServiceInvoice()
 {
     var service_sales_invoice = $('#service_sales_invoice');
+    var service_unit_price_invoice = $('#service_unit_price_invoice');
     var service_total_price_invoice = $('#service_total_price_invoice');
+    var service_qty_invoice = $('#service_qty_invoice').val();
 
     if(service_sales_invoice.val() == "")
     {
+        service_unit_price_invoice.val("0");
         service_total_price_invoice.val("0");
     }
     else
     {
-        service_total_price_invoice.val($('#service_sales_invoice option:selected').attr('unit_price'));
+        service_unit_price_invoice.val($('#service_sales_invoice option:selected').attr('unit_price'));
+
+        var total_sale_p = service_unit_price_invoice.val() * service_qty_invoice;
+
+        service_total_price_invoice.val(total_sale_p.toFixed(2));
 
         /**
          * on met à jour la description de l'article
@@ -79,12 +87,27 @@ function getPriceServiceInvoice()
 
 //calculateMargin($('#article_sales_invoice').attr('url'), $('#article_sales_invoice').attr('token'));
 
-function calculateMargin(url, token)
+function calculateMargin(url, token, operation)
 {
-    var article_margin_invoice = $('#article_margin_invoice').val();
-    var article_purchase_price_invoice = $('#article_purchase_price_invoice').val();
-    var quantity = $('#article_qty_invoice').val();
-    //var article_sale_price_invoice = $('#article_sale_price_invoice').val();
+    var article_margin_invoice = null;
+    var article_purchase_price_invoice = null;
+    var quantity = null;
+
+    if(operation == "add")
+    {
+        var article_margin_invoice = $('#article_margin_invoice').val();
+        var article_purchase_price_invoice = $('#article_purchase_price_invoice').val();
+        var quantity = $('#article_qty_invoice').val();
+        //var article_sale_price_invoice = $('#article_sale_price_invoice').val();
+    }
+    else
+    {
+        var article_margin_invoice = $('#article_margin_invoice_updt').val();
+        var article_purchase_price_invoice = $('#article_purchase_price_invoice_updt').val();
+        var quantity = $('#article_qty_invoice_updt').val();
+        //var article_sale_price_invoice = $('#article_sale_price_invoice').val();
+    }
+
     var pu = 0;
     var pt = 0;
 
@@ -99,29 +122,74 @@ function calculateMargin(url, token)
         success:function(response){
             //var value = (article_purchase_price_invoice * article_margin_invoice) / 100;
             //var final_sale_price = article_purchase_price_invoice + value;
+            if(operation == "add")
+            {
+                $('#article_sale_price_invoice').val(response.final_price.toFixed(2));
 
-            $('#article_sale_price_invoice').val(response.final_price.toFixed(2));
+                pu = response.final_price;
+                pt = pu * quantity
+                $('#article_total_price_invoice').val(pt.toFixed(2));
+            }
+            else
+            {
+                $('#article_sale_price_invoice_updt').val(response.final_price.toFixed(2));
 
-            pu = response.final_price;
-            pt = pu * quantity
-            $('#article_total_price_invoice').val(pt.toFixed(2));
+                pu = response.final_price;
+                pt = pu * quantity
+                $('#article_total_price_invoice_updt').val(pt.toFixed(2));
+            }
         },
         async : false
     });
     return pu;
 }
 
-function changeTotalPrice()
+function changeTotalPrice(operation)
 {
-    var article_sale_price_invoice = $('#article_sale_price_invoice').val();
-    var quantity = $('#article_qty_invoice').val();
+    if(operation == "add")
+    {
+        var article_sale_price_invoice = $('#article_sale_price_invoice').val();
+        var quantity = $('#article_qty_invoice').val();
 
-    var pt = article_sale_price_invoice * quantity;
+        var pt = article_sale_price_invoice * quantity;
 
-    $('#article_total_price_invoice').val(pt.toFixed(2));
+        $('#article_total_price_invoice').val(pt.toFixed(2));
+    }
+    else
+    {
+        var article_sale_price_invoice = $('#article_sale_price_invoice_updt').val();
+        var quantity = $('#article_qty_invoice_updt').val();
+
+        var pt = article_sale_price_invoice * quantity;
+
+
+        $('#article_total_price_invoice_updt').val(pt.toFixed(2));
+    }
 }
 
-$('#insert_article_invoice').click(function(){
+function changeTotalPriceService(operation)
+{
+    if(operation == "add")
+    {
+        var service_unit_price_invoice = $('#service_unit_price_invoice').val();
+        var quantity = $('#service_qty_invoice').val();
+
+        var pt = service_unit_price_invoice * quantity;
+
+        $('#service_total_price_invoice').val(pt.toFixed(2));
+    }
+    else
+    {
+        var service_unit_price_invoice = $('#service_unit_price_invoice_updt').val();
+        var quantity = $('#service_qty_invoice_updt').val();
+
+        var pt = service_unit_price_invoice * quantity;
+
+        $('#service_total_price_invoice_updt').val(pt.toFixed(2));
+    }
+}
+
+function insert_invoice_item(operation){
     var article_sales_invoice = $('#article_sales_invoice').val();
     var article_qty_invoice = $('#article_qty_invoice').val();
     var article_margin_invoice = $('#article_margin_invoice').val();
@@ -134,25 +202,29 @@ $('#insert_article_invoice').click(function(){
         if(article_qty_invoice != "" && article_qty_invoice != 0 && article_qty_invoice != "0")
         {
             $('#article_qty_invoice').removeClass('is-invalid');
-            $('#article_qty_invoice-error').text("");
+            $('.article_qty_invoice-error').text("");
 
             if(article_margin_invoice != "")
             {
                 $('#article_margin_invoice').removeClass('is-invalid');
-                $('#article_margin_invoice-error').text("");
+                $('.article_margin_invoice-error').text("");
 
-                $('#form_insert_article_invoice').submit();
+                $('#concerne_session').val($('#invoice_concern_sales').val());
+
+                operation == "add" ?
+                    $('#form_insert_article_invoice').submit() :
+                    $('#form_insert_article_invoice_updt').submit();
             }
             else
             {
                 $('#article_margin_invoice').addClass('is-invalid');
-                $('#article_margin_invoice-error').text($('#article_margin_invoice-message').val()); //margin_cannot_be_empty
+                $('.article_margin_invoice-error').text($('#article_margin_invoice-message').val()); //margin_cannot_be_empty
             }
         }
         else
         {
             $('#article_qty_invoice').addClass('is-invalid');
-            $('#article_qty_invoice-error').text($('#article_qty_invoice-message').val()); //Quantity cannot be empty
+            $('.article_qty_invoice-error').text($('#article_qty_invoice-message').val()); //Quantity cannot be empty
         }
     }
     else
@@ -160,9 +232,9 @@ $('#insert_article_invoice').click(function(){
         $('#article_sales_invoice').addClass('is-invalid');
         $('#article_sales_invoice-error').text($('#article_sales_invoice-message').val()); //Select an article please!
     }
-});
+}
 
-$('#insert_service_invoice').click(function(){
+function insert_invoice_item_service(operation){
 
     var service_sales_invoice = $('#service_sales_invoice').val();
 
@@ -171,43 +243,74 @@ $('#insert_service_invoice').click(function(){
         $('#service_sales_invoice').removeClass('is-invalid');
         $('#service_sales_invoice-error').text("");
 
-        $('#form_insert_service_invoice').submit();
+        $('#concerne_session_service').val($('#invoice_concern_sales').val());
+
+        operation == "add" ?
+            $('#form_insert_service_invoice').submit() :
+            $('#form_insert_service_invoice_updt').submit();
     }
     else
     {
         $('#service_sales_invoice').addClass('is-invalid');
         $('#service_sales_invoice-error').text($('#service_sales_invoice-message').val());
     }
-});
+}
 
-function updateArticleInvoice(id)
+function updateArticleInvoice(id, type)
 {
     var qty = $('#quantity-' + id).val();
     var margin = $('#margin-' + id).val();
     var purchase_price = $('#purchase-price-' + id).val();
     var sale_price = $('#sale-price-' + id).val();
     var total_price = $('#total-price-' + id).val();
-    var ref_article = $('#ref_article-' + id).val();
+    //var ref_article = $('#ref_article-' + id).val();
     var description_inv_elmnt = $('#description_inv_elmnt-' + id).val();
+    var custom_reference = $('#custom_reference-' + id).val();
 
-    $('#article_qty_invoice').val(qty);
-    $('#article_margin_invoice').val(margin);
-    $('#article_purchase_price_invoice').val(purchase_price);
-    $('#article_sale_price_invoice').val(sale_price);
-    $('#article_total_price_invoice').val(total_price);
-    //$('#article_sales_invoice').val(ref_article);
-    //$('#article_sales_invoice option:selected').text(description_inv_elmnt);
-    $('#article_sales_invoice').val(ref_article).trigger('change'); //select2 selection
+    //console.log(custom_reference);
 
-    $('#article_margin_invoice').prop('readonly', true);
+    if(type == "article")
+    {
+        //console.log(purchase_price);
+        $('#article_qty_invoice_updt').val(qty);
+        $('#article_margin_invoice_updt').val(margin);
+        $('#article_purchase_price_invoice_updt').val(purchase_price);
+        $('#article_sale_price_invoice_updt').val(sale_price);
+        $('#article_total_price_invoice_updt').val(total_price);
+        //$('#article_sales_invoice').val(ref_article);
+        //$('#article_sales_invoice option:selected').text(description_inv_elmnt);
+        $('#article_sales_invoice').val(id).trigger('change'); //select2 selection
 
-    $('.select2-invoice-item-zone').addClass('d-none');
-    $('.input-invoice-item-zone').removeClass('d-none');
-    $('#input-invoice-item').val(description_inv_elmnt);
+        //$('#article_margin_invoice').prop('readonly', true);
 
-    $('#id_invoice_element').val(id);
-    $('#modalRequest-article').val('edit');
+        $('.select2-invoice-item-zone').addClass('d-none');
+        $('.input-invoice-item-zone').removeClass('d-none');
+        $('.input-invoice-item-article').val(description_inv_elmnt);
+        $('.custom_reference_article').val(custom_reference);
 
+
+
+
+
+        $('.id_invoice_element').val(id);
+        //$('.modalRequest-article').val('edit');
+    }
+    else
+    {
+        //console.log(sale_price);
+        $('#service_qty_invoice_updt').val(qty);
+        $('#service_unit_price_invoice_updt').val(sale_price);
+        $('#service_total_price_invoice_updt').val(total_price);
+        $('#service_sales_invoice').val(id).trigger('change'); //select2 selection
+
+        $('.select2-invoice-item-zone').addClass('d-none');
+        $('.input-invoice-item-zone').removeClass('d-none');
+        $('.input-invoice-item-service').val(description_inv_elmnt);
+        $('.custom_reference_service').val(custom_reference);
+
+        $('.id_invoice_element').val(id);
+        //$('.modalRequest-article').val('edit');
+    }
 }
 
 function modalInsertArticleInvoice()
@@ -498,5 +601,17 @@ $('#save-entrance-btn').click(function(){
         $('#description_entr-error').removeClass('d-none');
     }
 });
+
+
+function payment_terms_select()
+{
+    if($('#payment_terms').val() == "after_delivery"){
+        //console.log("after_delivery");
+        $('.after_delivery_zone').removeClass('d-none');
+    }else{
+        //console.log("to_order");
+        $('.after_delivery_zone').addClass('d-none');
+    }
+}
 
 

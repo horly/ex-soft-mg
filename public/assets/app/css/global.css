@@ -117,9 +117,19 @@
  * logo exad nav
  **/
 
- body {
-    transform: scale('0.8') !important;
+ .permissions-icons {
+    width: 25px;
  }
+
+ .link-dashboard-widget:hover {
+    background-color: #c7cfec;
+    border-radius: 5px;
+ }
+
+ * {
+    transform: scale('0.75') !important;
+ }
+
 
 
 @media only screen and (max-width: 1200px) {

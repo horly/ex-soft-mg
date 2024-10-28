@@ -19,9 +19,9 @@ class SupplierController extends Controller
     protected $notificationRepo;
     protected $generateReferenceNumber;
 
-    function __construct(Request $request, 
-                            EntrepriseRepo $entrepriseRepo, 
-                            NotificationRepo $notificationRepo, 
+    function __construct(Request $request,
+                            EntrepriseRepo $entrepriseRepo,
+                            NotificationRepo $notificationRepo,
                             GenerateRefenceNumber $generateReferenceNumber)
     {
         $this->request = $request;
@@ -30,7 +30,7 @@ class SupplierController extends Controller
         $this->generateReferenceNumber = $generateReferenceNumber;
     }
 
-    public function supplier($id, $id2)
+    public function supplier($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -39,16 +39,34 @@ class SupplierController extends Controller
                     ->where('id_fu', $functionalUnit->id)
                     ->orderByDesc('id')
                     ->get();
-        
-        return view('supplier.supplier', compact('entreprise', 'functionalUnit', 'suppliers'));
+
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('supplier.supplier', compact('entreprise', 'functionalUnit', 'suppliers', 'permission_assign'));
     }
 
-    public function addNewSupplier($id, $id2)
+    public function addNewSupplier($group, $id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
 
-        return view('supplier.add_new_supplier', compact('entreprise', 'functionalUnit'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('supplier.add_new_supplier', compact('entreprise', 'functionalUnit', 'permission_assign'));
     }
 
     public function createSupplier(CreateSupplierForm $requestF)
@@ -112,11 +130,11 @@ class SupplierController extends Controller
             }
 
             //Notification
-            $url = route('app_info_supplier', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $supplier_saved->id]);
+            $url = route('app_info_supplier', ['group' => 'supplier', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $supplier_saved->id]);
             $description = "supplier.added_a_new_supplier";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_supplier', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_supplier', ['group' => 'supplier', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('supplier.supplier_added_successfully'));
         }
         else
@@ -163,16 +181,16 @@ class SupplierController extends Controller
             }
 
             //Notification
-            $url = route('app_info_supplier', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_supplier]);
+            $url = route('app_info_supplier', ['group' => 'supplier', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_supplier]);
             $description = "supplier.updated_a_supplier_from_functional_unit";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->route('app_supplier', ['id' => $id_entreprise, 'id2' => $id_fu ])
+            return redirect()->route('app_supplier', ['group' => 'supplier', 'id' => $id_entreprise, 'id2' => $id_fu ])
                     ->with('success', __('supplier.supplier_updated_successfully'));
         }
     }
 
-    public function infoSupplier($id, $id2, $id3)
+    public function infoSupplier($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
@@ -180,7 +198,16 @@ class SupplierController extends Controller
                     ->join('suppliers', 'suppliers.id_user', '=', 'users.id')
                     ->where('suppliers.id', $id3)->first();
 
-        return view('supplier.info_supplier', compact('entreprise', 'functionalUnit', 'supplier'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('supplier.info_supplier', compact('entreprise', 'functionalUnit', 'supplier', 'permission_assign'));
     }
 
     public function deleteSupplier()
@@ -197,16 +224,25 @@ class SupplierController extends Controller
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_supplier', [
-            'id' => $id_entreprise, 
+            'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('supplier.supplier_deleted_successfully'));
     }
 
-    public function updateSupplier($id, $id2, $id3)
+    public function updateSupplier($group, $id, $id2, $id3)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
         $supplier = DB::table('suppliers')->where('id', $id3)->first();
 
-        return view('supplier.update_supplier', compact('entreprise', 'functionalUnit', 'supplier'));
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+        return view('supplier.update_supplier', compact('entreprise', 'functionalUnit', 'supplier', 'permission_assign'));
     }
 }

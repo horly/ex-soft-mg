@@ -16,18 +16,18 @@ return new class extends Migration
             $table->string('type_deb', 255);
             $table->string('reference_deb', 255);
             $table->integer('reference_number');
-            $table->string('entreprise_name_deb', 255)->default('-');
-            $table->string('rccm_deb', 255)->default('-');
-            $table->string('id_nat_deb', 255)->default('-');
-            $table->string('nif_deb', 255)->default('-');
-            $table->string('account_num_deb', 255)->default('-');
-            $table->string('website_deb', 255)->default('-');
+            $table->string('entreprise_name_deb', 255)->default('-')->nullable();;
+            $table->string('rccm_deb', 255)->default('-')->nullable();
+            $table->string('id_nat_deb', 255)->default('-')->nullable();
+            $table->string('nif_deb', 255)->default('-')->nullable();
+            $table->string('account_num_deb', 255)->default('-')->nullable();
+            $table->string('website_deb', 255)->default('-')->nullable();
             $table->string('contact_name_deb', 255);
             $table->string('fonction_contact_deb', 255);
             $table->string('phone_number_deb', 255);
             $table->string('email_adress_deb', 255);
             $table->string('address_deb', 255);
-            
+
             $table->bigInteger('id_user')->unsigned()->index();
             $table->foreign('id_user')
                     ->references('id')->on('users')

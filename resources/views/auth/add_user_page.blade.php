@@ -99,12 +99,15 @@
                     <div class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-briefcase"></i></span>
+                            <input type="text" class="form-control @error('function') is-invalid @enderror" id="function" name="function" placeholder="{{ __('main.enter_your_grade') }}" value="{{ old('grade') }}">
+                            {{--
                             <select class="form-select @error('function') is-invalid @enderror" id="function" name="function">
                                 <option value="" selected>{{ __('main.choose') }}...</option>
                                 @foreach ($grades as $grade)
                                     <option value="{{ $grade->id }}">{{ $grade->name }}</option>
                                 @endforeach
                             </select>
+                            --}}
                         </div>
                         <small class="text-danger">@error('function'){{ $message }}@enderror</small>
                     </div>
@@ -151,7 +154,7 @@
                     <div class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-barcode"></i></span>
-                            <input type="text" class="form-control @error('matricule') is-invalid @enderror" name="matricule" id="matricule" placeholder="{{ __('main.enter_the_registration_number')}}" value="{{ old('matricule') }}">
+                            <input type="text" class="form-control @error('matricule') is-invalid @enderror" name="matricule" id="matricule" placeholder="{{ __('main.enter_the_registration_number')}}" value="{{ Session::has('matricule') ? old('matricule') : "00000" }}">
                         </div>
                         <small class="text-danger">@error('matricule'){{ $message }}@enderror</small>
                     </div>
@@ -168,7 +171,7 @@
                 @include('button.add-button')
             </div>
         </form>
- 
+
     </div>
 </div>
 

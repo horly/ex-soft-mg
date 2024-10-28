@@ -137,4 +137,10 @@
         'entrance_recorded_successfully' => "Entrance recorded successfully!",
         'updated_an_entrance' => "updated an entrance",
         'entrance_updated_successfully' => "Entrance updated successfully!",
+
+        'validity_of_the_offer' => "Validity of the offer",
+        'days' => "Days",
+        'payment_terms' => "Payment terms",
+        'to_order' => "To order",
+        'after_delivery' => "After delivery",
 ];
