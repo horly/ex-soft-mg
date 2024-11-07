@@ -143,8 +143,8 @@
     </div>
 @else
     <div class="box small-text">
-        <div class="key"></div>
-        <div class="content"></div>
+        <div class="key">Date : </div>
+        <div class="content">{{ date('Y-m-d', strtotime($invoice->created_at)) }}</div>
         <div class="right">
             {{ $contact->fullname_cl }}
         </div>
@@ -191,6 +191,17 @@
         </tbody>
     </table>
 
+    <br>
+
+    @foreach ($notes as $note)
+    @if ($note->type_note == 'list')
+        <small>&#x2022;</small>
+            &nbsp;&nbsp;
+        @endif
+        <small class="@if ($note->bold_note == 1) fw-bold @endif @if ($note->italic_note == 1) fst-italic @endif">{{ $note->note_content }}</small><br>
+    @endforeach
+
+    <br>
 
     @php
         $user = DB::table('countries')

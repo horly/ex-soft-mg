@@ -143,4 +143,17 @@
         'payment_terms' => "Modalité de paiement",
         'to_order' => "À la commande",
         'after_delivery' => "Après la livraison",
+
+        'sentence' => "Phrase",
+        'list' => "Liste",
+
+        'add_a_note' => "Ajouter une note",
+        'add_a_note_please' => "Veuillez ajouter une note!",
+        'bold' => "Gras",
+        'italic' => "Italic",
+
+        'preview' => "Aperçu",
+        'note_added_successfully' => "Note ajoutée avec succès!",
+        'note_updated_successfully' => "Note modifiée avec succès!",
+        'note_deleted_successfully' => "Note supprimée avec succès!",
     ];

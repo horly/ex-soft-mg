@@ -202,6 +202,10 @@
                         </tbody>
                     </table>
 
+                    {{-- Note --}}
+                    @include('invoice_sales.commun.note_document')
+
+
                     @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
                         <div class="row">
                             <div class="col-md-3 mb-3">

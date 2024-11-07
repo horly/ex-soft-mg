@@ -44,4 +44,6 @@
 
         'expense_updated_successfully' => "Expense updated successfully!",
         'updated_an_expense' => "updated an expense",
+        'file_deleted_successfully' => 'File deleted successfully!',
+        'no_files_found_to_delete' => "No files found to delete",
     ];

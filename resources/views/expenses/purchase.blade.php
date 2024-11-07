@@ -53,7 +53,6 @@
                                 <th>{{ __('client.reference') }}</th>
                                 <th>{{ __('invoice.date') }}</th>
                                 <th>{{ __('expenses.supplier') }}</th>
-                                <th>{{ __('invoice.due_date') }}</th>
                                 <th class="text-end">{{ __('dashboard.amount') }} {{ $deviseGest->iso_code }}</th>
                                 <th class="text-end">{{ __('expenses.payment_made') }} {{ $deviseGest->iso_code }}</th>
                                 <th>{{ __('client.manager') }}</th>
@@ -83,7 +82,6 @@
                                                 {{ $supplier->contact_name_sup }}
                                             @endif
                                         </td>
-                                        <td>{{ date('Y-m-d', strtotime($purchase->due_date)) }}</td>
                                         <td class="text-end">
                                             {{ number_format($purchase->amount, 2, '.', ' ') }}
                                         </td>

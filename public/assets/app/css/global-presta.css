@@ -1,0 +1,98 @@
+.btn-primary {
+    background: #754C24 !important;
+    color:  #fff !important;
+    border-color: #754C24;
+}
+
+.btn-primary:hover {
+    background: #533619 !important;
+    color:  #fff !important;
+    border-color: #b58656;
+}
+
+.form-check-input:checked {
+    background-color: #754C24 !important;
+    border-color: #b58656 !important;
+}
+
+a {
+    color: #754C24 !important;
+}
+
+
+.form-control:focus {
+    border-color: #b58656 !important;
+}
+
+.presta-text-color {
+    color: #754C24 !important;
+ }
+
+ .presta-bg-color, .bg-primary {
+    background: #754C24 !important;
+ }
+
+ .alert-primary {
+    background: #754C24 !important;
+ }
+
+
+
+ /***
+ * Datatable pagination
+ */
+/* Change the background color of the active pagination button */
+div.dataTables_wrapper div.dataTables_paginate ul.pagination li.paginate_button.active a {
+    background-color: #754C24 !important; /* Darker green background */
+    color: white !important; /* White text */
+    border: #754C24 !important;
+}
+
+.nav-pills .nav-link.active{
+    background: #754C24 !important;
+    color: white !important; /* White text */
+}
+
+a[role="button"] {
+    color: white !important; /* White text */
+}
+
+.text-primary {
+    color: #754C24 !important;;
+}
+
+.modules:hover {
+    background: #76583a !important;
+}
+
+a.list-group-item-action {
+    color: #76583a !important;
+}
+
+a.list-group-item-action.active {
+    background: #754C24 !important; /* Darker green background */
+    color: white !important; /* White text */
+    border: #754C24 !important;
+}
+
+#logo-presta {
+    height: 80px;
+}
+
+
+.sidebar-menu .sidebar-title, .sidebar-menu a, .sidebar-menu i {
+    color: #76583a !important;
+}
+
+.sidebar-menu .sidebar-item.active .sidebar-link {
+    background-color: #754C24 !important; /* Darker green background */
+    color: white !important; /* White text */
+}
+
+.sidebar-menu .sidebar-item.active .sidebar-link i {
+    color: white !important; /* White text */
+}
+
+.page-heading h3, .page-heading p {
+    color: #76583a !important;
+}

@@ -1,3 +1,6 @@
+
+@if (config('app.name') == "EXADERP")
+
 <footer>
     <div class="d-flex flex-row justify-content-center mb-4">
         <a class="link-underline-light me-5" href="/">{{ __('main.home') }}</a>
@@ -12,3 +15,6 @@
         <i class="fa-solid fa-power-off text-success"></i> &nbsp;{{ __('auth.powered_by') }} &nbsp;<a class="link-underline-light" href="https://www.exadgroup.org" target="_blank">{{ config('app.company_name') }}</a>
     </div>
 </footer>
+
+
+@endif

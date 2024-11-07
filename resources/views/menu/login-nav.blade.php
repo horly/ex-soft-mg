@@ -1,14 +1,21 @@
-<nav class="bg-primary d-flex align-items-center justify-content-between">
+<nav class="bg-primary d-flex align-items-center justify-content-between presta-bg-color">
     <div>
-        <div class="d-flex align-items-end ms-3" id="logo-nav-zone">
-            <img class="rounded mx-auto d-block me-2" src="{{ asset('assets/img/logo/exad.jpeg') }}" alt="" srcset="" width="150">
-            <span class="text-white fw-bold h3">ERP</span>
-        </div>
+        @if (config('app.name') == "EXADERP")
+            <div class="d-flex align-items-center ms-3 p-2" id="logo-nav-zone">
+                <img class="mx-auto d-block me-2" src="{{ asset('assets/img/logo/exad-logo-white.png') }}" alt="" srcset="" height="40">
+                <span class="text-white fw-bold h1">ERP</span>
+            </div>
+        @else
+
+            <div class="d-flex align-items-end ms-3" id="logo-nav-zone">
+                <img class="rounded mx-auto d-block me-2" src="{{ asset('assets/img/logo/Prestavice-white1.png') }}" alt="" srcset="" width="150">
+            </div>
+        @endif
     </div>
 
     <div class="d-flex align-items-center">
         <div class="dropdown-personal-menu me-2">
-            <button class="dropbtn">
+            <button class="dropbtn presta-bg-color">
                 <i class="fa-solid fa-language"></i> Lang
                 @if (Config::get('app.locale') == 'en')
                     <i class="flag-icon flag-icon-gb rounded"></i>
@@ -73,7 +80,7 @@
         @endphp
 
         <div class="dropdown-personal-menu me-4">
-            <button class="dropbtn">
+            <button class="dropbtn presta-bg-color">
                 <i class="fas fa-bell fa-2x"
                     @if ($notifCount != 0)
                         data-count="
@@ -121,7 +128,7 @@
         </div>
 
         <div class="dropdown-personal-menu" style="float:right;">
-            <button class="dropbtn user">
+            <button class="dropbtn user presta-bg-color">
                 <img src="{{ asset('assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png" class="rounded-circle border me-2" alt="..." width="40">
                 {{ Auth::user()->name }}
                 <i class="fa-solid fa-caret-down ms-2"></i>

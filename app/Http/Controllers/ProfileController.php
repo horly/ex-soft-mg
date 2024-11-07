@@ -9,6 +9,7 @@ use App\Models\Notification;
 use App\Models\ReadNotif;
 use App\Repository\NotificationRepo;
 use App\Services\Email\Email;
+use App\Services\Server\Server;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,12 +21,14 @@ class ProfileController extends Controller
     protected $request;
     protected $email;
     protected $notificationRepo;
+    protected $server;
 
-    function __construct(Request $request, Email $email, NotificationRepo $notificationRepo)
+    function __construct(Request $request, Email $email, NotificationRepo $notificationRepo, Server $server)
     {
         $this->request = $request;
         $this->email = $email;
         $this->notificationRepo = $notificationRepo;
+        $this->server = $server;
     }
 
     public function profile()
@@ -45,13 +48,15 @@ class ProfileController extends Controller
         $id_entreprise = $this->request->input('id-entreprise');
         $id_user = $this->request->input('id-user');
 
+        $public_path = $this->server->getPublicFolder();
 
         if($type == "entreprise")
         {
             //on hashe uplodad_profile + le md5 uniqid + l'id de l'utilisateur
             $image_hash = 'upload_profile' . md5(uniqid()) . $id_entreprise;
             //$folderPath = base_path() . '/public_html/assets/img/logo/entreprise/';
-            $folderPath = config('app.public_html') . '/assets/img/logo/entreprise/';
+
+            $folderPath = $public_path . '/assets/img/logo/entreprise/';
 
             $image_parts = explode(";base64,", $image);
             $image_base64 = base64_decode($image_parts[1]);
@@ -77,7 +82,7 @@ class ProfileController extends Controller
             //on hashe uplodad_profile + le md5 uniqid + l'id de l'utilisateur
             $image_hash = 'upload_profile' . md5(uniqid()) . $id_user;
             //$folderPath = base_path() . '/public_html/assets/img/profile/';
-            $folderPath = config('app.public_html') . '/assets/img/profile/';
+            $folderPath = $public_path . '/assets/img/profile/';
 
             $image_parts = explode(";base64,", $image);
             $image_base64 = base64_decode($image_parts[1]);

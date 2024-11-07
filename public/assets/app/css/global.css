@@ -126,10 +126,21 @@
     border-radius: 5px;
  }
 
+ .auth-login-presta {
+    margin-bottom: 100px;
+ }
+
  * {
     transform: scale('0.75') !important;
  }
 
+ #main, body {
+    background: #e6eaee !important;
+ }
+
+ #logo-exad-erp {
+    height: 50px;
+}
 
 
 @media only screen and (max-width: 1200px) {

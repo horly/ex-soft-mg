@@ -615,3 +615,17 @@ function payment_terms_select()
 }
 
 
+function setNoteDoc(id, note_content)
+{
+    var edit = $('#edit-text').val();
+
+    //console.log(edit);
+
+    $('#id_note').val(id);
+    $('#customerRequest').val('edit');
+    $('#add-note').text(edit);
+
+    $('#note_content').val(note_content);
+}
+
+

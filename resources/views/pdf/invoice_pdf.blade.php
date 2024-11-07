@@ -88,6 +88,10 @@
             font-weight: bold;
         }
 
+        .fst-italic {
+            font-style: italic;
+        }
+
         .footer {
             position: fixed;
             bottom: 0cm;
@@ -139,8 +143,8 @@
         </div>
     @else
         <div class="box small-text">
-            <div class="key"></div>
-            <div class="content"></div>
+            <div class="key">Date : </div>
+            <div class="content">{{ date('Y-m-d', strtotime($invoice->created_at)) }}</div>
             <div class="right">
                 {{ $contact->fullname_cl }}
             </div>
@@ -221,26 +225,41 @@
     <br>
 
     @if ($invoice->is_proforma_inv == 1)
-        <ul class="box small-text">
-            <li>
-                {{ __('invoice.validity_of_the_offer') }} :
-                {{ $invoice->validity_of_the_offer_day }}
-                {{ __('invoice.days') }}
-            </li>
-            <li>
-                {{ __('invoice.payment_terms') }} :
-                {{ $payment_terms_assign->purcentage . '%,' }}
+        <div>
+            <small>
+                <span>&#x2022;</span>&nbsp;&nbsp;
+                <span>{{ __('invoice.validity_of_the_offer') }} :</span>
+                <span>{{ $invoice->validity_of_the_offer_day }}</span>
+                <span>{{ __('invoice.days') }}</span>
+            </small>
+        </div>
+        <div>
+            <small>
+                <span>&#x2022;</span>&nbsp;&nbsp;
+                <span>{{ __('invoice.payment_terms') }} :</span>
+                <span>{{ $payment_terms_assign->purcentage . '%,' }}</span>
+
                 @if ($payment_terms_proforma->description == "after_delivery")
-                    {{ $payment_terms_assign->day_number }}
-                    {{ __('invoice.days') }}
-                    {{ __('invoice.after_delivery') }}
+                    <span>{{ $payment_terms_assign->day_number }}</span>
+                    <span>{{ __('invoice.days') }}</span>
+                    <span>{{ __('invoice.after_delivery') }}</span>
                 @else
-                    {{ __('invoice.to_order') }}
+                    <span>{{ __('invoice.to_order') }}</span>
                 @endif
-            </li>
-        </ul>
+            </small>
+        </div>
     @endif
 
+
+    <br>
+
+    @foreach ($notes as $note)
+    @if ($note->type_note == 'list')
+        <small>&#x2022;</small>
+            &nbsp;&nbsp;
+        @endif
+        <small class="@if ($note->bold_note == 1) fw-bold @endif @if ($note->italic_note == 1) fst-italic @endif">{{ $note->note_content }}</small><br>
+    @endforeach
 
     <br>
     @php

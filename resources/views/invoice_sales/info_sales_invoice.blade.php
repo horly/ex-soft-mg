@@ -185,6 +185,10 @@
                         </tbody>
                     </table>
 
+                    {{-- Note --}}
+                    @include('invoice_sales.commun.note_document')
+
+
                     <div class="border-bottom mb-4 fw-bold">
                         {{ __('invoice.payment_details') }}
                     </div>

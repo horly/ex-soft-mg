@@ -112,7 +112,11 @@
             <div class="d-flex justify-content-between">
                 <div class="logo">
                     <a href="#">
-                        <img src="{{ asset('assets/img/logo/exad.jpeg') }}" alt="Logo" srcset="">
+                        @if (config('app.name') == "EXADERP")
+                            <img src="{{ asset('assets/img/logo/exad-logo.png') }}" id="logo-exad-erp" alt="Logo" srcset="">
+                        @else
+                            <img src="{{ asset('assets/img/logo/Prestavice-logo-erp1.png') }}" id="logo-presta" alt="Logo" srcset="">
+                        @endif
                     </a>
                 </div>
                 <div class="toggler">

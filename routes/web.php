@@ -441,6 +441,9 @@ Route::controller(SalesInvoiceController::class)->group(function(){
 
         Route::post('/setup_enrance', 'setup_enrance')->name('app_setup_enrance');
         Route::post('/save_entrance', 'save_entrance')->name('app_save_entrance');
+
+        Route::post('/add_note_invoice', 'add_note_invoice')->name('app_add_note_invoice');
+        Route::post('/delete_note_invoice', 'delete_note_invoice')->name('app_delete_note_invoice');
     });
 });
 
@@ -486,6 +489,7 @@ Route::controller(ExpensesController::class)->group(function(){
         Route::post('/upload_purchase_pdf', 'uploadPurchasePdf')->name('app_upload_purchase_pdf');
         Route::post('/save_purchase', 'savePurchase')->name('app_save_purchase');
         Route::post('/delete_purchase', 'deletePurchase')->name('app_delete_purchase');
+        Route::post('/delete_purchase_file', 'delete_purchase_file')->name('app_delete_purchase_file');
 
         Route::post('/setup_expense', 'setUpExpense')->name('app_setup_expense');
         Route::post('/save_expense', 'saveExpense')->name('app_save_expense');

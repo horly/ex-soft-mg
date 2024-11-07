@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\SavePurchaseForm;
 use Illuminate\Support\Facades\Session;
 use App\Repository\GenerateRefenceNumber;
+use App\Services\Server\Server;
 
 class ExpensesController extends Controller
 {
@@ -22,16 +23,19 @@ class ExpensesController extends Controller
     protected $entrepriseRepo;
     protected $notificationRepo;
     protected $generateReferenceNumber;
+    protected $server;
 
     function __construct(Request $request,
                             EntrepriseRepo $entrepriseRepo,
                             NotificationRepo $notificationRepo,
-                            GenerateRefenceNumber $generateReferenceNumber)
+                            GenerateRefenceNumber $generateReferenceNumber,
+                            Server $server)
     {
         $this->request = $request;
         $this->entrepriseRepo = $entrepriseRepo;
         $this->notificationRepo = $notificationRepo;
         $this->generateReferenceNumber = $generateReferenceNumber;
+        $this->server = $server;
     }
 
     public function purchases($group, $id, $id2)
@@ -226,8 +230,10 @@ class ExpensesController extends Controller
 
         //$this->request->file_purchase->move(base_path() . '/public_html/assets/img/purchase/', $file);
 
-        $path = config('app.public_html') . '/assets/img/purchase/';
-        $fileExist = config('app.public_html') . '/assets/img/purchase/' . $ref_purchase . '.pdf';
+        $public_path = $this->server->getPublicFolder();
+
+        $path = $public_path . '/assets/img/purchase/';
+        $fileExist = $public_path . '/assets/img/purchase/' . $ref_purchase . '.pdf';
 
         if (file_exists($fileExist)) {
             unlink($fileExist);
@@ -407,11 +413,12 @@ class ExpensesController extends Controller
         }
 
         //Notification
-        $url = route('app_purchases', ['id' => $id_entreprise, 'id2' => $id_fu]);
+        $url = route('app_purchases', ['group' => 'expense', 'id' => $id_entreprise, 'id2' => $id_fu]);
         $description = "expenses.deleted_a_purchase_invoice";
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_purchases', [
+            'group' => 'expense',
             'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('expenses.purchase_invoice_successfully_deleted'));
     }
@@ -599,6 +606,25 @@ class ExpensesController extends Controller
                 'id' => $id_entreprise,
                 'id2' => $id_fu,
             ])->with('success', __('expenses.expense_updated_successfully'));
+        }
+    }
+
+    public function delete_purchase_file()
+    {
+        $ref_purchase =  $this->request->input('id_element');
+
+        //$this->request->file_purchase->move(base_path() . '/public_html/assets/img/purchase/', $file);
+
+        $public_path = $this->server->getPublicFolder();
+
+        $path = $public_path . '/assets/img/purchase/';
+        $fileExist = $public_path . '/assets/img/purchase/' . $ref_purchase . '.pdf';
+
+        if (file_exists($fileExist)) {
+            unlink($fileExist);
+            return redirect()->back()->with('success', __('expenses.file_deleted_successfully')); //file deleted successfully!
+        } else {
+            return redirect()->back()->with('danger', __('expenses.no_files_found_to_delete'));
         }
     }
 

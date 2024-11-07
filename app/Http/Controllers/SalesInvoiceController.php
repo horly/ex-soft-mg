@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddNoteForm;
 use App\Http\Requests\SaveSaleInvoiceForm;
 use App\Models\Decaissement;
 use App\Models\Encaissement;
 use App\Models\Entrance;
 use App\Models\InvoiceElement;
 use App\Models\InvoiceMargin;
+use App\Models\NoteDocument;
 use App\Models\PaymentTermsAssign;
 use App\Models\SalesInvoice;
 use App\Models\SerialNumberInvoice;
@@ -908,6 +910,10 @@ class SalesInvoiceController extends Controller
                     'id_perms' => $billing->id
                 ])->first();
 
+        $type_doc = "invoice";
+
+        $notes = DB::table('note_documents')->where('reference_doc', $ref_invoice)->get();
+
         return view('invoice_sales.info_sales_invoice', compact(
             'entreprise',
             'functionalUnit',
@@ -924,7 +930,9 @@ class SalesInvoiceController extends Controller
             'paymentMethods',
             'contact',
             'purchases',
-            'permission_assign'
+            'permission_assign',
+            'type_doc',
+            'notes'
         ));
     }
 
@@ -1308,6 +1316,10 @@ class SalesInvoiceController extends Controller
                 ->where('id', $payment_terms_assign->id_payment_terms)->first();
         }
 
+        $type_doc = "proforma";
+
+        $notes = DB::table('note_documents')->where('reference_doc', $ref_invoice)->get();
+
         return view('invoice_sales.proforma.info_proforma', compact(
             'entreprise',
             'functionalUnit',
@@ -1326,6 +1338,8 @@ class SalesInvoiceController extends Controller
             'permission_assign',
             'payment_terms_assign',
             'payment_terms_proforma',
+            'type_doc',
+            'notes'
         ));
     }
 
@@ -1618,6 +1632,14 @@ class SalesInvoiceController extends Controller
                     'id_perms' => $billing->id
                 ])->first();
 
+        $type_doc = "delivery_note";
+
+        $notes = DB::table('note_documents')
+                ->where([
+                    'reference_doc' => $ref_invoice,
+                    'type_doc' => $type_doc
+                ])->get();
+
         return view('delivery_note.info_delivery_note', compact(
             'entreprise',
             'functionalUnit',
@@ -1633,7 +1655,9 @@ class SalesInvoiceController extends Controller
             'remainingBalance',
             'paymentMethods',
             'contact',
-            'permission_assign'
+            'permission_assign',
+            'type_doc',
+            'notes'
         ));
     }
 
@@ -1843,5 +1867,61 @@ class SalesInvoiceController extends Controller
                 'id2' => $id_fu,
             ])->with('success', __('invoice.entrance_updated_successfully'));
         }
+    }
+
+    public function add_note_invoice(AddNoteForm $requestF)
+    {
+        //dd($requestF->all());
+
+        $id_note = $requestF->input('id_note');
+        $type_doc = $requestF->input('type_doc'); //invoice, proforma,...
+        $type_note = $requestF->input('type_note'); //list, sentence
+        $bold_note = $requestF->input('bold_note'); //on or nothing
+        $italic_note = $requestF->input('italic_note');
+        $note_content = $requestF->input('note_content');
+        $reference_doc = $requestF->input('reference_doc');
+        $customerRequest = $requestF->input('customerRequest');
+
+        if($customerRequest != "edit")
+        {
+            NoteDocument::create([
+                'type_doc' => $type_doc,
+                'type_note' => $type_note,
+                'bold_note' => $bold_note,
+                'italic_note' => $italic_note,
+                'note_content' => $note_content,
+                'reference_doc' => $reference_doc,
+            ]);
+
+            return redirect()->back()->with('success', __('invoice.note_added_successfully'));
+        }
+        else
+        {
+            DB::table('note_documents')
+                ->where('id', $id_note)
+                ->update([
+                    'type_doc' => $type_doc,
+                    'type_note' => $type_note,
+                    'bold_note' => $bold_note,
+                    'italic_note' => $italic_note,
+                    'note_content' => $note_content,
+                    'reference_doc' => $reference_doc,
+                ]);
+
+            return redirect()->back()->with('success', __('invoice.note_updated_successfully'));
+        }
+    }
+
+    public function delete_note_invoice()
+    {
+        $id_note = $this->request->input('id_element');
+
+        //dd($this->request->all());
+
+        DB::table('note_documents')
+            ->where('id', $id_note)
+            ->delete();
+
+        return redirect()->back()->with('success', __('invoice.note_deleted_successfully'));
     }
 }

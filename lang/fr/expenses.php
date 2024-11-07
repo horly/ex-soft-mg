@@ -44,4 +44,6 @@
 
         'expense_updated_successfully' => "Dépense modifiée avec succès!",
         'updated_an_expense' => "a modifié une dépense",
+        'file_deleted_successfully' => 'Fichier supprimé avec succès!',
+        'no_files_found_to_delete' => "Aucun fichier trouvé à supprimer",
     ];

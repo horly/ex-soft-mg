@@ -10,6 +10,7 @@
         </div>
     </div>
 
+    {{--
     <div class="col-md-3 mb-3">
         <div class="d-grid gap-2">
             <a class="card bg-primary text-white text-center p-4 modules" role="button" href="#">
@@ -31,4 +32,6 @@
             </a>
         </div>
     </div>
+
+    --}}
 </div>

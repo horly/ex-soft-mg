@@ -143,4 +143,18 @@
         'payment_terms' => "Payment terms",
         'to_order' => "To order",
         'after_delivery' => "After delivery",
+
+        'sentence' => "Sentence",
+        'list' => "List",
+
+        'add_a_note' => "Add a note",
+        'add_a_note_please' => "Add a note please!",
+        'bold' => "Bold",
+        'italic' => "Italic",
+
+        'preview' => "Preview",
+        'note_added_successfully' => "Note added successfully!",
+        'note_updated_successfully' => "Note updated successfully!",
+        'note_deleted_successfully' => "Note deleted successfully!",
+
 ];

@@ -17,6 +17,7 @@
 @import "../../lib/theme/vendors/perfect-scrollbar/perfect-scrollbar.css";
 @import "../../lib/theme/vendors/bootstrap-icons/bootstrap-icons.css";
 @import "../../lib/theme/css/app.css";
+@import "../../lib/theme/css/pages/auth.css";
 
 /**
  * Les pages
