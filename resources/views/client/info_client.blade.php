@@ -200,6 +200,7 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>
                                                         <a href="{{ route('app_info_proforma', [
+                                                            'group' => "sale",
                                                             'id' => $entreprise->id,
                                                             'id2' => $functionalUnit->id,
                                                             'ref_invoice' => $invoice->reference_sales_invoice ]) }}">
@@ -229,6 +230,7 @@
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('app_info_proforma', [
+                                                            'group' => "sale",
                                                             'id' => $entreprise->id,
                                                             'id2' => $functionalUnit->id,
                                                             'ref_invoice' => $invoice->reference_sales_invoice ]) }}">
@@ -269,6 +271,7 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>
                                                         <a href="{{ route('app_info_sales_invoice', [
+                                                            'group' => "sale",
                                                             'id' => $entreprise->id,
                                                             'id2' => $functionalUnit->id,
                                                             'ref_invoice' => $invoice->reference_sales_invoice ]) }}">
@@ -308,6 +311,7 @@
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('app_info_sales_invoice', [
+                                                            'group' => "sale",
                                                             'id' => $entreprise->id,
                                                             'id2' => $functionalUnit->id,
                                                             'ref_invoice' => $invoice->reference_sales_invoice ]) }}">

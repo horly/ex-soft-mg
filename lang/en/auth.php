@@ -59,13 +59,13 @@ return [
     'enter_a_valid_lastname_please' => "Enter a valid last name please!",
 
     'enter_your_name_please' => "Enter your name please!",
-    
+
     'create_your_password' => "Create your password",
     'confirm_your_password' => "Confirm your password",
 
-    
 
-    
+
+
 
     /*
     |--------------------------------------------------------------------------
@@ -210,7 +210,7 @@ return [
 
     'error_matriculer_register_message' => "Enter the registration number please!",
 
-    'user_authentication' => "User aunthenticattion", 
+    'user_authentication' => "User aunthenticattion",
     'device_vrification' => "Device verification",
 
     'code_email_utication_message' => "We just sent your authentication code via email to",
@@ -221,7 +221,7 @@ return [
 
 
     'please_verify_your_device' => "Please verify your device",
-    'a_sin_in_attempt_requires' => "A sign in attempt requires further verification. To complete the sign in, enter the verification code.", 
+    'a_sin_in_attempt_requires' => "A sign in attempt requires further verification. To complete the sign in, enter the verification code.",
     'device' => "Device",
     'verification_code' => "Verification code",
     'if_you_did_not_attempt' => "If you did not attempt to sign in to your account, your password may be compromised.",
@@ -229,8 +229,9 @@ return [
     'to_create_a_new_strong' => "to create a new, strong password for your account.",
     'thanks' => "Thanks,",
     'the_exad_team' => "The EXAD Team",
+    'the_prestavice_team' => "The PRESTAVICE Team",
     'time_and_date' => "Time and date",
-    'on' => "on", 
+    'on' => "on",
     'click' => "Click",
     'here' => "here",
 
@@ -241,10 +242,11 @@ return [
 
     'provide_your_email_and_we_will' => "Provide your email and we will send you instructions to change your password.",
     'this_email_address_does_not_correspond_to_any_user' => "This email address does not correspond to any user.",
-    
+
     'has_invited_you_to_join' => "has invited you to join " . config('app.name') . " team.",
     'your_credentials_is' => "Your credentials is",
     'you_can_login' => "You can login",
     'or_you_can_create' => "Or you can create a new password",
     'email_verification' => "Email verification",
+
 ];

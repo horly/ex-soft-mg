@@ -66,6 +66,11 @@ class DashboardController extends Controller
 
         $amount_from_client_to_be_paied = $amount_all_invoices - $collections_all;
 
+        if($amount_from_client_to_be_paied < 0)
+        {
+            $amount_from_client_to_be_paied = 0;
+        }
+
         $amount_all_purchases = DB::table('purchases')
                                 ->where('id_fu', $functionalUnit->id)
                                 ->sum('amount');

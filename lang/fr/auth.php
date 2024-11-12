@@ -209,7 +209,7 @@ return [
 
     'error_matriculer_register_message' => "Veuillez renseigner le matricule S.V.P!",
 
-    'user_authentication' => "Authentification de l'utilisateur", 
+    'user_authentication' => "Authentification de l'utilisateur",
     'device_vrification' => "Vérification de l'appareil",
 
     'code_email_utication_message' => "Nous venons d'envoyer votre code d'authentification par émail à",
@@ -227,6 +227,7 @@ return [
     'to_create_a_new_strong' => "pour créer un nouveau mot de passe fort pour votre compte.",
     'thanks' => "Merci,",
     'the_exad_team' => "L'équipe EXAD",
+    'the_prestavice_team' => "L'équipe PRESTAVICE",
     'time_and_date' => "Heure et date",
     'on' => "sur",
     'click' => "Cliquez",

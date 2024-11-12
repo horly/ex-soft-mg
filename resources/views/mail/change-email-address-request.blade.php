@@ -19,16 +19,14 @@
         <p>{{ __('auth.device') }} : <b>{{ $browser }} {{ __('auth.on') }} {{ $platform }}</b><br>
             {{ __('auth.time_and_date') }} : <b>{{ $time_date }}</b></p>
     </div>
-    
+
     <a href="{{ route('app_change_email_address', ['token' => $verification_code_secret]) }}" target="__blank">{{ __('auth.change_email_address') }}</a>
 
     <div style="margin-bottom: 20px">
         <p>{{ __('auth.thanks') }}</p>
     </div>
-    
-    <div style="margin-bottom: 20px">
-        <b>{{ __('auth.the_exad_team') }}.</b>
-    </div>
+
+    @include('mail.team')
 
 </body>
 </html>

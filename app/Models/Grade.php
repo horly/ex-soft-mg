@@ -16,8 +16,10 @@ class Grade extends Model
     ];
 
     /** Un grade appartien plusieurs utilisateurs */
+    /*
     public function users()
     {
         return $this->hasMany('App\Models\User');
     }
+        */
 }

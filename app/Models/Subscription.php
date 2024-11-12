@@ -12,7 +12,9 @@ class Subscription extends Model
     protected $table = "subscriptions";
 
     protected $fillable = [
+        'reference',
         'type',
+        'description',
         'start_date',
         'end_date',
     ];

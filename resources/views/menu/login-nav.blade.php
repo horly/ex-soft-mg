@@ -134,6 +134,9 @@
                 <i class="fa-solid fa-caret-down ms-2"></i>
             </button>
             <div class="dropdown-content nav-login-dropdown">
+                @if(Auth::user()->role->name == "superadmin")
+                <a class="dropdown-item" href="{{ route('app_super_admin_dashboard') }}"><i class="fa-solid fa-user-tie"></i> {{ __('super_admin.super_admin_dashboard') }}</a>
+                @endif
                 <hr class="dropdown-divider">
                 <a class="dropdown-item" href="{{ route('app_main') }}"><i class="fa-solid fa-house"></i> {{ __('main.home') }}</a>
                 <hr class="dropdown-divider">

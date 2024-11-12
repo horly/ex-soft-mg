@@ -111,7 +111,7 @@ class LoginController extends Controller
 
     public function addUserPage()
     {
-        $grades = DB::table('grades')->get();
+        //$grades = DB::table('grades')->get();
         $roles = null;
 
         if(Auth::user()->role->name == "superadmin")
@@ -132,7 +132,7 @@ class LoginController extends Controller
                         ->get();
 
         return view('auth.add_user_page', [
-            'grades' => $grades,
+            //'grades' => $grades,
             'roles' => $roles,
             'countries_gb' => $countries_gb,
             'countries_fr' => $countries_fr,
@@ -177,7 +177,7 @@ class LoginController extends Controller
                 'password' => Hash::make($password),
                 'role_id' => $role,
                 'grade' => $grade,
-                'grade_id' => 1,
+                //'grade_id' => 1,
                 'id_country' => $countryUsr,
                 'phone_number' => $phone_number,
                 'matricule' => $matricule,

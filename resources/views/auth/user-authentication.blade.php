@@ -94,7 +94,7 @@
 
 
 
-                    <form class="card" method="post" action="{{ route('app_confirm_auth') }}">
+                    <form method="post" action="{{ route('app_confirm_auth') }}">
                         @csrf
 
                             <div class="alert alert-primary text-center" role="alert">
@@ -122,7 +122,7 @@
                                     </a>
                                 </div>
                                 <div>
-                                    <a href="{{ route('app_resend_device_auth_code', ['secret' => $secret]) }}" role="button" class="link-underline-light save">{{ __('auth.resend_code')}}</a>
+                                    <a href="{{ route('app_resend_device_auth_code', ['secret' => $secret]) }}" class="link-underline-light save">{{ __('auth.resend_code')}}</a>
                                     <a href="#" class="link-underline-light btn-loading d-none">
                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                         {{ __('auth.loading') }}

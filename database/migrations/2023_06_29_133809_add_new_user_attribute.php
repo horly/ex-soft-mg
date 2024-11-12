@@ -19,12 +19,13 @@ return new class extends Migration
                 ->references('id')->on('roles')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-
+            /*
             $table->bigInteger('grade_id')->unsigned()->index();
             $table->foreign('grade_id')
                 ->references('id')->on('grades')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+                */
         });
     }
 

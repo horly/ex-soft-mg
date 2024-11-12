@@ -79,7 +79,7 @@
 
 
 
-                    <form class="card" method="post" action="{{ route('app_change_password_post') }}">
+                    <form method="post" action="{{ route('app_change_password_post') }}">
                         @csrf
 
                         @include('message.flash-message')

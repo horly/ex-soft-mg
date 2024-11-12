@@ -22,6 +22,7 @@ use App\Http\Controllers\ReceivableController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SalesInvoiceController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\SupplierController;
 use FontLib\Table\Type\name;
 use Illuminate\Support\Facades\DB;
@@ -529,6 +530,21 @@ Route::controller(ReportController::class)->group(function(){
 
                 });
             });
+        });
+    });
+});
+
+Route::controller(SuperAdminController::class)->group(function(){
+    Route::middleware('auth')->group(function(){
+        Route::middleware('super_admin')->group(function(){
+            Route::prefix('super_admin')->group(function(){
+                Route::get('/super_admin_dashboard', 'super_admin_dashboard')->name('app_super_admin_dashboard');
+                Route::get('/subscription', 'subscription')->name('app_subscription');
+                Route::get('/user', 'user_super_admin')->name('app_user_super_admin');
+                Route::get('/add_subscription/{id:int}', 'add_subscription')->name('app_add_subscription');
+            });
+
+            Route::post('/create_subscription', 'create_subscription')->name('app_create_subscription');
         });
     });
 });

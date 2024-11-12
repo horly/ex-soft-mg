@@ -70,7 +70,7 @@
 
 
 
-                    <form class="card" method="post" action="{{ route('app_email_reset_password_post') }}">
+                    <form method="post" action="{{ route('app_email_reset_password_post') }}">
                         @csrf
 
                             <div class="alert alert-primary text-center" role="alert">

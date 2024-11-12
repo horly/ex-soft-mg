@@ -32,7 +32,7 @@ class User extends Authenticatable
         'two_factor_recovery_codes',
         'two_factor_confirmed_at',
         'role_id',
-        'grade_id',
+        //'grade_id',
         'sub_id',
         'id_country',
         'grade',
@@ -67,10 +67,11 @@ class User extends Authenticatable
     }
 
     /** Un Utilisateurs appartient à un grade */
+    /*
     function grade()
     {
         return $this->belongsTo('App\Models\Grade', 'grade_id');
-    }
+    } */
 
     /** Un user contient plusieurs historique */
     public function connectionHistory()
