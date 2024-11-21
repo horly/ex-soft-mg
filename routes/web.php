@@ -545,6 +545,7 @@ Route::controller(SuperAdminController::class)->group(function(){
             });
 
             Route::post('/create_subscription', 'create_subscription')->name('app_create_subscription');
+            Route::post('/delete_subscription', 'delete_subscription')->name('app_delete_subscription');
         });
     });
 });

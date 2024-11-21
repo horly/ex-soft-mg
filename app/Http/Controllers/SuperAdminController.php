@@ -27,7 +27,7 @@ class SuperAdminController extends Controller
 
     public function subscription()
     {
-        $subscriptions = DB::table('subscriptions')->get();
+        $subscriptions = DB::table('subscriptions')->orderByDesc('id')->get();
 
         return view('super_admin.subscription', compact('subscriptions'));
     }
@@ -114,5 +114,14 @@ class SuperAdminController extends Controller
 
             return redirect()->route('app_subscription')->with('success', __('super_admin.subscription_updated_successfully'));
         }
+    }
+
+    public function delete_subscription()
+    {
+        $id_sub = $this->request->input('id_element');
+
+        DB::table('subscriptions')->where('id', $id_sub)->delete();
+
+        return redirect()->route('app_subscription')->with('success', __('super_admin.subscription_deleted_successfully'));
     }
 }

@@ -233,7 +233,7 @@
         <div class="key"></div>
         <div class="content"></div>
         <div class="right fw-bold">
-            {{ $grade->name }}
+            {{ $user->grade }}
         </div>
     </div>
 

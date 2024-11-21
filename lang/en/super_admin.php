@@ -18,4 +18,5 @@ return [
     'enter_the_subscription_description' => "Enter the subscription description",
     'subscription_added_successfully' => "Subscription added successfully!",
     'subscription_updated_successfully' => "Subscription updated successfully!",
+    'subscription_deleted_successfully' => "Subscription deleted successfully!",
 ];

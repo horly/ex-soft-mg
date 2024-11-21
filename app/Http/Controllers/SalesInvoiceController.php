@@ -1020,7 +1020,7 @@ class SalesInvoiceController extends Controller
             ]);
 
             //Notification
-            $url = route('app_info_sales_invoice', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
+            $url = route('app_info_sales_invoice', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu, 'ref_invoice' => $ref_invoice]);
             $description = "invoice.recorded_an_invoice_payment";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
         }
@@ -1037,7 +1037,7 @@ class SalesInvoiceController extends Controller
             ]);
 
             //Notification
-            $url = route('app_update_purchase', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_purchase' => $ref_invoice]);
+            $url = route('app_update_purchase', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu, 'ref_purchase' => $ref_invoice]);
             $description = "expenses.recorded_a_supplier_payment";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
         }

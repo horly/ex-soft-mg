@@ -113,10 +113,22 @@
                                 </div>
                             @endif
 
-                            {{-- button de sauvegarde --}}
-                            @include('button.save-button')
-
-
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{-- button de sauvegarde --}}
+                                    @include('button.save-button')
+                                </div>
+                                <div class="col-md-6">
+                                    @if ($subscription)
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $subscription->id }}', '{{ route('app_delete_subscription') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                                {{ __('entreprise.delete') }}
+                                            </button>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>

@@ -290,7 +290,7 @@ class CustomerController extends Controller
             ]);
 
              //Notification
-             $url = route('app_info_customer', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_client]);
+             $url = route('app_info_customer', ['group' => 'customer', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_client]);
              $description = "client.added_a_customer_contact";
              $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -310,7 +310,7 @@ class CustomerController extends Controller
                     'updated_at' => new \DateTimeImmutable
             ]);
 
-            $url = route('app_info_customer', ['id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_client]);
+            $url = route('app_info_customer', ['group' => 'customer', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_client]);
             $description = "client.updated_a_customer_contact";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 

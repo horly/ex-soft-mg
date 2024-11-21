@@ -18,4 +18,5 @@ return [
     'enter_the_subscription_description' => "Entrez la description de l'abonnement",
     'subscription_added_successfully' => "Abonnement ajouté avec succès!",
     'subscription_updated_successfully' => "Abonnement modifié avec succès!",
+    'subscription_deleted_successfully' => "Abonnement supprimé avec succès!",
 ];
