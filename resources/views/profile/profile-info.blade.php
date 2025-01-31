@@ -2,7 +2,11 @@
     <div class="col-md-4">
         <div class="p-4">
             <div class="text-center mb-4 profile">
-                <img src="{{ asset('assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png" class="image rounded-circle img-fluid img-thumbnail" alt="...">
+                @if (config('app.server') != "lws")
+                    <img src="{{ asset('assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png" class="image rounded-circle img-fluid img-thumbnail" alt="...">
+                @else
+                    <img src="{{ asset('ex-soft-mg/public/assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png" class="image rounded-circle img-fluid img-thumbnail" alt="...">
+                @endif
                 <div class="middle">
                     <div class="d-grid gap-2">
                         <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#edit-photo">

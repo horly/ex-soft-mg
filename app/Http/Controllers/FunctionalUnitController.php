@@ -38,17 +38,17 @@ class FunctionalUnitController extends Controller
         $address = $requestionF->input('unit_address');
         $unit_phone = $requestionF->input('unit_phone');
         $unit_email = $requestionF->input('unit_email');
-        $id_entreprise = $requestionF->input('id_entreprise'); 
-        $id_fu = $requestionF->input('id_fu'); 
+        $id_entreprise = $requestionF->input('id_entreprise');
+        $id_fu = $requestionF->input('id_fu');
         $fuRequest = $requestionF->input('fuRequest');
 
         if($fuRequest != "edit")
         {
             $functUnit = FunctionalUnit::create([
                 'name' => $name,
-                'address' => $address, 
+                'address' => $address,
                 'id_entreprise' => $id_entreprise,
-                'sub_id' => $user->id,
+                'sub_id' => $user->sub_id,
             ]);
 
             FunctionalUnitPhone::create([
@@ -89,7 +89,7 @@ class FunctionalUnitController extends Controller
                 ->where('id', $id_fu)
                 ->update([
                     'name' => $name,
-                    'address' => $address, 
+                    'address' => $address,
                     'updated_at' => new \DateTimeImmutable,
             ]);
 
@@ -107,14 +107,14 @@ class FunctionalUnitController extends Controller
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
             return redirect()->route('app_fu_infos', ['id' => $id_entreprise, 'id2' => $id_fu])->with('success', __('entreprise.functional_unit_updated_successfully'));
-        }  
+        }
     }
 
     public function modules($id, $id2)
     {
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
-        
+
         return view('functional_unit.modules', compact('entreprise', 'functionalUnit'));
     }
 
@@ -183,15 +183,15 @@ class FunctionalUnitController extends Controller
             'id_fu' => $functionalUnit->id,
             'default_cur_manage' => 1,
         ])->first();
-        
+
         $deviseDefault = DB::table('devises')->where('id', $deviseGest->id_devise)->first();
 
         return view('functional_unit.update-functional-unit', compact(
-            'entreprise', 
-            'functionalUnit', 
-            'phones', 
-            'emails', 
-            'country', 
+            'entreprise',
+            'functionalUnit',
+            'phones',
+            'emails',
+            'country',
             'devises',
             'deviseDefault',
         ));
@@ -226,7 +226,7 @@ class FunctionalUnitController extends Controller
                         'phone_number' => $phone,
                         'updated_at' => new \DateTimeImmutable,
                     ]);
-            
+
             //Notification
             $url = route('app_fu_infos', ['id' => $fu->id_entreprise, 'id2' => $id_fu]);
             $description = "entreprise.changed_the_functional_unit_phone_number";
@@ -246,7 +246,7 @@ class FunctionalUnitController extends Controller
         DB::table('functional_unit_phones')
                     ->where('id', $id_phone)
                     ->delete();
-        
+
         //Notification
         $url = route('app_fu_infos', ['id' => $fu->id_entreprise, 'id2' => $fu->id]);
         $description = "entreprise.deteled_the_functional_unit_phone_number";
@@ -275,7 +275,7 @@ class FunctionalUnitController extends Controller
             $url = route('app_fu_infos', ['id' => $fu->id_entreprise, 'id2' => $id_fu]);
             $description = "entreprise.added_a_functional_unit_email_address";
             $this->notificationRepo->setNotification($fu->id_entreprise, $description, $url);
-    
+
             return redirect()->back()->with('success', __('entreprise.email_address_added_successfully'));
         }
         else
@@ -306,7 +306,7 @@ class FunctionalUnitController extends Controller
         DB::table('functionalunit_emails')
                     ->where('id', $id_email)
                     ->delete();
-        
+
         //Notification
         $url = route('app_fu_infos', ['id' => $fu->id_entreprise, 'id2' => $fu->id]);
         $description = "entreprise.deteled_the_functional_unit_email_address";

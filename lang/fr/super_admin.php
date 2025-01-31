@@ -19,4 +19,9 @@ return [
     'subscription_added_successfully' => "Abonnement ajouté avec succès!",
     'subscription_updated_successfully' => "Abonnement modifié avec succès!",
     'subscription_deleted_successfully' => "Abonnement supprimé avec succès!",
+
+    'user_list' => "Liste des utilisateurs",
+    'add_user' => "Ajouter un utilisateur",
+    'update_user' => "Modifier un utilisateur",
+    'default_password' => "Mot de passe par défaut",
 ];

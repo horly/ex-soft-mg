@@ -33,7 +33,7 @@
         <script src="{{ asset('assets/lib/select2/select2.min.js') }}"></script>
         <script src="{{ asset('assets/lib/jqueryForm/jqueryForm.min.js') }}"></script>
 
-        @if (Request::route()->getName() == "app_entreprise_info_page" || Request::route()->getName() == "app_profile")
+        @if (Request::route()->getName() == "app_entreprise_info_page" || Request::route()->getName() == "app_profile" || Request::route()->getName() == "app_signature" || Request::route()->getName() == "app_seal")
             <script src="{{ asset('assets/lib/cropper/js/cropper.js') }}"></script>
             <script src="{{ asset('assets/lib/cropper/js/cropper-init.js') }}"></script>
         @endif

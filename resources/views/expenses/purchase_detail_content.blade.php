@@ -151,9 +151,11 @@
                             <button class="btn btn-primary" type="submit" id="button-addon2">
                                 <i class="fa-solid fa-floppy-disk"></i>
                             </button>
-                            <button class="btn btn-danger" type="button" id="button-addon2" onclick="deleteElement('{{ $purchases->reference_purch }}', '{{ route('app_delete_purchase_file') }}', '{{ csrf_token() }}');">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
+                            {{--
+                                <button class="btn btn-danger" type="button" id="button-addon2" onclick="deleteElement('{{ $purchases->reference_purch }}', '{{ route('app_delete_purchase_file') }}', '{{ csrf_token() }}');">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            --}}
                         </div>
                         <small class="text-danger" id="file_purchase-error"></small>
 

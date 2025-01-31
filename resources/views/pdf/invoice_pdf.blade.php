@@ -7,6 +7,41 @@
     <title>{{ $invoice->reference_sales_invoice }}</title>
 </head>
 <body>
+    @php
+        $title_color = "";
+        $border_title_color = "";
+        $th_table = "";
+        $th_table_child = "";
+        $border_bottom1 = "";
+        $border_bottom2 = "";
+        $table_border = "";
+        $footer = "";
+        $citation = "";
+
+        if (config('app.name') == "EXADERP") {
+            $title_color = "#0d3d9e";
+            $border_title_color = "#0d3d9e";
+            $th_table = "#2652a8";
+            $th_table_child = "#99add6";
+            $border_bottom1 = "#bfcce6";
+            $border_bottom2 = "#0d3d9e";
+            $table_border = "#bfcce6";
+            $footer = "#0d3d9e";
+            $citation = "#0d3d9e";
+        } else {
+            $title_color = "#754C24";
+            $border_title_color = "#754C24";
+            $th_table = "#754C24";
+            $th_table_child = "#ecbf93";
+            $border_bottom1 = "#f4e3d2";
+            $border_bottom2 = "#754C24";
+            $table_border = "#f7ede4";
+            $footer = "#754C24";
+            $citation = "#754C24";
+        }
+
+    @endphp
+
     <style>
 
         .small-text {
@@ -18,16 +53,16 @@
         }
 
         .invoice-title {
-            color: #0d3d9e;
-            border-bottom: 2px solid #0d3d9e;
+            color: {{ $title_color }};
+            border-bottom: 2px solid {{ $border_title_color }};
         }
 
         .border-bottom-1 {
-            border-bottom: 2px solid #bfcce6;
+            border-bottom: 2px solid {{ $border_bottom1 }};
         }
 
         .border-bottom-2 {
-            border-bottom: 2px solid #0d3d9e;
+            border-bottom: 2px solid {{ $border_bottom2 }};
         }
 
         .box div {
@@ -63,21 +98,21 @@
             border-collapse: collapse;
             border-spacing: 0;
             width: 100%;
-            border: 1px solid #bfcce6;
+            border: 1px solid {{ $table_border }};
         }
 
         .table th, td {
-            border: 1px solid #bfcce6;
+            border: 1px solid {{ $table_border }};
             padding: 5px;
         }
 
         .table th {
-            background-color: #2652a8;
+            background-color: {{ $th_table }};
             color: #fff;
         }
 
         .table tr:nth-child(even) {
-            background-color: #99add6;
+            background-color: {{ $th_table_child }};
         }
 
         .mb-3 {
@@ -99,18 +134,18 @@
             right: 0cm;
             height: 2cm;
 
-            border-top: 2px solid #0d3d9e;
+            border-top: 2px solid {{ $footer }};
         }
 
         .citation {
-            color: #0d3d9e;
+            color: {{ $citation }};
             font-style: italic;
         }
     </style>
 
     <div class="header">
         @if ($logo != 0 || $logo != '0')
-        <img src="{{ $logo }}" alt="" width="150">
+            <img src="{{ $logo }}" alt="" width="150">
         @else
             <h1>LOGO</h1>
         @endif
@@ -300,6 +335,10 @@
         </div>
     </div>
 
+    <div>
+        <img src="data:image/png;base64,{{ $qrcode }}" alt="QR Code">
+    </div>
+
 
     <div class="footer small-text-sm">
         @php
@@ -341,9 +380,16 @@
             @endforeach
         </div>
 
-        <div class="citation">
-            {{ __('invoice.invoice_generated_by_EXADERP') }}
-        </div>
+        @if (config('app.name') == "EXADERP")
+            <div class="citation">
+                {{ __('invoice.invoice_generated_by_EXADERP') }}
+            </div>
+        @else
+            <div class="citation">
+                {{ __('invoice.invoice_generated_by_PRESTAVICEERP') }}
+            </div>
+        @endif
+
 
     </div>
 

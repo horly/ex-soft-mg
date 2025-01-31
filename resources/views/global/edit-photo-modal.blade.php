@@ -2,19 +2,44 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5">{{ __('entreprise.edit_photo')}}</h1>
+                <h1 class="modal-title fs-5" id="title_crop_photo">{{ __('entreprise.edit_photo')}}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="img-container1">
 
                     @if (Request::route()->getName() == "app_entreprise_info_page")
-                        <img id="image" class="image img-fluid border" src="{{ asset('assets/img/logo/entreprise')}}/{{ $entreprise->url_logo }}.png">
+                        @if (config('app.server') != "lws")
+                            <img id="image" class="image img-fluid border" src="{{ asset('assets/img/logo/entreprise')}}/{{ $entreprise->url_logo }}.png">
+                        @else
+                            <img id="image" class="image img-fluid border" src="{{ asset('ex-soft-mg/public/assets/img/logo/entreprise')}}/{{ $entreprise->url_logo }}.png">
+                        @endif
                     @endif
 
                     @if (Request::route()->getName() == "app_profile")
-                        <img id="image" class="image img-fluid border" src="{{ asset('assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png">
+                        @if (config('app.server') != "lws")
+                            <img id="image" class="image img-fluid border" src="{{ asset('assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png">
+                        @else
+                            <img id="image" class="image img-fluid border" src="{{ asset('ex-soft-mg/public/assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png">
+                        @endif
                     @endif
+
+                    @if (Request::route()->getName() == "app_signature")
+                        @if (config('app.server') != "lws")
+                            <img id="image" class="image img-fluid border" src="{{ asset('assets/img/invoice/signature/SIGN_') }}{{ Auth::user()->signature_id }}.jpg">
+                        @else
+                            <img id="image" class="image img-fluid border" src="{{ asset('ex-soft-mg/public/assets/img/invoice/signature/SIGN_') }}{{ Auth::user()->signature_id }}.jpg">
+                        @endif
+                    @endif
+
+                    @if (Request::route()->getName() == "app_seal")
+                        @if (config('app.server') != "lws")
+                            <img id="image" class="image img-fluid border" src="{{ asset('assets/img/invoice/seal/SEAL_') }}{{ Auth::user()->seal_id }}.jpg">
+                        @else
+                            <img id="image" class="image img-fluid border" src="{{ asset('ex-soft-mg/public/assets/img/invoice/seal/SEAL_') }}{{ Auth::user()->seal_id }}.jpg">
+                        @endif
+                    @endif
+
                 </div>
 
                 {{-- les informations utilisateur à passer --}}
@@ -106,6 +131,20 @@
                         <input type="hidden" name="id-user" id="id-user" value="{{ Auth::user()->id }}">
                         <input type="hidden" name="id-entreprise" id="id-entreprise" value="null">
                         <input type="hidden" name="type-photo" id="type-photo" value="user">
+
+                    @endif
+
+                    @if (Request::route()->getName() == "app_signature")
+                        <input type="hidden" name="id-user" id="id-user" value="{{ Auth::user()->id }}">
+                        <input type="hidden" name="id-entreprise" id="id-entreprise" value="null">
+                        <input type="hidden" name="type-photo" id="type-photo" value="signature">
+
+                    @endif
+
+                    @if (Request::route()->getName() == "app_seal")
+                        <input type="hidden" name="id-user" id="id-user" value="{{ Auth::user()->id }}">
+                        <input type="hidden" name="id-entreprise" id="id-entreprise" value="null">
+                        <input type="hidden" name="type-photo" id="type-photo" value="seal">
 
                     @endif
 

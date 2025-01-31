@@ -75,6 +75,7 @@
         'invoice_MAJ' => "FACTURE",
         'invoice_MIN' => "Facture",
         'invoice_generated_by_EXADERP' => "Facture générée par EXADERP",
+        'invoice_generated_by_PRESTAVICEERP' => "Facture générée par PRESTAVICEERP",
 
         /**
          * Proforma invoice
@@ -156,4 +157,12 @@
         'note_added_successfully' => "Note ajoutée avec succès!",
         'note_updated_successfully' => "Note modifiée avec succès!",
         'note_deleted_successfully' => "Note supprimée avec succès!",
+
+        'settings' => "Paramètres",
+        'invoice_settings' => "Paramètres de la facture",
+        'your_signature' => "Votre signature",
+        'seal' => "Sceau/Cachet",
+
+        'signature_registered_successfully' => "Signature enregistrée avec succès",
+        'seal_registered_successfully' => "Sceau/Cachet enregistrée avec succès",
     ];

@@ -77,7 +77,7 @@ class ProfileController extends Controller
 
             return redirect()->back()->with('success', __('entreprise.photo_saved_successfully'));
         }
-        else
+        else if($type == "user")
         {
             //on hashe uplodad_profile + le md5 uniqid + l'id de l'utilisateur
             $image_hash = 'upload_profile' . md5(uniqid()) . $id_user;
@@ -98,6 +98,48 @@ class ProfileController extends Controller
             ]);
 
             return redirect()->back()->with('success', __('entreprise.photo_saved_successfully'));
+        }
+        else if($type == "signature")
+        {
+            //on hashe uplodad_profile + le md5 uniqid + l'id de l'utilisateur
+            $image_hash = 'SIGN_' . $id_user;
+            //$folderPath = base_path() . '/public_html/assets/img/profile/';
+            $folderPath = $public_path . '/assets/img/invoice/signature/';
+
+            $image_parts = explode(";base64,", $image);
+            $image_base64 = base64_decode($image_parts[1]);
+            $file = $folderPath . $image_hash . '.jpg';
+            file_put_contents($file, $image_base64);
+
+            DB::table('users')
+                ->where('id', $id_user)
+                ->update([
+                'signature_id' => $id_user,
+                'updated_at' => new \DateTimeImmutable
+            ]);
+
+            return redirect()->back()->with('success', __('invoice.signature_registered_successfully'));
+        }
+        else
+        {
+            //on hashe uplodad_profile + le md5 uniqid + l'id de l'utilisateur
+            $image_hash = 'SEAL_' . $id_user;
+            //$folderPath = base_path() . '/public_html/assets/img/profile/';
+            $folderPath = $public_path . '/assets/img/invoice/seal/';
+
+            $image_parts = explode(";base64,", $image);
+            $image_base64 = base64_decode($image_parts[1]);
+            $file = $folderPath . $image_hash . '.jpg';
+            file_put_contents($file, $image_base64);
+
+            DB::table('users')
+                ->where('id', $id_user)
+                ->update([
+                'seal_id' => $id_user,
+                'updated_at' => new \DateTimeImmutable
+            ]);
+
+            return redirect()->back()->with('success', __('invoice.seal_registered_successfully'));
         }
     }
 

@@ -40,12 +40,20 @@
                 <div class="card">
                     <div class="card-body">
 
-                        @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
-                            <a href="#" onclick="setUpinvoice('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_invoice') }}', '{{ 0 }}', '{{ 0 }}', '{{ 0 }}', '{{ 0 }}')" class="btn btn-primary mb-3" role="button">
-                                <i class="fa-solid fa-circle-plus"></i>
-                                &nbsp;{{ __('auth.add') }}
+                        <div class="mb-3">
+                            @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                                <a href="#" onclick="setUpinvoice('{{ $functionalUnit->id }}', '{{  $entreprise->id }}', '{{ csrf_token() }}', '{{ route('app_setup_invoice') }}', '{{ 0 }}', '{{ 0 }}', '{{ 0 }}', '{{ 0 }}')" class="btn btn-primary" role="button">
+                                    <i class="fa-solid fa-circle-plus"></i>
+                                    &nbsp;{{ __('auth.add') }}
+                                </a>
+                            @endif
+                            {{--
+                            <a href="{{ route('app_signature', ['group' => 'sale', 'id' => $entreprise->id, 'id2' => $functionalUnit->id]) }}" class="btn btn-primary" role="button">
+                                <i class="fa-solid fa-gear"></i>
+                                &nbsp;{{ __('invoice.settings') }}
                             </a>
-                        @endif
+                            --}}
+                        </div>
 
                         <table class="table table-striped table-hover border bootstrap-datatable">
                             <thead>

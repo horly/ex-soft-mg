@@ -38,9 +38,6 @@
                 </thead>
                 <tbody>
                     @foreach ($users as $user)
-                        @php
-                            $grade = DB::table('grades')->where('id', $user->grade_id)->first();
-                        @endphp
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>
@@ -48,7 +45,7 @@
                             </td>
                             <td>{{ $user->matricule }}</td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $grade->name }}</td>
+                            <td>{{ $user->grade }}</td>
                             <td><a href="{{ Auth::user()->id == $user->id ? route('app_profile') : route('app_user_management_info', ['id' => $user->id ]) }}">{{ __('main.show') }}</a></td>
                         </tr>
                     @endforeach

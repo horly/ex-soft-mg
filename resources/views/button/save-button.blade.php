@@ -1,4 +1,4 @@
-<div class="d-grid gap-2">
+
     <button class="btn btn-primary save" type="submit">
         <i class="fa-solid fa-floppy-disk"></i>
       {{ __('main.save') }}
@@ -7,4 +7,3 @@
       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
       {{ __('auth.loading') }}
     </button>
-</div> 

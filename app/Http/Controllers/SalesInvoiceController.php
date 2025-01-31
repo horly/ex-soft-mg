@@ -1827,7 +1827,7 @@ class SalesInvoiceController extends Controller
             ]);
 
             //Notification
-            $url = route('app_entrances', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_entrances', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu]);
             $description = "invoice.recorded_an_entrance";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -1858,7 +1858,7 @@ class SalesInvoiceController extends Controller
                 ]);
 
             //Notification
-            $url = route('app_entrances', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_entrances', ['group' => 'sale', 'id' => $id_entreprise, 'id2' => $id_fu]);
             $description = "invoice.updated_an_entrance";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -1923,5 +1923,21 @@ class SalesInvoiceController extends Controller
             ->delete();
 
         return redirect()->back()->with('success', __('invoice.note_deleted_successfully'));
+    }
+
+    public function signature($group, $id, $id2)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        return view('invoice_sales.signature', compact('entreprise', 'functionalUnit'));
+    }
+
+    public function seal($group, $id, $id2)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+
+        return view('invoice_sales.seal', compact('entreprise', 'functionalUnit'));
     }
 }

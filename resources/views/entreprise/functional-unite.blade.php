@@ -1,6 +1,6 @@
-@if(Auth::user()->role->name == "admin")
+@if(Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
     <div class="border-bottom p-4">
-        <a href="{{ route('app_create_functional_unit', ['id' => $entreprise->id]) }}" class="btn btn-primary" role="button"><i class="fa-solid fa-building-circle-arrow-right"></i> 
+        <a href="{{ route('app_create_functional_unit', ['id' => $entreprise->id]) }}" class="btn btn-primary" role="button"><i class="fa-solid fa-building-circle-arrow-right"></i>
             &nbsp;{{ __('entreprise.create_a_functional_unit') }}
         </a>
     </div>

@@ -2,7 +2,11 @@
     <div class="col-md-4">
         <div class="p-4">
             <div class="text-center mb-4 profile">
-                <img src="{{ asset('assets/img/logo/entreprise')}}/{{ $entreprise->url_logo }}.png" class="image rounded-circle img-fluid img-thumbnail" alt="...">
+                @if (config('app.server') != "lws")
+                    <img src="{{ asset('assets/img/logo/entreprise')}}/{{ $entreprise->url_logo }}.png" class="image rounded-circle img-fluid img-thumbnail" alt="...">
+                @else
+                    <img src="{{ asset('ex-soft-mg/public/assets/img/logo/entreprise')}}/{{ $entreprise->url_logo }}.png" class="image rounded-circle img-fluid img-thumbnail" alt="...">
+                @endif
                 <div class="middle">
                     @if (Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
                         <div class="d-grid gap-2">

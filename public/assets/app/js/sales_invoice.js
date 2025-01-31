@@ -628,4 +628,9 @@ function setNoteDoc(id, note_content)
     $('#note_content').val(note_content);
 }
 
+function add_sign_seal(title)
+{
+    $('#title_crop_photo').text(title);
+}
+
 

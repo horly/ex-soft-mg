@@ -27,7 +27,7 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-        return redirect('/login');
+        return redirect()->route('login');
     }
 
     public function userChecker()
@@ -151,6 +151,10 @@ class LoginController extends Controller
         $address = $requestF->input('address');
         $matricule = $requestF->input('matricule');
 
+        $id_user = $requestF->input('id_user');
+        $customerRequest = $requestF->input('customerRequest');
+        $add_type = $requestF->input('add_type');
+
         $userExit = DB::table('users')
                         ->where('email', $email)
                         ->first();
@@ -177,7 +181,8 @@ class LoginController extends Controller
                 'password' => Hash::make($password),
                 'role_id' => $role,
                 'grade' => $grade,
-                //'grade_id' => 1,
+                'grade_id' => 1,
+                'sub_id' => Auth::user()->sub_id,
                 'id_country' => $countryUsr,
                 'phone_number' => $phone_number,
                 'matricule' => $matricule,

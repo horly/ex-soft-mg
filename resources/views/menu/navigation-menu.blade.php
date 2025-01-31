@@ -384,7 +384,9 @@
                                                     Request::route()->getName() == "app_add_new_delivery_note" ||
                                                     Request::route()->getName() == "app_info_delivery_note" ||
                                                     Request::route()->getName() == "app_entrances" ||
-                                                    Request::route()->getName() == "app_add_new_entrance")
+                                                    Request::route()->getName() == "app_add_new_entrance" ||
+                                                    Request::route()->getName() == "app_signature" ||
+                                                    Request::route()->getName() == "app_seal")
                                                         active
                                                 @endif  has-sub">
                         <a href="#" class='sidebar-link'>
@@ -405,7 +407,9 @@
                                                 Request::route()->getName() == "app_add_new_delivery_note" ||
                                                 Request::route()->getName() == "app_info_delivery_note" ||
                                                 Request::route()->getName() == "app_entrances" ||
-                                                Request::route()->getName() == "app_add_new_entrance")
+                                                Request::route()->getName() == "app_add_new_entrance" ||
+                                                Request::route()->getName() == "app_signature" ||
+                                                Request::route()->getName() == "app_seal")
                                                     active
                                             @endif">
                             <li class="submenu-item @if(Request::route()->getName() == "app_sales_invoice") active @endif">

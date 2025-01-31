@@ -23,7 +23,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
         'address',
         'phone_number',
         'matricule',
@@ -32,10 +31,12 @@ class User extends Authenticatable
         'two_factor_recovery_codes',
         'two_factor_confirmed_at',
         'role_id',
-        //'grade_id',
+        'grade_id',
         'sub_id',
         'id_country',
         'grade',
+        'signature_id',
+        'seal_id',
     ];
 
     /**

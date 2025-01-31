@@ -129,7 +129,11 @@
 
         <div class="dropdown-personal-menu" style="float:right;">
             <button class="dropbtn user presta-bg-color">
-                <img src="{{ asset('assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png" class="rounded-circle border me-2" alt="..." width="40">
+                @if (config('app.server') != "lws")
+                    <img src="{{ asset('assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png" class="rounded-circle border me-2" alt="..." width="40">
+                @else
+                    <img src="{{ asset('ex-soft-mg/public/assets/img/profile') }}/{{ Auth::user()->photo_profile_url }}.png" class="rounded-circle border me-2" alt="..." width="40">
+                @endif
                 {{ Auth::user()->name }}
                 <i class="fa-solid fa-caret-down ms-2"></i>
             </button>

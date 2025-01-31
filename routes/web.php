@@ -418,6 +418,11 @@ Route::controller(SalesInvoiceController::class)->group(function(){
 
                     Route::get('/entrances/{group:string}/{id:int}/{id2:int}', 'entrances')->name('app_entrances');
                     Route::get('/add_new_entrance/{group:string}/{id:int}/{id2:int}/{ref_entrance:string}', 'add_new_entrance')->name('app_add_new_entrance');
+
+                    Route::prefix('invoice_settings')->group(function(){
+                        Route::get('/signature/{group:string}/{id:int}/{id2:int}', 'signature')->name('app_signature');
+                        Route::get('seal/{group:string}/{id:int}/{id2:int}', 'seal')->name('app_seal');
+                    });
                 });
             });
         });
@@ -542,6 +547,7 @@ Route::controller(SuperAdminController::class)->group(function(){
                 Route::get('/subscription', 'subscription')->name('app_subscription');
                 Route::get('/user', 'user_super_admin')->name('app_user_super_admin');
                 Route::get('/add_subscription/{id:int}', 'add_subscription')->name('app_add_subscription');
+                Route::get('/add_user_admin/{id:int}', 'add_user_admin')->name('app_add_user_admin');
             });
 
             Route::post('/create_subscription', 'create_subscription')->name('app_create_subscription');

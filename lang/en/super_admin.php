@@ -19,4 +19,9 @@ return [
     'subscription_added_successfully' => "Subscription added successfully!",
     'subscription_updated_successfully' => "Subscription updated successfully!",
     'subscription_deleted_successfully' => "Subscription deleted successfully!",
+
+    'user_list' => "User list",
+    'add_user' => "Add user",
+    'update_user' => "Update user",
+    'default_password' => "Default password",
 ];

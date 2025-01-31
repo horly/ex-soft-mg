@@ -23,7 +23,11 @@
                 <div class="col-md-4">
                     <div class="p-4">
                         <div class="text-center mb-4">
-                            <img src="{{ asset('assets/img/profile') }}/{{ $user->photo_profile_url }}.png" class="image rounded-circle img-fluid img-thumbnail" alt="...">
+                            @if (config('app.server') != "lws")
+                                <img src="{{ asset('assets/img/profile') }}/{{ $user->photo_profile_url }}.png" class="image rounded-circle img-fluid img-thumbnail" alt="...">
+                            @else
+                                <img src="{{ asset('ex-soft-mg/public/assets/img/profile') }}/{{ $user->photo_profile_url }}.png" class="image rounded-circle img-fluid img-thumbnail" alt="...">
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -55,7 +59,7 @@
 
                         <div class="row mb-4">
                             <div class="col-md-4"><i class="fa-solid fa-briefcase"></i>&nbsp;&nbsp;&nbsp;{{ __('main.function') }}</div>
-                            <div class="col-md-8 text-primary fw-bold">{{ Auth::user()->grade }}</div>
+                            <div class="col-md-8 text-primary fw-bold">{{ $user->grade }}</div>
                         </div>
 
                         <div class="row mb-4">

@@ -2,20 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Server\Server;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Services\SimpleQRCode\SimpleQRCode;
 
 class DomPdfController extends Controller
 {
     //
     protected $request;
+    protected $simple_qr_code;
 
-    function __construct(Request $request)
+    function __construct(Request $request, SimpleQRCode $simple_qr_code)
     {
         $this->request = $request;
+        $this->simple_qr_code = $simple_qr_code;
     }
 
     public function invoicePdf($id, $id2, $ref_invoice)
@@ -54,6 +57,34 @@ class DomPdfController extends Controller
 
         $notes = DB::table('note_documents')->where('reference_doc', $ref_invoice)->get();
 
+        $serverName = $this->request->server('SERVER_NAME');
+        $serverPort = $this->request->server('SERVER_PORT');
+
+        ///http://127.0.0.1:8000/invoice_pdf/11/8/INV2024102409540811
+
+        $server = new Server;
+        $public_folder = $server->getPublicFolder();
+
+        $env = config('app.server');
+        $image_path = '/public/assets/img/logo/entreprise/' . $entreprise->url_logo . '.png';
+
+        $url = "";
+
+        if($env == "local")
+        {
+            //$image_path = $public_folder . '/public/assets/img/logo/entreprise/' . $entreprise->url_logo . '.png';
+            $url = "http://" . $serverName . ':' . $serverPort . '/invoice_pdf' . '/' . $id . '/' . $id2 . '/' . $ref_invoice;
+        }
+        else
+        {
+            //$image_path = '/assets/img/logo/entreprise/' . $entreprise->url_logo . '.png';
+            $url = "https://" . $serverName . '/invoice_pdf' . '/' . $id . '/' . $id2 . '/' . $ref_invoice;
+        }
+
+        //dd($image_path);
+
+        $qrcode = $this->simple_qr_code->generateQRcode($url, $image_path, $entreprise->url_logo);
+
         $pdf = Pdf::loadView('pdf.invoice_pdf', compact(
             'entreprise',
             'functionalUnit',
@@ -66,7 +97,8 @@ class DomPdfController extends Controller
             'contact',
             'payment_terms_proforma',
             'payment_terms_assign',
-            'notes'
+            'notes',
+            'qrcode'
         ));
         return $pdf->stream('invoice.pdf');
     }
@@ -104,6 +136,36 @@ class DomPdfController extends Controller
                 ])->get();
 
 
+
+            $serverName = $this->request->server('SERVER_NAME');
+            $serverPort = $this->request->server('SERVER_PORT');
+
+            ///http://127.0.0.1:8000/invoice_pdf/11/8/INV2024102409540811
+
+            $server = new Server;
+            $public_folder = $server->getPublicFolder();
+
+            $env = config('app.server');
+            $image_path = '/public/assets/img/logo/entreprise/' . $entreprise->url_logo . '.png';
+
+            $url = "";
+
+            if($env == "local")
+            {
+                //$image_path = $public_folder . '/public/assets/img/logo/entreprise/' . $entreprise->url_logo . '.png';
+                $url = "http://" . $serverName . ':' . $serverPort . '/delivery_note_pdf' . '/' . $id . '/' . $id2 . '/' . $ref_invoice;
+            }
+            else
+            {
+                //$image_path = '/assets/img/logo/entreprise/' . $entreprise->url_logo . '.png';
+                $url = "https://" . $serverName . '/delivery_note_pdf' . '/' . $id . '/' . $id2 . '/' . $ref_invoice;
+            }
+
+            //dd($image_path);
+
+            $qrcode = $this->simple_qr_code->generateQRcode($url, $image_path, $entreprise->url_logo);
+
+
         $pdf = Pdf::loadView('pdf.delivery_note_pdf', compact(
             'entreprise',
             'functionalUnit',
@@ -114,7 +176,8 @@ class DomPdfController extends Controller
             'logo',
             'tot_excl_tax',
             'contact',
-            'notes'
+            'notes',
+            'qrcode'
         ));
         return $pdf->stream('delivery_note.pdf');
     }

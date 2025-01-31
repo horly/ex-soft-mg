@@ -17,6 +17,10 @@
         <form id="form-register" class="card bg-body-tertiary" action="{{ route('app_add_user') }}" method="post" token={{ csrf_token() }}>
             @csrf
 
+            <input type="hidden" name="id_user" value="0">
+            <input type="hidden" name="customerRequest" id="customerRequest" value="add">
+            <input type="hidden" name="add_type" value="admin">
+
             <div class="card-body">
 
                 <div class="mb-4 row">

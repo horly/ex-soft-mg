@@ -19,11 +19,11 @@ class Server
         }
         else if($this->server == 'lws')
         {
-            return "/home/htdocs/exaderp.exadgroup.org";
+            return "/home/htdocs/exaderp.exadgroup.org/ex-soft-mg/public";
         }
         else //hostinger
         {
-            return  base_path() . '/public_html';
+            return  base_path() . '/public';
         }
     }
 }

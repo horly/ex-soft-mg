@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subscription;
+use App\Models\User;
 use App\Repository\GenerateRefenceNumber;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SuperAdminController extends Controller
@@ -34,7 +36,9 @@ class SuperAdminController extends Controller
 
     public function user_super_admin()
     {
-        return view('super_admin.user_super_admin');
+        $users = User::orderBy('id', 'desc')->get();
+
+        return view('super_admin.user_super_admin', compact('users'));
     }
 
     public function add_subscription($id)
@@ -123,5 +127,32 @@ class SuperAdminController extends Controller
         DB::table('subscriptions')->where('id', $id_sub)->delete();
 
         return redirect()->route('app_subscription')->with('success', __('super_admin.subscription_deleted_successfully'));
+    }
+
+    public function add_user_admin($id)
+    {
+        //$grades = DB::table('grades')->get();
+        $roles = null;
+
+        if(Auth::user()->role->name == "superadmin")
+        {
+            $roles = DB::table('roles')->get();
+        }
+        else
+        {
+            $roles = DB::table('roles')->whereNot('name', 'superadmin')->get();
+        }
+
+        $countries_gb = DB::table('countries')
+                        ->orderBy('name_gb', 'asc')
+                        ->get();
+
+        $countries_fr = DB::table('countries')
+                        ->orderBy('name_fr', 'asc')
+                        ->get();
+
+        $user = User::where('id', $id)->first();
+
+        return view('super_admin.add_user_subscription', compact('roles', 'countries_gb', 'countries_fr', 'user'));
     }
 }
