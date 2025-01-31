@@ -38,7 +38,7 @@
 
             $notifCount = null;
 
-            if(Auth::user()->role->name == "admin")
+            if(Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
             {
                 $notifs = DB::table('notifications')
                             ->join('read_notifs', 'read_notifs.id_notif', '=', 'notifications.id')
