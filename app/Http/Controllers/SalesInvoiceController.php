@@ -514,7 +514,7 @@ class SalesInvoiceController extends Controller
                                         ->where($whereData)
                                         ->get();
 
-                    foreach($get_invoice_exist as $invoice_elemnt)
+                    /* foreach($get_invoice_exist as $invoice_elemnt)
                     {
                         $pur_price = $invoice_elemnt->purshase_price_inv_elmnt;
                         $quantity_get = $invoice_elemnt->quantity;
@@ -530,6 +530,7 @@ class SalesInvoiceController extends Controller
                             'total_price_inv_elmnt' => $total_price,
                         ]);
                     }
+                        */
                 }
                 else
                 {
