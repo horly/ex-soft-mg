@@ -1,5 +1,4 @@
-{{-- Modal --}}
-
+{{-- start Modal --}}
 <div class="modal fade" id="cash-in" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <form class="modal-content" id="record_payment_invoice_form" action="{{ route('app_save_record_payment') }}" method="POST">
@@ -73,3 +72,4 @@
     </form>
     </div>
 </div>
+{{-- and Modal --}}
