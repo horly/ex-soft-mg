@@ -269,6 +269,15 @@
                                 @endif
                             </div>
 
+                            <div class="col-md-3 mb-3">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#send-mail-invoice">
+                                        <i class="fa-solid fa-envelope"></i>
+                                        {{ __('invoice.send_by_email') }}
+                                    </button>
+                                </div>
+                            </div>
+
                         </div>
                     @endif
 
@@ -350,5 +359,7 @@
     </form>
     </div>
   </div>
+
+  @include('global.modale-send-mail-invoice')
 
 @endsection

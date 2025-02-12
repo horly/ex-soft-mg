@@ -57,6 +57,9 @@ Route::middleware('guest')->group(function(){
 
 Route::controller(HomeController::class)->group(function(){
     Route::get('/infos-online-user/{matricule}', 'infosOnlineUser')->name('app_infos_online_user');
+    Route::get('/contact_us', 'contact_us')->name('app_contact_us');
+    Route::post('/send-message', 'sendMessage')->name('app_send_message');
+
     Route::middleware('auth')->group(function(){
         Route::middleware('admin')->group(function(){
             Route::get('/user_management', 'userManagement')->name('app_user_management');
@@ -450,6 +453,8 @@ Route::controller(SalesInvoiceController::class)->group(function(){
 
         Route::post('/add_note_invoice', 'add_note_invoice')->name('app_add_note_invoice');
         Route::post('/delete_note_invoice', 'delete_note_invoice')->name('app_delete_note_invoice');
+
+        Route::post('/send_email_invoice', 'send_email_invoice')->name('app_send_email_invoice');
     });
 });
 

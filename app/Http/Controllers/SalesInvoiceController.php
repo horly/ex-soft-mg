@@ -7,6 +7,7 @@ use App\Http\Requests\SaveSaleInvoiceForm;
 use App\Models\Decaissement;
 use App\Models\Encaissement;
 use App\Models\Entrance;
+use App\Models\Entreprise;
 use App\Models\InvoiceElement;
 use App\Models\InvoiceMargin;
 use App\Models\NoteDocument;
@@ -16,6 +17,7 @@ use App\Models\SerialNumberInvoice;
 use App\Repository\EntrepriseRepo;
 use App\Repository\GenerateRefenceNumber;
 use App\Repository\NotificationRepo;
+use App\Services\Email\Email;
 use App\Services\Reference\Reference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,16 +31,19 @@ class SalesInvoiceController extends Controller
     protected $entrepriseRepo;
     protected $notificationRepo;
     protected $generateReferenceNumber;
+    protected $email;
 
     function __construct(Request $request,
                             EntrepriseRepo $entrepriseRepo,
                             NotificationRepo $notificationRepo,
-                            GenerateRefenceNumber $generateReferenceNumber)
+                            GenerateRefenceNumber $generateReferenceNumber,
+                            Email $email)
     {
         $this->request = $request;
         $this->entrepriseRepo = $entrepriseRepo;
         $this->notificationRepo = $notificationRepo;
         $this->generateReferenceNumber = $generateReferenceNumber;
+        $this->email = $email;
     }
 
     public function salesInvoice($group, $id, $id2)
@@ -1940,5 +1945,43 @@ class SalesInvoiceController extends Controller
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
 
         return view('invoice_sales.seal', compact('entreprise', 'functionalUnit'));
+    }
+
+    public function send_email_invoice()
+    {
+        $id_entreprise = $this->request->input('id_entreprise');
+        $id_fu = $this->request->input('id_fu');
+        $ref_invoice = $this->request->input('ref_invoice');
+        $from_email = $this->request->input('from-email');
+        $to_email = $this->request->input('to-email');
+        $concern_email = $this->request->input('concern-email');
+        $greeting = $this->request->input('greeting');
+        $recipient_name = $this->request->input('recipient_name');
+        $message_email = $this->request->input('message-email');
+
+        //dd($this->request->all());
+
+        $env = config('app.server');
+        $serverName = $this->request->server('SERVER_NAME');
+        $serverPort = $this->request->server('SERVER_PORT');
+
+        $entreprise = Entreprise::where('id', $id_entreprise)->first();
+
+        $url = "";
+
+        if($env == "local")
+        {
+            //$image_path = $public_folder . '/public/assets/img/logo/entreprise/' . $entreprise->url_logo . '.png';
+            $url = "http://" . $serverName . ':' . $serverPort . '/invoice_pdf' . '/' . $id_entreprise . '/' . $id_fu . '/' . $ref_invoice;
+        }
+        else
+        {
+            //$image_path = '/assets/img/logo/entreprise/' . $entreprise->url_logo . '.png';
+            $url = "https://" . $serverName . '/invoice_pdf' . '/' . $id_entreprise . '/' . $id_fu . '/' . $ref_invoice;
+        }
+
+        $this->email->send_email_invoice($from_email, $to_email, $concern_email, $greeting, $recipient_name, $message_email, $url, $entreprise->name);
+
+        return redirect()->back()->with('success', __('invoice.invoice_sent_successfully'));
     }
 }

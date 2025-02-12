@@ -165,4 +165,26 @@
 
         'signature_registered_successfully' => "Signature enregistrée avec succès",
         'seal_registered_successfully' => "Sceau/Cachet enregistrée avec succès",
+
+        'send_by_email' => "Envoyer par email",
+
+        'good_morning' => "Bonjour",
+        'good_evening' => "Bonsoir",
+        'hi' => "Salut",
+        'sir' => "Monsieur",
+        'madam' => "Madame",
+        'recipient_name' => "Nom du destinataire",
+        'from' => "De",
+        'to' => "À",
+        'enter_the_recipients_email_address' => "Saisissez l'adresse e-mail du destinataire",
+        'send' => "Envoyer",
+
+        'please_enter_the_recipients_email_address' => "Veuillez saisir l'adresse e-mail du destinataire",
+        'please_enter_the_recipients_name' => "Veuillez saisir le nom du destinataire",
+        'please_enter_your_message' => "Veuillez saisir votre message ",
+
+        'download_the_invoice_here' => "Télécharger la facture ici",
+        'invoice_sent_by' => "Facture envoyée par",
+
+        'invoice_sent_successfully' => "Facture envoyée avec succès!",
     ];

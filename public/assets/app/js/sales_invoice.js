@@ -634,3 +634,47 @@ function add_sign_seal(title)
 }
 
 
+/**
+ * send invoice via email
+ */
+
+$('#send_email_invoice').click(function(e){
+    e.preventDefault();
+
+    var to_email = $('#to-email');
+    var recipient_name = $('#recipient_name');
+    var message_email = $('#message-email');
+
+    if(to_email.val() != "" && /^[a-zA-Z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,6}$/.test(to_email.val())){
+        $(to_email).removeClass('is-invalid');
+        $('#to-email-error').text("");
+
+        if(recipient_name.val() != "" && /^[a-zA-Z ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ]+$/.test(recipient_name.val())){
+            $(recipient_name).removeClass('is-invalid');
+            $('#recipient_name-error').text("");
+
+            if(message_email.val() != ""){
+                $(message_email).removeClass('is-invalid');
+                $('#message-email-error').text("");
+
+                $('.saveP').addClass('d-none');
+                $('.btn-loadingP').removeClass('d-none');
+
+                $('#send_email_invoice_form').submit();
+
+            } else {
+                $(message_email).addClass('is-invalid');
+                $('#message-email-error').text($('#message-email-error').attr('message'));
+            }
+        } else {
+            $(recipient_name).addClass('is-invalid');
+            $('#recipient_name-error').text($('#recipient_name-error').attr('message'));
+        }
+    } else {
+        $(to_email).addClass('is-invalid');
+        $('#to-email-error').text($('#to-email-error').attr('message'));
+    }
+
+});
+
+

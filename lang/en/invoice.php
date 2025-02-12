@@ -166,4 +166,25 @@
         'signature_registered_successfully' => "Signature registered successfully",
         'seal_registered_successfully' => "Seal registered successfully",
 
+        'send_by_email' => "Send by email",
+
+        'good_morning' => "Good morning",
+        'good_evening' => "Good evening",
+        'hi' => "Hi",
+        'sir' => "Sir",
+        'madam' => "Madam",
+        'recipient_name' => "Recipient Name",
+        'from' => "From",
+        'to' => "To",
+        'enter_the_recipients_email_address' => "Enter the recipient's email address",
+        'send' => "Send",
+
+        'please_enter_the_recipients_email_address' => "Please enter the recipient's email address",
+        'please_enter_the_recipients_name' => "Please enter the recipient's name",
+        'please_enter_your_message' => "Please enter your message",
+
+        'download_the_invoice_here' => "Download the invoice here",
+        'invoice_sent_by' => "Invoice sent by",
+
+        'invoice_sent_successfully' => "Invoice sent successfully!",
 ];

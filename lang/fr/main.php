@@ -104,4 +104,7 @@
         'enter_your_grade' => "Entrez la fonction",
         'enter_your_grade_please' => "Veuillez entrer la fonction!",
 
+        'contact_us' => "Nous contacter",
+        'get_in_touch' => "Nous contacter",
+
 ];

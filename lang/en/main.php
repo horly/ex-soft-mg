@@ -106,4 +106,7 @@
 
         'enter_your_grade' => "Enter the grade",
         'enter_your_grade_please' => "Enter the grade please!",
+
+        'contact_us' => "Contact us",
+        'get_in_touch' => "Get in touch",
     ];

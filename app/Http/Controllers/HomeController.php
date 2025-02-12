@@ -8,6 +8,7 @@ use App\Models\PermissionAssign;
 use App\Repository\ConnectionHistoryRepo;
 use App\Repository\EntrepriseRepo;
 use App\Repository\NotificationRepo;
+use App\Services\Email\Email;
 use App\Services\Permissions\Permissions;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
@@ -763,5 +764,40 @@ class HomeController extends Controller
             'expense_permissions',
             'report_permissions'
         ));
+    }
+
+    public function contact_us()
+    {
+        return view('auth.contact_us');
+    }
+
+    public function sendMessage()
+    {
+        $name = $this->request->input('name');
+        $phone_number = $this->request->input('phone_number');
+        $email_addr = $this->request->input('email_addr');
+        $message_text = $this->request->input('message_text');
+        $subject = $this->request->input('subject');
+
+        $mail = new Email;
+        $send = $mail->sendContactMessage($name, $email_addr, $phone_number, $message_text, $subject);
+
+        //dd($this->request->all());
+
+        if($send == true) {
+            return response()->json([
+                'code' => 200,
+                'status' => "success",
+                'contact' => $this->request->all(),
+                'send' => $send,
+            ]);
+        } else {
+            return response()->json([
+                'code' => 404,
+                'status' => "error",
+                'contact' => $this->request->all(),
+                'send' => $send,
+            ]);
+        }
     }
 }

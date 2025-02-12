@@ -147,6 +147,11 @@
                             </a>.
                         </p>
                     </div>
+
+                    <div class="p-3 text-center">
+                        <a href="{{ route('app_contact_us') }}">{{ __('main.contact_us') }}</a>
+                    </div>
+
                 </div>
             </div>
             <div class="col-lg-7 d-none d-lg-block">
@@ -158,6 +163,7 @@
                 </div>
             </div>
         </div>
+
 
     </div>
 @endif

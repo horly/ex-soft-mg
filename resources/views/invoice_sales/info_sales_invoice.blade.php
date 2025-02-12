@@ -279,7 +279,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 @if ($paymentReceived != 0 )
                                     <div class="d-grid gap-2">
                                         <button class="btn btn-success" type="button" disabled>
@@ -297,7 +297,7 @@
                                 @endif
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 @if ($paymentReceived != 0 )
                                     <div class="d-grid gap-2">
                                         <button class="btn btn-danger" type="button" disabled>
@@ -313,6 +313,15 @@
                                         </button>
                                     </div>
                                 @endif
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#send-mail-invoice">
+                                        <i class="fa-solid fa-envelope"></i>
+                                        {{ __('invoice.send_by_email') }}
+                                    </button>
+                                </div>
                             </div>
 
                         </div>
@@ -332,5 +341,7 @@
 
 {{-- Pour le decaissement et l'encaissement --}}
 @include('global.modale-payment')
+
+@include('global.modale-send-mail-invoice')
 
 @endsection

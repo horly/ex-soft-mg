@@ -27,7 +27,7 @@ class Email
         $this->mail = new PHPMailer;
         $this->mail->isSMTP();
         $this->mail->SMTPDebug = 0; //pas d'afficahe de debug mais si nous voulons afficher les erreurs il faut le mettre à 2
-        $this->mail->Port = 465; //587
+        $this->mail->Port = config('app.mail_port');
         $this->mail->Host = config('app.mail_host'); //mail.exadgroup.org
         $this->mail->SMTPAuth = true;
         $this->mail->SMTPSecure = 'tls';
@@ -206,5 +206,71 @@ class Email
             ]);
 
         $this->sendHtmlEmail($subject, $email, $name, $message);
+    }
+
+    public function send_email_invoice($from_email, $to_email, $concern_email, $greeting, $recipient_name, $message_email, $url, $entreprise_name)
+    {
+        $this->mail->Subject = $concern_email;
+        $this->mail->setFrom($this->username, $entreprise_name);
+        $this->mail->addReplyTo($from_email, $entreprise_name);
+        $this->mail->addAddress($to_email);
+
+
+        $message = view('mail.send_email_invoice')
+                    ->with([
+                        'recipient_name' => $recipient_name,
+                        'greeting' => $greeting,
+                        'subject' => $concern_email,
+                        'message_email' => $message_email,
+                        'url' => $url
+            ]);
+
+        $this->mail->IsHTML(true);
+        $this->mail->Body = $message;
+
+        return $this->mail->send();
+    }
+
+    //pour l'envoie du mail
+    public function sendEmail($subject, $emailUser, $name, $message, $isHtml)
+    {
+        $this->mail->Subject = $subject;
+        $this->mail->setFrom($this->username, $this->app_name); //from contact user email
+        $this->mail->addReplyTo($emailUser, $name); //
+        $this->mail->addAddress($this->from_address); //to sales@exadgroup.org
+        $this->mail->IsHTML($isHtml);
+        $this->mail->Body = $message;
+
+        return $this->mail->send(); //true or false
+
+
+        //ici c'est pour le teste et voir les erreurs
+        /*if(!$this->mail->send())
+        {
+            return "error : " . $this->mail->ErrorInfo;
+        }
+        else
+        {
+            return "success";
+        }*/
+    }
+
+    public function sendContactMessage($fullname, $email_addr, $phoneNumber, $message_text, $subject)
+    {
+        $email = $email_addr;
+        $name = $fullname;
+        $phone_number = $phoneNumber;
+        $message = $message_text;
+
+        //$subject = __('home.information');
+        $messageHtml = view('mail.message-email')
+                    ->with([
+                        'name' => $name,
+                        'message' => $message,
+                        'phone_number' => $phone_number,
+                        'email' => $email
+            ]);
+
+        return $this->sendEmail($subject, $email, $name, $messageHtml, true);
     }
 }
