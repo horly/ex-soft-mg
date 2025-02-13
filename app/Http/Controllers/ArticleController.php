@@ -41,6 +41,7 @@ class ArticleController extends Controller
 
         $category_articles = DB::table('category_articles')
                     ->where('id_fu', $functionalUnit->id)
+                    ->whereNot('default', 1)
                     ->orderByDesc('id')
                     ->get();
 
@@ -191,6 +192,7 @@ class ArticleController extends Controller
         $subcategory_articles = DB::table('category_articles')
                     ->join('subcategory_articles', 'subcategory_articles.id_cat', '=', 'category_articles.id')
                     ->where('subcategory_articles.id_fu', $functionalUnit->id)
+                    ->whereNot('subcategory_articles.default', 1)
                     ->orderByDesc('subcategory_articles.id')
                     ->get();
 

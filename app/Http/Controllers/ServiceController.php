@@ -39,6 +39,7 @@ class ServiceController extends Controller
 
         $category_services = DB::table('category_services')
                     ->where('id_fu', $functionalUnit->id)
+                    ->whereNot('default', 1)
                     ->orderByDesc('id')
                     ->get();
 

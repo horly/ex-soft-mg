@@ -17,6 +17,7 @@ class CategoryArticle extends Model
         'reference_cat_art',
         'id_user',
         'id_fu',
+        'default',
     ];
 
     public function subCategory()

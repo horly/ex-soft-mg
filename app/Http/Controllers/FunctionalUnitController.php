@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FunctionalUnitForm;
+use App\Models\CategoryArticle;
+use App\Models\CategoryService;
 use App\Models\DeviseGestionUF;
 use App\Models\FunctionalUnit;
 use App\Models\FunctionalunitEmail;
 use App\Models\FunctionalUnitPhone;
 use App\Models\ManageFU;
 use App\Models\PaymentMethod;
+use App\Models\SubcategoryArticle;
 use App\Repository\EntrepriseRepo;
+use App\Repository\GenerateRefenceNumber;
 use App\Repository\NotificationRepo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,12 +25,17 @@ class FunctionalUnitController extends Controller
     protected $request;
     protected $entrepriseRepo;
     protected $notificationRepo;
+    protected $generateReferenceNumber;
 
-    function __construct(Request $request, EntrepriseRepo $entrepriseRepo, NotificationRepo $notificationRepo)
+    function __construct(Request $request,
+                            EntrepriseRepo $entrepriseRepo,
+                            NotificationRepo $notificationRepo,
+                            GenerateRefenceNumber $generateReferenceNumber)
     {
         $this->request = $request;
         $this->entrepriseRepo = $entrepriseRepo;
         $this->notificationRepo = $notificationRepo;
+        $this->generateReferenceNumber = $generateReferenceNumber;
     }
 
     public function saveFunctionalUnit(FunctionalUnitForm $requestionF)
@@ -74,6 +83,43 @@ class FunctionalUnitController extends Controller
                 'id_currency' => $devisGestUf->id,
                 'id_user' => Auth::user()->id,
                 'id_fu' => $functUnit->id,
+            ]);
+
+            $refNum = $this->generateReferenceNumber->getReferenceNumber("category_articles", $id_fu);
+            $ref = $this->generateReferenceNumber->generate("CA", $refNum);
+
+            $category = CategoryArticle::create([
+                'reference_cat_art' => $ref,
+                'reference_number' => $refNum,
+                'name_cat_art' => "default",
+                'id_user' => Auth::user()->id,
+                'id_fu' => $functUnit->id,
+                'default' => 1,
+            ]);
+
+            $refNumSC = $this->generateReferenceNumber->getReferenceNumber("subcategory_articles", $id_fu);
+            $refSC = $this->generateReferenceNumber->generate("SCA", $refNum);
+
+            SubcategoryArticle::create([
+                'reference_subcat_art' => $refSC,
+                'reference_number' => $refNumSC,
+                'name_subcat_art' => "default",
+                'id_cat' => $category->id,
+                'id_fu' => $functUnit->id,
+                'id_user' => Auth::user()->id,
+                'default' => 1,
+            ]);
+
+            $refNumCS = $this->generateReferenceNumber->getReferenceNumber("category_services", $id_fu);
+            $refCS = $this->generateReferenceNumber->generate("CAS", $refNum);
+
+            CategoryService::create([
+                'reference_cat_serv' => $refCS,
+                'reference_number' => $refNumCS,
+                'name_cat_serv' => "default",
+                'id_fu' => $functUnit->id,
+                'id_user' => Auth::user()->id,
+                'default' => 1,
             ]);
 
             //Notification

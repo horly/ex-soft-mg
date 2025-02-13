@@ -18,6 +18,7 @@ class SubcategoryArticle extends Model
         'id_cat',
         'id_user',
         'id_fu',
+        'default',
     ];
 
     public function categoryArticle()
@@ -29,7 +30,7 @@ class SubcategoryArticle extends Model
     {
         return $this->belongsTo('App\Models\User', 'id_user');
     }
- 
+
     function functionalUit()
     {
         return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');

@@ -17,13 +17,14 @@ class CategoryService extends Model
         'reference_cat_serv',
         'id_user',
         'id_fu',
+        'default',
     ];
 
     function user()
     {
         return $this->belongsTo('App\Models\User', 'id_user');
     }
- 
+
     function functionalUit()
     {
         return $this->belongsTo('App\Models\FunctionalUnit', 'id_fu');
