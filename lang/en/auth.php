@@ -249,4 +249,7 @@ return [
     'or_you_can_create' => "Or you can create a new password",
     'email_verification' => "Email verification",
 
+    'full_name' => "Full name",
+    'enter_your_fullname' => "Enter your full name",
+    'please_enter_your_fullname' => "Please enter your full name",
 ];

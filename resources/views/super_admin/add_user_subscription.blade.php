@@ -60,25 +60,29 @@
                             <input type="hidden" name="customerRequest" id="customerRequest" value="{{ $user ? "edit" : "add" }}">
                             <input type="hidden" name="add_type" value="super_admin">
 
+                            {{--
                             @php
                                 if ($user) {
                                     $result = explode(" ", $user->name);
                                     $firstname = $result[0];
                                     $lastname = $result[1];
+                                    $lastname ? $lastname = $result[1] : $lastname = "";
                                 }
                             @endphp
+                            --}}
 
                             <div class="mb-4 row">
-                                <label for="firstName" class="col-sm-4 col-form-label">{{ __('auth.first_name')}} *</label>
+                                <label for="full_name" class="col-sm-4 col-form-label">{{ __('auth.full_name')}} *</label>
                                 <div class="col-md-8">
                                     <div class="input-group">
                                         <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-                                        <input type="text" class="form-control @error('firstName') is-invalid @enderror" name="firstName" id="firstName" placeholder="{{ __('auth.enter_the_firstname') }}" value="{{ $user ? $firstname : old('firstName') }}">
+                                        <input type="text" class="form-control @error('full_name') is-invalid @enderror" name="full_name" id="full_name" placeholder="{{ __('auth.enter_your_fullname') }}" value="{{ $user ? $user->name : old('full_name') }}">
                                     </div>
-                                    <small class="text-danger">@error('firstName'){{ $message }}@enderror</small>
+                                    <small class="text-danger">@error('full_name'){{ $message }}@enderror</small>
                                 </div>
                             </div>
 
+                            {{--
                             <div class="mb-4 row">
                                 <label for="lastName" class="col-sm-4 col-form-label">{{ __('auth.last_name')}} *</label>
                                 <div class="col-md-8">
@@ -89,6 +93,7 @@
                                     <small class="text-danger">@error('lastName'){{ $message }}@enderror</small>
                                 </div>
                             </div>
+                            --}}
 
                             <div class="mb-4 row">
                                 <label for="emailUsr" class="col-sm-4 col-form-label">{{ __('auth.email')}} *</label>
@@ -159,7 +164,7 @@
                             </div>
 
                             <div class="mb-4 row">
-                                <label for="function" class="col-sm-4 form-label">{{ __('main.function') }} *</label>
+                                <label for="function" class="col-sm-4 form-label">{{ __('main.function') }} </label>
                                 <div class="col-md-8">
                                     <div class="input-group">
                                         <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-briefcase"></i></span>
@@ -237,7 +242,28 @@
                             </div>
 
                             <div class="mb-4 row">
-                                <label for="address" class="col-sm-4 col-form-label">{{ __('main.address') }}*</label>
+                                <label for="subscript_user" class="col-sm-4 form-label">{{ __('super_admin.subscription') }} *</label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-arrow-rotate-right"></i></span>
+                                        <select class="form-select @error('subscript_user') is-invalid @enderror" id="subscript_user" name="subscript_user">
+                                            @if ($user)
+                                                <option value="{{ $user->subscription->id }}" selected>{{ $user->subscription->description }}</option>
+                                            @else
+                                                <option value="" selected>{{ __('super_admin.select_a_subscription') }}...</option>
+                                            @endif
+
+                                            @foreach ($subscriptions as $subscription)
+                                                <option value="{{ $subscription->id }}">{{ $subscription->description }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <small class="text-danger">@error('subscript_user'){{ $message }}@enderror</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-4 row">
+                                <label for="address" class="col-sm-4 col-form-label">{{ __('main.address') }}</label>
                                 <div class="col-md-8">
                                     <textarea name="address" class="form-control @error('address') is-invalid @enderror" id="address" rows="5" placeholder="{{ __('auth.enter_the_address') }}">{{ $user ? $user->address : ""}}</textarea>
                                 </div>
@@ -245,6 +271,14 @@
 
                             {{-- Button ajout --}}
                             @include('button.add-button')
+
+                            @if ($user)
+                                <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $user->id }}', '{{ route('app_delete_user_super_admin') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                    {{ __('entreprise.delete') }}
+                                </button>
+                            @endif
+
                         </form>
                     </div>
                 </div>

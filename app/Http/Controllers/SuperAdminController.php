@@ -77,7 +77,10 @@ class SuperAdminController extends Controller
                 $type = "Startup";
             }
         }
-        return view('super_admin.add_subscription', compact('subscription', 'id_sub', 'state', 'text', 'type'));
+
+        $users = User::where('sub_id', $id)->get();
+
+        return view('super_admin.add_subscription', compact('subscription', 'id_sub', 'state', 'text', 'type', 'users'));
     }
 
     public function create_subscription()
@@ -153,6 +156,17 @@ class SuperAdminController extends Controller
 
         $user = User::where('id', $id)->first();
 
-        return view('super_admin.add_user_subscription', compact('roles', 'countries_gb', 'countries_fr', 'user'));
+        $subscriptions = Subscription::get();
+
+        return view('super_admin.add_user_subscription', compact('roles', 'countries_gb', 'countries_fr', 'user', 'subscriptions'));
+    }
+
+    public function delete_user_super_admin()
+    {
+        $id_user = $this->request->input('id_element');
+
+        DB::table('users')->where('id', $id_user)->delete();
+
+        return redirect()->route('app_user_super_admin')->with('success', __('main.user_deleted_successfully'));
     }
 }

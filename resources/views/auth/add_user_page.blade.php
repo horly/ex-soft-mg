@@ -24,16 +24,17 @@
             <div class="card-body">
 
                 <div class="mb-4 row">
-                    <label for="firstName" class="col-sm-4 col-form-label">{{ __('auth.first_name')}} *</label>
+                    <label for="full_name" class="col-sm-4 col-form-label">{{ __('auth.full_name')}} *</label>
                     <div class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-                            <input type="text" class="form-control @error('firstName') is-invalid @enderror" name="firstName" id="firstName" placeholder="{{ __('auth.enter_the_firstname') }}" value="{{ old('firstName') }}">
+                            <input type="text" class="form-control @error('full_name') is-invalid @enderror" name="full_name" id="full_name" placeholder="{{ __('auth.enter_your_fullname') }}" value="{{ old('full_name') }}">
                         </div>
-                        <small class="text-danger">@error('firstName'){{ $message }}@enderror</small>
+                        <small class="text-danger">@error('full_name'){{ $message }}@enderror</small>
                     </div>
                 </div>
 
+                {{--
                 <div class="mb-4 row">
                     <label for="lastName" class="col-sm-4 col-form-label">{{ __('auth.last_name')}} *</label>
                     <div class="col-md-8">
@@ -44,6 +45,7 @@
                         <small class="text-danger">@error('lastName'){{ $message }}@enderror</small>
                     </div>
                 </div>
+                --}}
 
                 <div class="mb-4 row">
                     <label for="emailUsr" class="col-sm-4 col-form-label">{{ __('auth.email')}} *</label>
@@ -53,6 +55,16 @@
                             <input type="email" class="form-control @error('emailUsr') is-invalid @enderror" name="emailUsr" id="emailUsr" placeholder="{{ __('auth.enter_the_email') }}" value="{{ old('emailUsr') }}">
                         </div>
                         <small class="text-danger">@error('emailUsr'){{ $message }}@enderror</small>
+                    </div>
+                </div>
+
+                <div class="mb-4 row">
+                    <label for="passwordUsr" class="col-sm-4 col-form-label">{{ __('super_admin.default_password')}}</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-lock"></i></span>
+                            <input type="text" name="passwordUsr" id="passwordUsr" class="form-control @error('passwordUsr') is-invalid @enderror" placeholder="{{ __('auth.create_your_password') }}" value="123456789" readonly>
+                        </div>
                     </div>
                 </div>
 
@@ -99,7 +111,7 @@
                 </div>
 
                 <div class="mb-4 row">
-                    <label for="function" class="col-sm-4 form-label">{{ __('main.function') }} *</label>
+                    <label for="function" class="col-sm-4 form-label">{{ __('main.function') }} </label>
                     <div class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-briefcase"></i></span>
@@ -164,8 +176,21 @@
                     </div>
                 </div>
 
+                <div class="mb-4 row" hidden>
+                    <label for="subscript_user" class="col-sm-4 form-label">{{ __('super_admin.subscription') }} *</label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-arrow-rotate-right"></i></span>
+                            <select class="form-select @error('subscript_user') is-invalid @enderror" id="subscript_user" name="subscript_user">
+                                <option value="{{ Auth::user()->subscription->id }}" selected>{{ Auth::user()->subscription->description }}</option>
+                            </select>
+                        </div>
+                        <small class="text-danger"></small>
+                    </div>
+                </div>
+
                 <div class="mb-4 row">
-                    <label for="address" class="col-sm-4 col-form-label">{{ __('main.address') }}*</label>
+                    <label for="address" class="col-sm-4 col-form-label">{{ __('main.address') }}</label>
                     <div class="col-md-8">
                         <textarea name="address" class="form-control @error('address') is-invalid @enderror" id="address" rows="5" placeholder="{{ __('auth.enter_the_address') }}"></textarea>
                     </div>

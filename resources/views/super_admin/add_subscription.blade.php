@@ -113,25 +113,57 @@
                                 </div>
                             @endif
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    {{-- button de sauvegarde --}}
-                                    @include('button.save-button')
-                                </div>
-                                <div class="col-md-6">
-                                    @if ($subscription)
-                                        <div class="d-grid gap-2">
-                                            <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $subscription->id }}', '{{ route('app_delete_subscription') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
-                                                <i class="fa-solid fa-trash-can"></i>
-                                                {{ __('entreprise.delete') }}
-                                            </button>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
+                            {{-- button de sauvegarde --}}
+                            @include('button.save-button')
+
+                            @if ($subscription)
+                                <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $subscription->id }}', '{{ route('app_delete_subscription') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                    {{ __('entreprise.delete') }}
+                                </button>
+                            @endif
+
                         </form>
                     </div>
                 </div>
+
+                @if ($subscription)
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="mb-4">{{ __('super_admin.user_list') }}</h6>
+
+                            <a href="{{ route('app_add_user_admin', ['id' => 0]) }}" class="btn btn-primary mb-3" role="button">
+                                <i class="fa-solid fa-circle-plus"></i>
+                                &nbsp;{{ __('auth.add') }}
+                            </a>
+                            <table class="table table-striped table-hover border bootstrap-datatable">
+                                <thead>
+                                    <th>N°</th>
+                                    <th>{{ __('main.name') }}</th>
+                                    <th>{{ __('super_admin.subscription') }}</th>
+                                    <th>{{ __('auth.email') }}</th>
+                                    <th>{{ __('main.function') }}</th>
+                                    <th>Action</th>
+                                </thead>
+                                <tbody>
+                                    @foreach ($users as $user)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>
+                                                <a href="{{ Auth::user()->id == $user->id ? route('app_profile') : route('app_add_user_admin', ['id' => $user->id ]) }}">{{ $user->name }}</a>
+                                            </td>
+                                            <td>{{ $user->subscription->description }}</td>
+                                            <td>{{ $user->email }}</td>
+                                            <td>{{ $user->grade }}</td>
+                                            <td><a href="{{ Auth::user()->id == $user->id ? route('app_profile') : route('app_add_user_admin', ['id' => $user->id ]) }}">{{ __('main.show') }}</a></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                @endif
             </section>
 
             <div class="m-5">

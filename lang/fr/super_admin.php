@@ -24,4 +24,9 @@ return [
     'add_user' => "Ajouter un utilisateur",
     'update_user' => "Modifier un utilisateur",
     'default_password' => "Mot de passe par défaut",
+
+    'select_a_subscription' => "Sélectionnez un abonnement",
+    'please_select_a_subscription' => "Veuillez sélectionner un abonnement",
+
+    'your_subscription_has_expired' => "Votre abonnement a expiré, veuillez le renouveler avant de vous connecter",
 ];

@@ -247,4 +247,9 @@ return [
     'you_can_login' => "Vous pouvez vous connecter",
     'or_you_can_create' => "ou vous pouvez créer un nouveau mot de passe",
     'email_verification' => "Vérification de l'émail",
+
+    'full_name' => "Nom complet",
+    'enter_your_fullname' => "Entrez votre nom complet",
+    'please_enter_your_fullname' => "Veuillez entrer votre nom complet",
+
 ];

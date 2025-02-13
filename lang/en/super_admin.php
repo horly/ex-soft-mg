@@ -24,4 +24,9 @@ return [
     'add_user' => "Add user",
     'update_user' => "Update user",
     'default_password' => "Default password",
+
+    'select_a_subscription' => "Select a subscription",
+    'please_select_a_subscription' => "Please select a subscription",
+
+    'your_subscription_has_expired' => "Your subscription has expired, please renew it before logging in",
 ];

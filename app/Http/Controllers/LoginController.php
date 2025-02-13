@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddUserForm;
 use App\Http\Requests\PasswordResetRequestForm;
+use App\Models\Subscription;
 use App\Models\User;
 use App\Repository\ConnectionHistoryRepo;
 use App\Services\Email\Email;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -34,34 +36,48 @@ class LoginController extends Controller
     {
         //return redirect()->route('app_main');
         $user = Auth::user();
+        $subscription = Subscription::where('id', $user->sub_id)->first();
 
-        //on génère de nombre aleotoire de 6 chiffres si l'utilisateur choisie de copier coller le code
-        $verification_code = "";
-        $longeur_code = 6;
-        $verification_code_secret = md5(uniqid()) . $user->id . sha1($user->email);
+        $subscriptionEndDate = Carbon::parse(date('Y-m-d', strtotime($subscription->end_date))); // Example end date
+        $currentDate = Carbon::now();
 
-        for($i = 0; $i < $longeur_code; $i++)
+        //si la période d'abonnement n'a pas expiré
+        if($currentDate->lessThanOrEqualTo($subscriptionEndDate))
         {
-            $verification_code .= mt_rand(0,9);
+            //on génère de nombre aleotoire de 6 chiffres si l'utilisateur choisie de copier coller le code
+            $verification_code = "";
+            $longeur_code = 6;
+            $verification_code_secret = md5(uniqid()) . $user->id . sha1($user->email);
+
+            for($i = 0; $i < $longeur_code; $i++)
+            {
+                $verification_code .= mt_rand(0,9);
+            }
+
+            DB::table('users')
+                ->where('id', $user->id)
+                ->update([
+                    'two_factor_secret' => $verification_code_secret,
+                    'two_factor_recovery_codes' => $verification_code,
+            ]);
+
+            $mail = new Email;
+            $ml = $mail->sendVerifactionCode($user, $verification_code, $verification_code_secret);
+
+            //dd($ml);
+
+            Auth::logout();
+
+            return redirect()->route('app_user_authentication', [
+                'secret' => $verification_code_secret,
+            ]);
         }
+        else
+        {
+            Auth::logout();
 
-        DB::table('users')
-            ->where('id', $user->id)
-            ->update([
-                'two_factor_secret' => $verification_code_secret,
-                'two_factor_recovery_codes' => $verification_code,
-        ]);
-
-        $mail = new Email;
-        $ml = $mail->sendVerifactionCode($user, $verification_code, $verification_code_secret);
-
-        //dd($ml);
-
-        Auth::logout();
-
-        return redirect()->route('app_user_authentication', [
-            'secret' => $verification_code_secret,
-        ]);
+            return redirect()->route('login')->with('warning', __('super_admin.your_subscription_has_expired'));
+        }
     }
 
     public function userAuthentication($secret)
@@ -141,15 +157,16 @@ class LoginController extends Controller
 
     public function addUser(AddUserForm $requestF)
     {
-        $name = $requestF->input('firstName') . " " . $requestF->input('lastName');
+        $name = $requestF->input('full_name');
         $email = $requestF->input('emailUsr');
-        //$password = $requestF->input('passwordUsr');
+        $password = $requestF->input('passwordUsr');
         $role = $requestF->input('role');
         $grade = $requestF->input('function');
         $phone_number = $requestF->input('phoneNumber');
         $countryUsr = $requestF->input('countryUsr');
         $address = $requestF->input('address');
         $matricule = $requestF->input('matricule');
+        $subscript_user = $requestF->input('subscript_user');
 
         $id_user = $requestF->input('id_user');
         $customerRequest = $requestF->input('customerRequest');
@@ -162,15 +179,15 @@ class LoginController extends Controller
         {
             /**
              * on génère un mot de passe de 8 caratère
-             */
-            $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-            $pass = array(); //remember to declare $pass as an array
-            $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
-            for ($i = 0; $i < 10; $i++) {
-                $n = rand(0, $alphaLength);
-                $pass[] = $alphabet[$n];
-            }
-            $password = implode($pass); //turn the array into a string
+             * $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+             * $pass = array(); //remember to declare $pass as an array
+             * $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+             * for ($i = 0; $i < 10; $i++) {
+             *   $n = rand(0, $alphaLength);
+             *   $pass[] = $alphabet[$n];
+             * }
+             * $password = implode($pass); //turn the array into a string
+            */
 
             //dd($password);
 
@@ -182,7 +199,7 @@ class LoginController extends Controller
                 'role_id' => $role,
                 'grade' => $grade,
                 'grade_id' => 1,
-                'sub_id' => Auth::user()->sub_id,
+                'sub_id' => $subscript_user,
                 'id_country' => $countryUsr,
                 'phone_number' => $phone_number,
                 'matricule' => $matricule,
@@ -214,13 +231,50 @@ class LoginController extends Controller
 
             $this->email->inviteUser($userP2, $userExp, $password);
 
-            return redirect()->route('app_user_management')->with('success', __('main.user_added'));
+            if($add_type == "admin")
+            {
+                return redirect()->route('app_user_management')->with('success', __('main.user_added'));
+            }
+            else
+            {
+                return redirect()->route('app_user_super_admin')->with('success', __('main.user_added'));
+            }
         }
         else
         {
-            return redirect()->back()->withErrors([
-                'emailUsr' => __('auth.this_email_address_is_already_used')
-            ])->withInput();
+            if($customerRequest == "edit")
+            {
+                DB::table('users')
+                    ->where('id', $id_user)
+                    ->update([
+                        'name' => $name,
+                        'email' => $email,
+                        //'password' => Hash::make($password),
+                        'role_id' => $role,
+                        'grade' => $grade,
+                        //'grade_id' => 1,
+                        'sub_id' => $subscript_user,
+                        'id_country' => $countryUsr,
+                        'phone_number' => $phone_number,
+                        'matricule' => $matricule,
+                        'address' => $address
+                    ]);
+
+                if($add_type == "admin")
+                {
+                    return redirect()->route('app_user_management')->with('success', __('main.user_added'));
+                }
+                else
+                {
+                    return redirect()->route('app_user_super_admin')->with('success', __('main.user_added'));
+                }
+            }
+            else
+            {
+                return redirect()->back()->withErrors([
+                    'emailUsr' => __('auth.this_email_address_is_already_used')
+                ])->withInput();
+            }
         }
     }
 
