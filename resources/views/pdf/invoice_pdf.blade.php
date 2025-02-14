@@ -225,7 +225,7 @@
             @if ($invoice->vat != 0)
                 {{ __('invoice.total_excl_tax') }} {{ $deviseGest->iso_code }}
             @else
-                Total {{ $deviseGest->iso_code }}
+            {{ __('invoice.total_excl_tax') }} {{ $deviseGest->iso_code }}
             @endif
         </div>
         <div class="content"></div>
