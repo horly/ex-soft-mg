@@ -129,16 +129,32 @@
                             </div>
 
                             @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-primary saveP" id="save-entrance-btn" type="button">
-                                        <i class="fa-solid fa-floppy-disk"></i>
-                                    {{ __('main.save') }}
-                                    </button>
-                                    <button class="btn btn-primary btn-loadingP d-none" type="button" disabled>
-                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                        {{ __('auth.loading') }}
-                                    </button>
-                                </div>
+
+                                @if ($entrance)
+                                    @if (Auth::user()->id == $entrance->id_user)
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-primary saveP" id="save-entrance-btn" type="button">
+                                                <i class="fa-solid fa-floppy-disk"></i>
+                                            {{ __('main.save') }}
+                                            </button>
+                                            <button class="btn btn-primary btn-loadingP d-none" type="button" disabled>
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                {{ __('auth.loading') }}
+                                            </button>
+                                        </div>
+                                    @endif
+                                @else
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-primary saveP" id="save-entrance-btn" type="button">
+                                            <i class="fa-solid fa-floppy-disk"></i>
+                                        {{ __('main.save') }}
+                                        </button>
+                                        <button class="btn btn-primary btn-loadingP d-none" type="button" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            {{ __('auth.loading') }}
+                                        </button>
+                                    </div>
+                                @endif
                             @endif
 
                         </form>

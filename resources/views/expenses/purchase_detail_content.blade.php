@@ -80,11 +80,11 @@
                     </div>
                 </div>
 
-                @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
+                @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin" || Auth::user()->id == $purchases->id_user)
                     {{-- button de sauvegarde --}}
                     @include('button.save-button')
 
-                    <br>
+                    <div class="mb-3"></div>
 
                     @if ($purchases)
 

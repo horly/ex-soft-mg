@@ -284,7 +284,7 @@ class ExpensesController extends Controller
                 ]);
 
                 //Notification
-                $url = route('app_purchases', ['id' => $id_entreprise, 'id2' => $id_fu]);
+                $url = route('app_purchases', ['group' => 'expense', 'id' => $id_entreprise, 'id2' => $id_fu]);
                 $description = "expenses.added_a_purchase_invoice";
                 $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -307,7 +307,7 @@ class ExpensesController extends Controller
                 ]);
 
                 //Notification
-                $url = route('app_update_purchase', ['id' => $id_entreprise, 'id2' => $id_fu, 'ref_purchase' => $reference_purch]);
+                $url = route('app_update_purchase', ['group' => 'expense', 'id' => $id_entreprise, 'id2' => $id_fu, 'ref_purchase' => $reference_purch]);
                 $description = "expenses.modified_a_purchase_invoice";
                 $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -567,7 +567,7 @@ class ExpensesController extends Controller
             ]);
 
             //Notification
-            $url = route('app_expenses', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_expenses', ['group' => 'expense', 'id' => $id_entreprise, 'id2' => $id_fu]);
             $description = "expenses.recorded_an_expense";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
@@ -598,7 +598,7 @@ class ExpensesController extends Controller
                 ]);
 
             //Notification
-            $url = route('app_expenses', ['id' => $id_entreprise, 'id2' => $id_fu]);
+            $url = route('app_expenses', ['group' => 'expense', 'id' => $id_entreprise, 'id2' => $id_fu]);
             $description = "expenses.updated_an_expense";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 

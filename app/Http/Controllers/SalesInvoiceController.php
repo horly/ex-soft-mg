@@ -855,7 +855,8 @@ class SalesInvoiceController extends Controller
         $entreprise = DB::table('entreprises')->where('id', $id)->first();
         $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
 
-        $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
+        $invoice = SalesInvoice::where('reference_sales_invoice', $ref_invoice)->first();
+
         $customer = DB::table('clients')->where('id', $invoice->id_client)->first();
         $contact = DB::table('customer_contacts')->where('id', $invoice->id_contact)->first();
 

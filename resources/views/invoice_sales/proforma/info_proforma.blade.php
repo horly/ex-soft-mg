@@ -233,41 +233,43 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3 mb-3">
-                                @if ($paymentReceived != 0 )
-                                    <div class="d-grid gap-2">
-                                        <button class="btn btn-success" type="button" disabled>
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                            {{ __('entreprise.edit') }}
-                                        </button>
-                                    </div>
-                                @else
-                                    <div class="d-grid gap-2">
-                                        <a class="btn btn-success" role="button" href="{{ route('app_add_new_proforma', ['group' => 'sale', 'id' => $entreprise->id, 'id2' => $functionalUnit->id, 'ref_invoice' => $ref_invoice]) }}">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                            {{ __('entreprise.edit') }}
-                                        </a>
-                                    </div>
-                                @endif
-                            </div>
+                            @if (Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin" || Auth::user()->id == $invoice->id_user)
+                                <div class="col-md-3 mb-3">
+                                    @if ($paymentReceived != 0 )
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-success" type="button" disabled>
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                {{ __('entreprise.edit') }}
+                                            </button>
+                                        </div>
+                                    @else
+                                        <div class="d-grid gap-2">
+                                            <a class="btn btn-success" role="button" href="{{ route('app_add_new_proforma', ['group' => 'sale', 'id' => $entreprise->id, 'id2' => $functionalUnit->id, 'ref_invoice' => $ref_invoice]) }}">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                {{ __('entreprise.edit') }}
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
 
-                            <div class="col-md-3 mb-3">
-                                @if ($paymentReceived != 0 )
-                                    <div class="d-grid gap-2">
-                                        <button class="btn btn-danger" type="button" disabled>
-                                            <i class="fa-solid fa-trash-can"></i>
-                                            {{ __('entreprise.delete') }}
-                                        </button>
-                                    </div>
-                                @else
-                                    <div class="d-grid gap-2">
-                                        <button class="btn btn-danger" type="button" onclick="deleteElementThreeVal('{{ $invoice->reference_sales_invoice }}', {{ $entreprise->id }}, {{ $functionalUnit->id }}, '{{ route('app_delete_sales_invoice') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                            {{ __('entreprise.delete') }}
-                                        </button>
-                                    </div>
-                                @endif
-                            </div>
+                                <div class="col-md-3 mb-3">
+                                    @if ($paymentReceived != 0 )
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-danger" type="button" disabled>
+                                                <i class="fa-solid fa-trash-can"></i>
+                                                {{ __('entreprise.delete') }}
+                                            </button>
+                                        </div>
+                                    @else
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-danger" type="button" onclick="deleteElementThreeVal('{{ $invoice->reference_sales_invoice }}', {{ $entreprise->id }}, {{ $functionalUnit->id }}, '{{ route('app_delete_sales_invoice') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                                {{ __('entreprise.delete') }}
+                                            </button>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
 
                             <div class="col-md-3 mb-3">
                                 <div class="d-grid gap-2">
