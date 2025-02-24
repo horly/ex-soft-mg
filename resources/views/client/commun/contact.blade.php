@@ -1,8 +1,8 @@
 @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
-    <button class="btn btn-primary mb-3" type="button" onclick="addNewcontact();" data-bs-toggle="modal" data-bs-target="#add_contact">
+    <a class="btn btn-primary mb-3" role="button" href="{{ route('app_add_new_contact', ['group' => 'customer', 'id' => $entreprise->id, 'id2' => $functionalUnit->id, 'id3' => $client->id, 'id4' => 0]) }}">
         <i class="fa-solid fa-circle-plus"></i>
         &nbsp;{{ __('auth.add') }}
-    </button>
+    </a>
 @endif
 
 <table class="table table-striped table-hover border bootstrap-datatable">
@@ -28,15 +28,15 @@
                 <td>{{ $contact->address_cl }}</td>
                 <td class="text-end">
                     @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
-                        <button class="btn btn-success" type="button" onclick="editContactClient('{{ $contact->id }}', '{{ $contact->fullname_cl }}', '{{ $contact->fonction_contact_cl }}', '{{ $contact->departement_cl }}', '{{ $contact->phone_number_cl }}', '{{ $contact->email_adress_cl }}', '{{ $contact->address_cl }}');" title="{{ __('entreprise.edit') }}" data-bs-toggle="modal" data-bs-target="#add_contact">
+                        <a class="btn btn-success" role="button" href="{{ route('app_add_new_contact', ['group' => 'customer', 'id' => $entreprise->id, 'id2' => $functionalUnit->id, 'id3' => $client->id, 'id4' => $contact->id]) }}"  title="{{ __('entreprise.edit') }}">
                             <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
+                        </a>
                         @php
                             $is_invoiced = DB::table('sales_invoices')->where('id_contact', $contact->id)->first();
                         @endphp
 
                         @if (!$is_invoiced)
-                            <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $contact->id }}', '{{ route('app_delete_bank_account') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                            <button class="btn btn-danger" type="button" onclick="deleteElement('{{ $contact->id }}', '{{ route('app_delete_contact_client') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         @endif

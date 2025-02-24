@@ -152,11 +152,12 @@ class ArticleController extends Controller
         DB::table('category_articles')->where('id', $id_cat_art)->delete();
 
         //Notification
-        $url = route('app_category_article', ['id' => $id_entreprise, 'id2' => $id_fu]);
+        $url = route('app_category_article', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu]);
         $description = "article.deleted_an_article_category_in_the_functional_unit";
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_category_article', [
+            'group' => 'stock',
             'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('article.article_category_successfully_deleted'));
     }
@@ -311,11 +312,12 @@ class ArticleController extends Controller
         DB::table('subcategory_articles')->where('id', $id_subcat_art)->delete();
 
         //Notification
-        $url = route('app_subcategory_article', ['id' => $id_entreprise, 'id2' => $id_fu]);
+        $url = route('app_subcategory_article', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu]);
         $description = "article.deleted_an_article_subcategory_in_the_functional_unit";
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_subcategory_article', [
+            'group' => 'stock',
             'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('article.article_subcategory_successfully_deleted'));
     }
@@ -510,11 +512,12 @@ class ArticleController extends Controller
         DB::table('articles')->where('id', $id_art)->delete();
 
         //Notification
-        $url = route('app_article', ['id' => $id_entreprise, 'id2' => $id_fu]);
+        $url = route('app_article', ['group' => 'stock', 'id' => $id_entreprise, 'id2' => $id_fu]);
         $description = "article.deleted_an_article_in_the_functional_unit";
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_article', [
+            'group' => 'stock',
             'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('article.article_successfully_deleted'));
     }

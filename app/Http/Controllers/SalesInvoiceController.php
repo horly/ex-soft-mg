@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddNoteForm;
 use App\Http\Requests\SaveSaleInvoiceForm;
+use App\Models\Article;
+use App\Models\CategoryService;
 use App\Models\Decaissement;
 use App\Models\Encaissement;
 use App\Models\Entrance;
@@ -14,6 +16,8 @@ use App\Models\NoteDocument;
 use App\Models\PaymentTermsAssign;
 use App\Models\SalesInvoice;
 use App\Models\SerialNumberInvoice;
+use App\Models\Service;
+use App\Models\SubcategoryArticle;
 use App\Repository\EntrepriseRepo;
 use App\Repository\GenerateRefenceNumber;
 use App\Repository\NotificationRepo;
@@ -442,6 +446,7 @@ class SalesInvoiceController extends Controller
         $id_invoice_margin = $this->request->input('id_invoice_margin');
 
         $article_sales_invoice = $this->request->input('article_sales_invoice');
+        $article_sales_invoice_manual = $this->request->input('article_sales_invoice_manual');
         $article_qty_invoice = $this->request->input('article_qty_invoice');
         $article_margin_invoice = $this->request->input('article_margin_invoice');
         $article_purchase_price_invoice = $this->request->input('article_purchase_price_invoice');
@@ -454,7 +459,7 @@ class SalesInvoiceController extends Controller
         $concerne_session = $this->request->input('concerne_session');
         $article_reference_invoice = $this->request->input('article_reference_invoice');
 
-        //dd($article_reference_invoice);
+        //dd($is_an_article);
 
         if($id_customer_session_art != 0 && $id_contact_session_art != 0)
         {
@@ -489,10 +494,40 @@ class SalesInvoiceController extends Controller
                     ->where([
                         'ref_article' => $article_sales_invoice,
                         'ref_invoice' => $ref_invoice,
+                        'is_an_article' => 1,
                     ])->first();
 
                 if(!$article_exist)
                 {
+
+                    if($article_sales_invoice_manual != "default")
+                    {
+                        $descrption_saved_art = $article_sales_invoice_manual;
+
+                        $refNum = $this->generateReferenceNumber->getReferenceNumber("articles", $id_fu);
+                        $ref = $this->generateReferenceNumber->generate("ART", $refNum);
+
+                        $sub_cat = SubcategoryArticle::where([
+                            'default' => 1,
+                            'id_fu' => $id_fu,
+                        ])->first();
+
+                        $article_saved = Article::create([
+                            'reference_art' => $ref,
+                            'reference_number' => $refNum,
+                            'description_art' => $descrption_saved_art,
+                            'purchase_price' => $article_purchase_price_invoice,
+                            'sale_price' => $article_sale_price_invoice,
+                            'number_in_stock' => 1,
+                            'id_sub_cat' => $sub_cat->id,
+                            'id_fu' => $id_fu,
+                            'id_user' => Auth::user()->id,
+                        ]);
+
+                        $article_sales_invoice = $article_saved->reference_art;
+
+                    }
+
                     $invoice_el_select = InvoiceElement::create([
                         'ref_invoice' => $ref_invoice,
                         'ref_article' => $article_sales_invoice,
@@ -549,10 +584,37 @@ class SalesInvoiceController extends Controller
                                     ->where([
                                         'ref_service' => $article_sales_invoice,
                                         'ref_invoice' => $ref_invoice,
+                                        'is_an_article' => 0,
                                     ])->first();
 
                 if(!$service_exist)
                 {
+                    if($article_sales_invoice_manual != "default")
+                    {
+                        $descrption_saved_art = $article_sales_invoice_manual;
+
+                        $refNum = $this->generateReferenceNumber->getReferenceNumber("services", $id_fu);
+                        $ref = $this->generateReferenceNumber->generate("SERV", $refNum);
+
+                        $sub_cat = CategoryService::where([
+                            'default' => 1,
+                            'id_fu' => $id_fu,
+                        ])->first();
+
+                        $service = Service::create([
+                            'reference_serv' => $ref,
+                            'reference_number' => $refNum,
+                            'description_serv' => $descrption_saved_art,
+                            'unit_price' => $article_sale_price_invoice,
+                            'id_cat' => $sub_cat->id,
+                            'id_fu' => $id_fu,
+                            'id_user' => Auth::user()->id,
+                        ]);
+
+                        $article_sales_invoice = $service->reference_serv;
+
+                    }
+
                     $invoice_el_select = InvoiceElement::create([
                         'ref_invoice' => $ref_invoice,
                         'ref_service' => $article_sales_invoice,

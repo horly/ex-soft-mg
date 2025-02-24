@@ -187,4 +187,9 @@
         'invoice_sent_by' => "Facture envoyée par",
 
         'invoice_sent_successfully' => "Facture envoyée avec succès!",
+
+        'add_manually' => "Ajouter manuellement",
+        'cancel' => "Annuler",
+        'item_description' => "Description de l'article",
+        'service_description' => "Description du service",
     ];

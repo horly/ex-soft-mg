@@ -150,11 +150,12 @@ class ServiceController extends Controller
         DB::table('category_services')->where('id', $id_cat_serv)->delete();
 
         //Notification
-        $url = route('app_category_service', ['id' => $id_entreprise, 'id2' => $id_fu]);
+        $url = route('app_category_service', ['group' => 'service', 'id' => $id_entreprise, 'id2' => $id_fu]);
         $description = "service.deleted_a_service_category_in_the_functional_unit";
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_category_service', [
+            'group' => 'service',
             'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('service.service_category_successfully_deleted'));
     }
@@ -332,11 +333,12 @@ class ServiceController extends Controller
         DB::table('services')->where('id', $id_serv)->delete();
 
         //Notification
-        $url = route('app_service', ['id' => $id_entreprise, 'id2' => $id_fu]);
+        $url = route('app_service', ['group' => 'service', 'id' => $id_entreprise, 'id2' => $id_fu]);
         $description = "service.deleted_a_service_in_the_functional_unit";
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_service', [
+            'group' => 'service',
             'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('service.service_successfully_deleted'));
     }

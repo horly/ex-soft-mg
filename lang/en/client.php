@@ -80,4 +80,6 @@ return [
 
     'customer_contact' => "Customer contact",
     'select_a_contact' => "Select a contact",
+
+    'contact_deleted_successfully' => "Contact deleted successfully!",
 ];

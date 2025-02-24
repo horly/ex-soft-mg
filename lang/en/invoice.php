@@ -187,4 +187,9 @@
         'invoice_sent_by' => "Invoice sent by",
 
         'invoice_sent_successfully' => "Invoice sent successfully!",
+
+        'add_manually' => "Add manually",
+        'cancel' => "Cancel",
+        'item_description' => "Item description",
+        'service_description' => "Service description",
 ];

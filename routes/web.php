@@ -226,6 +226,7 @@ Route::controller(CustomerController::class)->group(function(){
                     Route::get('/add_new_client/{group:string}/{id:int}/{id2:int}', 'addNewClient')->name('app_add_new_client');
                     Route::get('/info_customer/{group:string}/{id:int}/{id2:int}/{id3:int}', 'infoCustomer')->name('app_info_customer');
                     Route::get('/update_customer/{group:string}/{id:int}/{id2:int}/{id3:int}', 'updateCustomer')->name('app_update_customer');
+                    Route::get('/add_new_contact/{group:string}/{id:int}/{id2:int}/{id3:int}/{id4:int}', 'add_new_contact')->name('app_add_new_contact');
                 });
             });
         });
@@ -235,6 +236,7 @@ Route::controller(CustomerController::class)->group(function(){
         Route::post('/delete_client', 'deleteClient')->name('app_delete_client');
 
         Route::post('/add_new_contact_client', 'addNewContactClient')->name('app_add_new_contact_client');
+        Route::post('/delete_contact_client', 'deleteContactClient')->name('app_delete_contact_client');
     });
 });
 

@@ -81,4 +81,6 @@ return [
 
     'customer_contact' => "Contact client",
     'select_a_contact' => "Sélectionnez un contact",
+
+    'contact_deleted_successfully' => "Contact supprimé avec succès !",
 ];

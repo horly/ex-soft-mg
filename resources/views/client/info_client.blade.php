@@ -329,44 +329,33 @@
 
 
                         @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
-                            <div class="row">
 
-                                <div class="col-md-6 mb-3">
-                                    <div class="d-grid gap-2">
-                                        <a class="btn btn-success" role="button" href="{{ route('app_update_customer', [
-                                            'group' => 'customer',
-                                            'id' => $entreprise->id,
-                                            'id2' => $functionalUnit->id,
-                                            'id3' => $client->id
-                                            ]) }}">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                            {{ __('entreprise.edit') }}
-                                        </a>
-                                    </div>
-                                </div>
 
-                                <div class="col-md-6 mb-3">
-                                    @php
-                                        $invoice_exst = DB::table('sales_invoices')->where('id_client', $client->id)->first();
-                                    @endphp
-                                    @if ($invoice_exst)
-                                        <div class="d-grid gap-2">
-                                            <button class="btn btn-danger" type="button" title="{{ __('entreprise.delete') }}" disabled>
-                                                <i class="fa-solid fa-trash-can"></i>
-                                                {{ __('entreprise.delete') }}
-                                            </button>
-                                        </div>
-                                    @else
-                                        <div class="d-grid gap-2">
-                                            <button class="btn btn-danger" type="button" onclick="deleteElementThreeVal('{{ $client->id }}', {{ $entreprise->id }}, {{ $functionalUnit->id }}, '{{ route('app_delete_client') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
-                                                <i class="fa-solid fa-trash-can"></i>
-                                                {{ __('entreprise.delete') }}
-                                            </button>
-                                        </div>
-                                    @endif
-                                </div>
+                            <a class="btn btn-success" role="button" href="{{ route('app_update_customer', [
+                                'group' => 'customer',
+                                'id' => $entreprise->id,
+                                'id2' => $functionalUnit->id,
+                                'id3' => $client->id
+                                ]) }}">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                {{ __('entreprise.edit') }}
+                            </a>
 
-                            </div>
+                            @php
+                                $invoice_exst = DB::table('sales_invoices')->where('id_client', $client->id)->first();
+                            @endphp
+                            @if ($invoice_exst)
+                                <button class="btn btn-danger" type="button" title="{{ __('entreprise.delete') }}" disabled>
+                                    <i class="fa-solid fa-trash-can"></i>
+                                    {{ __('entreprise.delete') }}
+                                </button>
+                            @else
+                                <button class="btn btn-danger" type="button" onclick="deleteElementThreeVal('{{ $client->id }}', {{ $entreprise->id }}, {{ $functionalUnit->id }}, '{{ route('app_delete_client') }}', '{{ csrf_token() }}');" title="{{ __('entreprise.delete') }}">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                    {{ __('entreprise.delete') }}
+                                </button>
+                            @endif
+
                         @endif
 
                     </div>

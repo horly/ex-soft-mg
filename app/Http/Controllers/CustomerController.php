@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\addNewContactClientForm;
 use App\Http\Requests\CreateClientForm;
 use App\Models\Client;
 use App\Models\CustomerContact;
+use App\Models\FunctionalUnit;
 use App\Repository\EntrepriseRepo;
 use App\Repository\GenerateRefenceNumber;
 use App\Repository\NotificationRepo;
@@ -233,13 +235,34 @@ class CustomerController extends Controller
         DB::table('clients')->where('id', $id_client)->delete();
 
         //Notification
-        $url = route('app_customer', ['id' => $id_entreprise, 'id2' => $id_fu]);
+        $url = route('app_customer', ['group' => 'customer', 'id' => $id_entreprise, 'id2' => $id_fu]);
         $description = "client.removed_a_customer_from_the_functional_unit";
         $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
         return redirect()->route('app_customer', [
+            'group' => 'customer',
             'id' => $id_entreprise,
             'id2' => $id_fu ])->with('success', __('client.customer_deleted_successfully'));
+    }
+
+    public function deleteContactClient()
+    {
+        $id_contact = $this->request->input('id_element');
+        $contact = CustomerContact::where('id', $id_contact)->first();
+        $id_client = $contact->id_client;
+        $client = Client::where('id', $id_client)->first();
+        $id_fu = $client->id_fu;
+        $fu = FunctionalUnit::where('id', $id_fu)->first();
+        $id_entreprise = $fu->id_entreprise;
+
+        DB::table('customer_contacts')->where('id', $id_contact)->delete();
+
+        //Notification
+        $url = route('app_info_customer', ['group' => 'customer', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_client]);
+        $description = "client.contact_deleted_successfully";
+        $this->notificationRepo->setNotification($id_entreprise, $description, $url);
+
+        return redirect()->back()->with('success', __('client.contact_deleted_successfully'));
     }
 
     public function updateCustomer($group, $id, $id2, $id3)
@@ -261,19 +284,19 @@ class CustomerController extends Controller
         return view('client.update_client', compact('entreprise', 'functionalUnit', 'client', 'contacts', 'permission_assign'));
     }
 
-    public function addNewContactClient()
+    public function addNewContactClient(addNewContactClientForm $requestF)
     {
-        $full_name_cl = $this->request->input('full_name_cl');
-        $grade_cl = $this->request->input('grade_cl');
-        $department_cl = $this->request->input('department_cl');
-        $email_cl = $this->request->input('email_cl');
-        $phone_number_cl = $this->request->input('phone_number_cl');
-        $address_cl = $this->request->input('address_cl');
-        $id_client = $this->request->input('id_client');
-        $modalRequest = $this->request->input('modalRequest');
-        $id_contact = $this->request->input('id_contact');
-        $id_entreprise = $this->request->input('id_entreprise');
-        $id_fu = $this->request->input('id_fu');
+        $full_name_cl = $requestF->input('full_name_cl');
+        $grade_cl = $requestF->input('grade_cl');
+        $department_cl = $requestF->input('department_cl');
+        $email_cl = $requestF->input('email_cl');
+        $phone_number_cl = $requestF->input('phone_number_cl');
+        $address_cl = $requestF->input('address_cl');
+        $id_client = $requestF->input('id_client');
+        $modalRequest = $requestF->input('modalRequest');
+        $id_contact = $requestF->input('id_contact');
+        $id_entreprise = $requestF->input('id_entreprise');
+        $id_fu = $requestF->input('id_fu');
 
         //dd($this->request->all());
 
@@ -294,7 +317,8 @@ class CustomerController extends Controller
              $description = "client.added_a_customer_contact";
              $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-             return redirect()->back()->with('success', __('client.contact_saved_successfully'));
+             return redirect()->route('app_info_customer', ['group' => 'customer', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_client])
+                ->with('success', __('client.contact_saved_successfully'));
         }
         else
         {
@@ -314,7 +338,38 @@ class CustomerController extends Controller
             $description = "client.updated_a_customer_contact";
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
-            return redirect()->back()->with('success', __('client.contact_updated_successfully'));
+            return redirect()->route('app_info_customer', ['group' => 'customer', 'id' => $id_entreprise, 'id2' => $id_fu, 'id3' => $id_client])
+                ->with('success', __('client.contact_updated_successfully'));
         }
+    }
+
+    public function add_new_contact($group, $id, $id2, $id3, $id4)
+    {
+        $entreprise = DB::table('entreprises')->where('id', $id)->first();
+        $functionalUnit = DB::table('functional_units')->where('id', $id2)->first();
+        $client = Client::where('id', $id3)->first();
+        $contact = CustomerContact::where('id', $id4)->first();
+
+        $id_contact = $id4;
+
+        $edit_delete_contents = DB::table('permissions')->where('name', 'edit_delete_contents')->first();
+
+        $permission_assign = DB::table('permission_assigns')
+            ->where([
+                'id_user' => Auth::user()->id,
+                'id_fu' => $id2,
+                'id_perms' => $edit_delete_contents->id
+            ])->first();
+
+
+        return view('client.add_new_contact', compact(
+            'group',
+            'entreprise',
+            'functionalUnit',
+            'client',
+            'contact',
+            'id_contact',
+            'permission_assign'
+        ));
     }
 }

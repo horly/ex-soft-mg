@@ -157,7 +157,8 @@
                                             Request::route()->getName() == "app_debtor" ||
                                             Request::route()->getName() == "app_add_new_debtor" ||
                                             Request::route()->getName() == "app_info_debtor" ||
-                                            Request::route()->getName() == "app_update_debtor")
+                                            Request::route()->getName() == "app_update_debtor" ||
+                                            Request::route()->getName() == "app_add_new_contact")
                                             active
                                         @endif has-sub">
 
@@ -184,7 +185,8 @@
                                                 Request::route()->getName() == "app_debtor" ||
                                                 Request::route()->getName() == "app_add_new_debtor" ||
                                                 Request::route()->getName() == "app_info_debtor" ||
-                                                Request::route()->getName() == "app_update_debtor")
+                                                Request::route()->getName() == "app_update_debtor" ||
+                                                Request::route()->getName() == "app_add_new_contact")
                                                 active
                                             @endif">
 
