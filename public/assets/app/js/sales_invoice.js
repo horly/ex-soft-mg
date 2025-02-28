@@ -632,9 +632,15 @@ function payment_terms_select()
     if($('#payment_terms').val() == "after_delivery"){
         //console.log("after_delivery");
         $('.after_delivery_zone').removeClass('d-none');
-    }else{
+    }
+    else if($('#payment_terms').val() == "to_order") {
         //console.log("to_order");
         $('.after_delivery_zone').addClass('d-none');
+        $('.to_order_zone').removeClass('d-none');
+    }
+    else{
+        $('.after_delivery_zone').addClass('d-none');
+        $('.to_order_zone').addClass('d-none');
     }
 }
 

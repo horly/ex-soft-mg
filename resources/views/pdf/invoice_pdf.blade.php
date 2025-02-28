@@ -272,14 +272,25 @@
             <small>
                 <span>&#x2022;</span>&nbsp;&nbsp;
                 <span>{{ __('invoice.payment_terms') }} :</span>
-                <span>{{ $payment_terms_assign->purcentage . '%,' }}</span>
 
                 @if ($payment_terms_proforma->description == "after_delivery")
+                    <span>{{ $payment_terms_assign->purcentage . '%,' }}</span>
                     <span>{{ $payment_terms_assign->day_number }}</span>
                     <span>{{ __('invoice.days') }}</span>
                     <span>{{ __('invoice.after_delivery') }}</span>
-                @else
+                @elseif ($payment_terms_proforma->description == "to_order")
+                    <span>{{ $payment_terms_assign->purcentage . '%,' }}</span>
                     <span>{{ __('invoice.to_order') }}</span>
+                @else
+                    <span>{{ __('invoice.to_discuss_with_the_customer') }}</span>
+                @endif
+            </small>
+        </div>
+        <div>
+            <small>
+                @if ($invoice->delivery_time)
+                    <span>&#x2022;</span>&nbsp;&nbsp;
+                    <span>{{ __('invoice.delivery_time') }} : {{ $invoice->delivery_time }} {{ __('invoice.days') }}</span>
                 @endif
             </small>
         </div>

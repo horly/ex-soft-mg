@@ -185,13 +185,17 @@
                             <tr>
                                 <td class="fw-bold">
                                     {{ __('invoice.payment_terms') }} :
-                                    {{ $payment_terms_assign->purcentage . '%,' }}
+
                                     @if ($payment_terms_proforma->description == "after_delivery")
+                                        {{ $payment_terms_assign->purcentage . '%,' }}
                                         {{ $payment_terms_assign->day_number }}
                                         {{ __('invoice.days') }}
                                         {{ __('invoice.after_delivery') }}
-                                    @else
+                                    @elseif ($payment_terms_proforma->description == "to_order")
+                                        {{ $payment_terms_assign->purcentage . '%,' }}
                                         {{ __('invoice.to_order') }}
+                                    @else
+                                        {{ __('invoice.to_discuss_with_the_customer') }}
                                     @endif
                                 </td>
                                 <td></td>
@@ -199,6 +203,22 @@
                                 <td></td>
                                 <td></td>
                             </tr>
+
+                            @if ($invoice->delivery_time)
+                                <tr>
+                                    <td class="fw-bold">
+                                        {{ __('invoice.delivery_time') }} :
+
+                                        {{ $invoice->delivery_time }}
+                                        {{ __('invoice.days') }}
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            @endif
+
                         </tbody>
                     </table>
 

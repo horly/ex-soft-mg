@@ -34,6 +34,7 @@ class SalesInvoice extends Model
         'id_contact',
         'due_date',
         'validity_of_the_offer_day',
+        'delivery_time',
     ];
 
     function client()

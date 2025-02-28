@@ -192,4 +192,7 @@
         'cancel' => "Cancel",
         'item_description' => "Item description",
         'service_description' => "Service description",
+
+        'to_discuss_with_the_customer' => "To discuss with the customer",
+        'delivery_time' => "Delivery time",
 ];

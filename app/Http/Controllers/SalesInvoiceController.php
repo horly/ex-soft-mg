@@ -719,22 +719,42 @@ class SalesInvoiceController extends Controller
         $payment_terms = $requestF->input('payment_terms'); //to_order or after_delivery
         $payment_terms_percentage = $requestF->input('payment_terms_percentage');
         $after_delivery_days = $requestF->input('after_delivery_days');
+        $delivery_time = $requestF->input('delivery_time');
 
+        $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
 
-        if($is_proforma == 1)
+        $payment_terms_proformas = DB::table('payment_terms_proformas')->where('description', $payment_terms)->first();
+
+        if(!$invoice)
         {
-            $payment_terms_proformas = DB::table('payment_terms_proformas')->where('description', $payment_terms)->first();
-            PaymentTermsAssign::create([
-                'ref_invoice' => $ref_invoice,
-                'id_payment_terms' => $payment_terms_proformas->id,
-                'purcentage' => $payment_terms_percentage,
-                'day_number' => $after_delivery_days,
-            ]);
+            if($is_proforma == 1)
+            {
+                PaymentTermsAssign::create([
+                    'ref_invoice' => $ref_invoice,
+                    'id_payment_terms' => $payment_terms_proformas->id,
+                    'purcentage' => $payment_terms_percentage,
+                    'day_number' => $after_delivery_days,
+                ]);
+            }
+            else
+            {
+                $validity_of_the_offer = 15;
+            }
         }
         else
         {
-            $validity_of_the_offer = 15;
+            if($is_proforma == 1)
+            {
+                DB::table('payment_terms_assigns')
+                    ->where('ref_invoice', $ref_invoice)
+                    ->update([
+                        'id_payment_terms' => $payment_terms_proformas->id,
+                        'purcentage' => $payment_terms_percentage,
+                        'day_number' => $after_delivery_days,
+                    ]);
+            }
         }
+
 
 
         $reference_personalized = "";
@@ -766,7 +786,7 @@ class SalesInvoiceController extends Controller
 
         //dd($requestF->all());
 
-        $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
+
 
         $invoice_elmnt = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->first();
 
@@ -802,7 +822,8 @@ class SalesInvoiceController extends Controller
                     'is_delivery_note' => $is_delivery_note_marge,
                     'is_simple_invoice' => $is_simple_invoice_inv,
                     'reference_personalized' => $reference_personalized,
-                    'validity_of_the_offer_day' => $validity_of_the_offer
+                    'validity_of_the_offer_day' => $validity_of_the_offer,
+                    'delivery_time' => $delivery_time,
                 ]);
 
                 DB::table('invoice_margins')
@@ -867,7 +888,8 @@ class SalesInvoiceController extends Controller
                         'is_proforma_inv' => $is_proforma,
                         'is_delivery_note' => $is_delivery_note_marge,
                         'is_simple_invoice' => $is_simple_invoice_inv,
-                        'validity_of_the_offer_day' => $validity_of_the_offer
+                        'validity_of_the_offer_day' => $validity_of_the_offer,
+                        'delivery_time' => $delivery_time,
                 ]);
 
                 if($is_proforma == 1 && $is_delivery_note_marge == 0)
@@ -1257,6 +1279,8 @@ class SalesInvoiceController extends Controller
         $reference = new Reference(Auth::user()->name);
         $reference_personalized = $reference->getInvoiceReference();
 
+        $delivery_time = "";
+
         if($invoice)
         {
             $client = DB::table('clients')->where('id', $invoice->id_client)->first();
@@ -1278,6 +1302,8 @@ class SalesInvoiceController extends Controller
             $this->request->session()->put('due_date_sales_invoice', date('Y-m-d', strtotime($due_date)));
 
             $reference_personalized = $invoice->reference_personalized;
+
+            $delivery_time = $invoice->delivery_time;
         }
 
         $payment_terms_assign = DB::table('payment_terms_assigns')
@@ -1307,6 +1333,7 @@ class SalesInvoiceController extends Controller
             'invoice',
             'payment_terms_proforma',
             'payment_terms_assign',
+            'delivery_time'
         ));
     }
 

@@ -283,17 +283,30 @@
                                     @endforeach
                                 </select>
 
-                                <input type="number" class="form-control text-end" id="payment_terms_percentage" name="payment_terms_percentage" min="1" max="100"  value="{{ $payment_terms_assign ? $payment_terms_assign->purcentage : "10" }}">
-                                <span class="input-group-text" id="basic-addon2">%</span>
-
                                 @if ($payment_terms_proforma)
-                                    <input type="number" class="form-control text-end @if($payment_terms_proforma->description == "to_order") d-none @endif after_delivery_zone" id="after_delivery_days" name="after_delivery_days" min="15" max="90"  value="{{ $payment_terms_assign ? $payment_terms_assign->day_number : "15" }}">
-                                    <span class="input-group-text @if($payment_terms_proforma->description == "to_order") d-none @endif after_delivery_zone" id="basic-addon2">{{ __('invoice.days') }}</span>
+                                    <input type="number" class="form-control text-end @if($payment_terms_proforma->description == "to_discuss_with_the_customer") d-none @endif to_order_zone" id="payment_terms_percentage" name="payment_terms_percentage" min="1" max="100"  value="{{ $payment_terms_assign ? $payment_terms_assign->purcentage : "10" }}">
+                                    <span class="input-group-text @if($payment_terms_proforma->description == "to_discuss_with_the_customer") d-none @endif to_order_zone" id="basic-addon2">%</span>
+
+                                    <input type="number" class="form-control text-end @if($payment_terms_proforma->description == "to_order" || $payment_terms_proforma->description == "to_discuss_with_the_customer") d-none @endif after_delivery_zone" id="after_delivery_days" name="after_delivery_days" min="15" max="90"  value="{{ $payment_terms_assign ? $payment_terms_assign->day_number : "15" }}">
+                                    <span class="input-group-text @if($payment_terms_proforma->description == "to_order" || $payment_terms_proforma->description == "to_discuss_with_the_customer") d-none @endif after_delivery_zone" id="basic-addon2">{{ __('invoice.days') }}</span>
                                 @else
+                                    <input type="number" class="form-control text-end to_order_zone" id="payment_terms_percentage" name="payment_terms_percentage" min="1" max="100"  value="{{ $payment_terms_assign ? $payment_terms_assign->purcentage : "10" }}">
+                                    <span class="input-group-text to_order_zone" id="basic-addon2">%</span>
+
                                     <input type="number" class="form-control text-end d-none after_delivery_zone" id="after_delivery_days" name="after_delivery_days" min="15" max="90"  value="{{ $payment_terms_assign ? $payment_terms_assign->day_number : "15" }}">
                                     <span class="input-group-text d-none after_delivery_zone" id="basic-addon2">{{ __('invoice.days') }}</span>
                                 @endif
 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 row">
+                        <label for="delivery_time" class="col-sm-4 col-form-label">{{ __('invoice.delivery_time') }}</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input type="number" class="form-control text-end" id="delivery_time" name="delivery_time" min="1" max="90"  value="{{ $delivery_time }}">
+                                <span class="input-group-text" id="basic-addon2">{{ __('invoice.days') }}</span>
                             </div>
                         </div>
                     </div>

@@ -192,4 +192,7 @@
         'cancel' => "Annuler",
         'item_description' => "Description de l'article",
         'service_description' => "Description du service",
+
+        'to_discuss_with_the_customer' => "À discuter avec le client",
+        'delivery_time' => "Délai de livraison",
     ];
