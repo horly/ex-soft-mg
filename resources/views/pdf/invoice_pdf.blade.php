@@ -202,8 +202,8 @@
                 <th class="text-start">REF/SKU</th>
                 <th class="text-start">{{ __('article.description') }}</th>
                 <th class="text-center">{{ __('invoice.quantity') }}</th>
-                <th class="text-end">{{ __('article.unit_price') }} {{ $deviseGest->iso_code }}</th>
-                <th class="text-end">{{ __('invoice.total_price') }} {{ $deviseGest->iso_code }}</th>
+                <th class="text-end" style="width: 120px">{{ __('article.unit_price') }} {{ $deviseGest->iso_code }}</th>
+                <th class="text-end" style="width: 120px">{{ __('invoice.total_price') }} {{ $deviseGest->iso_code }}</th>
               </tr>
         </thead>
         <tbody>

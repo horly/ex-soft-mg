@@ -182,7 +182,12 @@
                     <div class="col-sm-8">
                         <div class="input-group mb-3">
                             <select class="form-select" name="vat-apply-change" id="vat-apply-change" onchange="changeVat('{{ route('app_change_vat') }}', '{{ csrf_token() }}');">
-                                <option value="0" selected>0</option>
+                                @if ($invoice)
+                                    <option value="{{ $invoice->vat }}" selected>{{ $invoice->vat }}</option>
+                                @else
+                                    <option value="0" selected>0</option>
+                                @endif
+                                <option value="0">0</option>
                                 <option value="{{ $country->vat_rat }}">{{ $country->vat_rat }}</option>
                             </select>
                             <span class="input-group-text" id="basic-addon2">%</span>
@@ -211,12 +216,22 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="fw-bold">{{ __('invoice.vat') }} <span id="vat_apply_pur">0</span>%</td>
+                            @if ($invoice)
+                                <td class="fw-bold">{{ __('invoice.vat') }} <span id="vat_apply_pur">{{ $invoice->vat }}</span>% ({{ $deviseGest->iso_code }})</td>
+                            @else
+                                <td class="fw-bold">{{ __('invoice.vat') }} <span id="vat_apply_pur">0</span>% ({{ $deviseGest->iso_code }})</td>
+                            @endif
+
                             <td></td>
                             <td></td>
                             <td></td>
                             <td class="text-end fw-bold">
-                                <span id="vat_apply_td">0.00</span>
+                                @if ($invoice)
+                                    <span id="vat_apply_td">{{ number_format($invoice->vat_amount, 2, '.', ' ') }}</span>
+                                @else
+                                    <span id="vat_apply_td">0.00</span>
+                                @endif
+
                             </td>
                         </tr>
                         <tr>
@@ -225,14 +240,14 @@
                             <td></td>
                             <td></td>
                             <td class="text-end fw-bold">
-                                <span id="tot_incl_tax_td">{{ number_format($tot_excl_tax, 2, '.', ' ') }} </span>
+                                <span id="tot_incl_tax_td">{{ number_format($tot_incl_tax, 2, '.', ' ') }} </span>
                             </td>
                         </tr>
                         <div>
                             <input type="hidden" name="tot_excl_tax" id="tot_excl_tax" value="{{ $tot_excl_tax }}">
                             <input type="hidden" name="discount_apply_input" id="discount_apply_input" value="0">
                             <input type="hidden" name="vat_apply_input" id="vat_apply_input" value="0">
-                            <input type="hidden" name="tot_incl_tax_input" id="tot_incl_tax_input" value="{{ $tot_excl_tax }}">
+                            <input type="hidden" name="tot_incl_tax_input" id="tot_incl_tax_input" value="{{ $tot_incl_tax }}">
                             <input type="hidden" name="amount_received" id="amount_received" value="0">
                         </div>
                     </tbody>
@@ -310,6 +325,8 @@
                             </div>
                         </div>
                     </div>
+                @else
+                    <input type="hidden" class="form-control text-end" id="validity_of_the_offer" name="validity_of_the_offer" min="15" max="90"  value="15">
                 @endif
 
                 @if ($permission_assign || Auth::user()->role->name == "admin" || Auth::user()->role->name == "superadmin")
@@ -334,6 +351,7 @@
 
 <form action="#">
     <input type="hidden" id="article_sales_invoice-message" value="{{ __('invoice.select_an_article_please') }}">
+    <input type="hidden" id="article_sales_invoice-message-size" value="{{ __('invoice.your_description_must_not_exceed_255_characters') }}">
     <input type="hidden" id="article_qty_invoice-message" value="{{ __('invoice.quantity_cannot_be_empty') }}">
     <input type="hidden" id="article_margin_invoice-message" value="{{ __('invoice.margin_cannot_be_empty') }}">
     <input type="hidden" id="service_sales_invoice-message" value="{{ __('invoice.select_a_service_please') }}">

@@ -299,6 +299,10 @@ class SalesInvoiceController extends Controller
 
         $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
 
+
+        $tot_incl_tax = $tot_excl_tax;
+
+
         /**
          * On génère une référence pour chaque user
          * par exemple
@@ -328,6 +332,8 @@ class SalesInvoiceController extends Controller
             $this->request->session()->put('due_date_sales_invoice', date('Y-m-d', strtotime($due_date)));
 
             $reference_personalized = $invoice->reference_personalized;
+
+            $tot_incl_tax = $tot_excl_tax + $invoice->vat_amount;
         }
 
         $billing = DB::table('permissions')->where('name', 'billing')->first();
@@ -342,6 +348,7 @@ class SalesInvoiceController extends Controller
         $payment_terms_proforma = null;
         $payment_terms_assign = null;
 
+
         return view('invoice_sales.add_new_sales_invoice', compact(
             'entreprise',
             'functionalUnit',
@@ -354,6 +361,7 @@ class SalesInvoiceController extends Controller
             'invoice_elements',
             'country',
             'tot_excl_tax',
+            'tot_incl_tax',
             'permission_assign',
             'reference_personalized',
             'invoice',
@@ -494,6 +502,8 @@ class SalesInvoiceController extends Controller
                     ->where([
                         'ref_article' => $article_sales_invoice,
                         'ref_invoice' => $ref_invoice,
+                        'custom_reference' => $article_reference_invoice,
+                        'description_inv_elmnt' => $descrption_saved_art,
                         'is_an_article' => 1,
                     ])->first();
 
@@ -961,6 +971,7 @@ class SalesInvoiceController extends Controller
 
         $tot_excl_tax = DB::table('invoice_elements')->where('ref_invoice', $ref_invoice)->sum('total_price_inv_elmnt');
 
+
         $paymentReceived = DB::table('encaissements')
                             ->where([
                                 'reference_enc' => $ref_invoice,
@@ -1271,6 +1282,8 @@ class SalesInvoiceController extends Controller
 
         $invoice = DB::table('sales_invoices')->where('reference_sales_invoice', $ref_invoice)->first();
 
+        $tot_incl_tax = $tot_excl_tax;
+
         /**
          * On génère une référence pour chaque user
          * par exemple
@@ -1328,6 +1341,7 @@ class SalesInvoiceController extends Controller
             'invoice_elements',
             'country',
             'tot_excl_tax',
+            'tot_incl_tax',
             'permission_assign',
             'reference_personalized',
             'invoice',

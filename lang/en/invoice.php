@@ -195,4 +195,6 @@
 
         'to_discuss_with_the_customer' => "To discuss with the customer",
         'delivery_time' => "Delivery time",
+
+        'your_description_must_not_exceed_255_characters' => "Your description must not exceed 255 characters",
 ];

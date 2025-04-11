@@ -205,33 +205,46 @@ function insert_invoice_item(operation){
             $('#article_sales_invoice_manual').removeClass('is-invalid');
             $('#article_sales_invoice_manual-error').text("");
 
-            if(article_qty_invoice != "" && article_qty_invoice != 0 && article_qty_invoice != "0")
+            if(article_sales_invoice_manual.length <= 255)
+            {
+
+                $('#article_sales_invoice_manual').removeClass('is-invalid');
+                $('#article_sales_invoice_manual-error').text("");
+
+                if(article_qty_invoice != "" && article_qty_invoice != 0 && article_qty_invoice != "0")
+                    {
+                        $('#article_qty_invoice').removeClass('is-invalid');
+                        $('.article_qty_invoice-error').text("");
+
+                        if(article_margin_invoice != "")
+                        {
+                            $('#article_margin_invoice').removeClass('is-invalid');
+                            $('.article_margin_invoice-error').text("");
+
+                            $('#concerne_session').val($('#invoice_concern_sales').val());
+
+                            operation == "add" ?
+                                $('#form_insert_article_invoice').submit() :
+                                $('#form_insert_article_invoice_updt').submit();
+                        }
+                        else
+                        {
+                            $('#article_margin_invoice').addClass('is-invalid');
+                            $('.article_margin_invoice-error').text($('#article_margin_invoice-message').val()); //margin_cannot_be_empty
+                        }
+                }
+                else
                 {
-                    $('#article_qty_invoice').removeClass('is-invalid');
-                    $('.article_qty_invoice-error').text("");
-
-                    if(article_margin_invoice != "")
-                    {
-                        $('#article_margin_invoice').removeClass('is-invalid');
-                        $('.article_margin_invoice-error').text("");
-
-                        $('#concerne_session').val($('#invoice_concern_sales').val());
-
-                        operation == "add" ?
-                            $('#form_insert_article_invoice').submit() :
-                            $('#form_insert_article_invoice_updt').submit();
-                    }
-                    else
-                    {
-                        $('#article_margin_invoice').addClass('is-invalid');
-                        $('.article_margin_invoice-error').text($('#article_margin_invoice-message').val()); //margin_cannot_be_empty
-                    }
+                    $('#article_qty_invoice').addClass('is-invalid');
+                    $('.article_qty_invoice-error').text($('#article_qty_invoice-message').val()); //Quantity cannot be empty
+                }
             }
             else
             {
-                $('#article_qty_invoice').addClass('is-invalid');
-                $('.article_qty_invoice-error').text($('#article_qty_invoice-message').val()); //Quantity cannot be empty
+                $('#article_sales_invoice_manual').addClass('is-invalid');
+                $('#article_sales_invoice_manual-error').text($('#article_sales_invoice-message-size').val());
             }
+
         }
         else
         {
@@ -261,11 +274,22 @@ function insert_invoice_item_service(operation){
             $('#service_sales_invoice_manual').removeClass('is-invalid');
             $('#service_sales_invoice_manual-error').text("");
 
-            $('#concerne_session_service').val($('#invoice_concern_sales').val());
+            if(service_sales_invoice_manual.length <= 255)
+            {
+                $('#service_sales_invoice_manual').removeClass('is-invalid');
+                $('#service_sales_invoice_manual-error').text("");
 
-            operation == "add" ?
-                $('#form_insert_service_invoice').submit() :
-                $('#form_insert_service_invoice_updt').submit();
+                $('#concerne_session_service').val($('#invoice_concern_sales').val());
+
+                operation == "add" ?
+                    $('#form_insert_service_invoice').submit() :
+                    $('#form_insert_service_invoice_updt').submit();
+            }
+            else
+            {
+                $('#service_sales_invoice_manual').addClass('is-invalid');
+                $('#service_sales_invoice_manual-error').text($('#article_sales_invoice-message-size').val());
+            }
         }
         else
         {
