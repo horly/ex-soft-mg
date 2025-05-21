@@ -572,6 +572,7 @@ class ExpensesController extends Controller
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
             return redirect()->route('app_expenses', [
+                'group' => 'expense',
                 'id' => $id_entreprise,
                 'id2' => $id_fu,
             ])->with('success', __('expenses.expense_recorded_successfully'));

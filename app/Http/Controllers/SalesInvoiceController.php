@@ -1942,6 +1942,7 @@ class SalesInvoiceController extends Controller
             $this->notificationRepo->setNotification($id_entreprise, $description, $url);
 
             return redirect()->route('app_entrances', [
+                'group' => 'sale',
                 'id' => $id_entreprise,
                 'id2' => $id_fu,
             ])->with('success', __('invoice.entrance_recorded_successfully'));
